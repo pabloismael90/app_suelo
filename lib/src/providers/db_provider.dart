@@ -1,7 +1,7 @@
 import 'dart:io';
 
 
-import 'package:app_suelo/src/models/testplaga_model.dart';
+import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -66,7 +66,7 @@ class DBProvider {
                 );
 
                 await db.execute(
-                    'CREATE TABLE TestPlaga ('
+                    'CREATE TABLE TestSuelo ('
                     ' id TEXT PRIMARY KEY,'
                     ' idFinca TEXT,'
                     ' idLote TEXT,'
@@ -103,9 +103,9 @@ class DBProvider {
         return res;
     }
 
-    nuevoTestPlaga( Testplaga nuevaPlaga ) async {
+    nuevoTestSuelo( TestSuelo nuevaPlaga ) async {
         final db  = await database;
-        final res = await db.insert('TestPlaga',  nuevaPlaga.toJson() );
+        final res = await db.insert('TestSuelo',  nuevaPlaga.toJson() );
         return res;
     }
 
@@ -136,13 +136,13 @@ class DBProvider {
         return list;
     }
 
-    Future<List<Testplaga>> getTodasTestPlaga() async {
+    Future<List<TestSuelo>> getTodasTestSuelo() async {
 
         final db  = await database;
-        final res = await db.query('TestPlaga');
+        final res = await db.query('TestSuelo');
 
-        List<Testplaga> list = res.isNotEmpty 
-                                ? res.map( (c) => Testplaga.fromJson(c) ).toList()
+        List<TestSuelo> list = res.isNotEmpty 
+                                ? res.map( (c) => TestSuelo.fromJson(c) ).toList()
                                 : [];
         return list;
     }
@@ -163,10 +163,10 @@ class DBProvider {
         return res.isNotEmpty ? Parcela.fromJson(res.first) : null;
     }
 
-    Future<Testplaga> getTestId(String id) async{
+    Future<TestSuelo> getTestId(String id) async{
         final db = await database;
-        final res = await db.query('Testplaga', where: 'id = ?', whereArgs: [id]);
-        return res.isNotEmpty ? Testplaga.fromJson(res.first) : null;
+        final res = await db.query('TestSuelo', where: 'id = ?', whereArgs: [id]);
+        return res.isNotEmpty ? TestSuelo.fromJson(res.first) : null;
     }
 
     Future<List<Parcela>> getTodasParcelasIdFinca(String idFinca) async{
@@ -226,10 +226,10 @@ class DBProvider {
 
     }
 
-    Future<int> updateTestPlaga( Testplaga nuevaPlaga ) async {
+    Future<int> updateTestSuelo( TestSuelo nuevaPlaga ) async {
 
         final db  = await database;
-        final res = await db.update('TestPlaga', nuevaPlaga.toJson(), where: 'id = ?', whereArgs: [nuevaPlaga.id] );
+        final res = await db.update('TestSuelo', nuevaPlaga.toJson(), where: 'id = ?', whereArgs: [nuevaPlaga.id] );
         return res;
 
     }
@@ -251,10 +251,10 @@ class DBProvider {
         return res;
     }
 
-    Future<int> deleteTestPlaga( String idTest ) async {
+    Future<int> deleteTestSuelo( String idTest ) async {
 
         final db  = await database;
-        final res = await db.delete('TestPlaga', where: 'id = ?', whereArgs: [idTest]);
+        final res = await db.delete('TestSuelo', where: 'id = ?', whereArgs: [idTest]);
         return res;
     }
 

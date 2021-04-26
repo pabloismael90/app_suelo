@@ -5,8 +5,9 @@ import 'package:app_suelo/src/pages/galeria/image.dart';
 import 'package:app_suelo/src/pages/galeria/list_galeria.dart';
 import 'package:app_suelo/src/pages/parcelas/parcela_form.dart';
 import 'package:app_suelo/src/pages/parcelas/parcelas_page.dart';
-import 'package:app_suelo/src/pages/suelo/testplaga_form.dart';
-import 'package:app_suelo/src/pages/suelo/testplaga_page.dart';
+import 'package:app_suelo/src/pages/recorrido/estaciones_page.dart';
+import 'package:app_suelo/src/pages/suelo/testSuelo_form.dart';
+import 'package:app_suelo/src/pages/suelo/testSuelo_page.dart';
 import 'package:app_suelo/src/utils/constants.dart';
 import 'package:flutter/material.dart';
  
@@ -54,7 +55,8 @@ class MyApp extends StatelessWidget {
                 //test
                 'tests' :  ( BuildContext context ) => TestPage(),
                 'addTest' : ( BuildContext context ) => AgregarTest(),
-                //estaciones
+                //toma de datos
+                'tomaDatos' : ( BuildContext context ) => TodaDatos(),
                 
                 
                 //Galeria de imagenes

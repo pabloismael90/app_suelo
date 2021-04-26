@@ -1,6 +1,6 @@
 //import 'dart:html';
 
-import 'package:app_suelo/src/models/testplaga_model.dart';
+import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,7 @@ class _AgregarTestState extends State<AgregarTest> {
 
 
 
-    Testplaga plaga = new Testplaga();
+    TestSuelo plaga = new TestSuelo();
     final fincasBloc = new FincasBloc();
 
     bool _guardando = false;
@@ -35,7 +35,7 @@ class _AgregarTestState extends State<AgregarTest> {
     String _fecha = '';
     TextEditingController _inputfecha = new TextEditingController();
 
-    List<Testplaga> mainlistplagas ;
+    List<TestSuelo> mainlistplagas ;
 
     List mainparcela;
     TextEditingController _control;
@@ -85,7 +85,7 @@ class _AgregarTestState extends State<AgregarTest> {
                                                 Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                                                     child:Text(
-                                                        '3 Estaciones',
+                                                        'Recorrido de parcela',
                                                         style: Theme.of(context).textTheme
                                                             .headline6
                                                             .copyWith(fontSize: 16)
@@ -94,7 +94,7 @@ class _AgregarTestState extends State<AgregarTest> {
                                                 Padding(
                                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                                                     child:Text(
-                                                        '10 Plantas por estaciones',
+                                                        '5 puntos',
                                                         style: Theme.of(context).textTheme
                                                             .headline6
                                                             .copyWith(fontSize: 16)

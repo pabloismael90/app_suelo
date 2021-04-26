@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-Testplaga testplagaFromJson(String str) => Testplaga.fromJson(json.decode(str));
+TestSuelo testSueloFromJson(String str) => TestSuelo.fromJson(json.decode(str));
 
-String testplagaToJson(Testplaga data) => json.encode(data.toJson());
+String testSueloToJson(TestSuelo data) => json.encode(data.toJson());
 
-class Testplaga {
-    Testplaga({
+class TestSuelo {
+    TestSuelo({
         this.id,
         this.idFinca = '',
         this.idLote = '',
@@ -19,7 +19,7 @@ class Testplaga {
     int estaciones;
     String fechaTest;
 
-    factory Testplaga.fromJson(Map<String, dynamic> json) => Testplaga(
+    factory TestSuelo.fromJson(Map<String, dynamic> json) => TestSuelo(
         id: json["id"],
         idFinca: json["idFinca"],
         idLote: json["idLote"],

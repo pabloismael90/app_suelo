@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:app_suelo/src/models/decisiones_model.dart';
 import 'package:app_suelo/src/models/planta_model.dart';
-import 'package:app_suelo/src/models/testplaga_model.dart';
+import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 
 class FincasBloc {
@@ -22,7 +22,7 @@ class FincasBloc {
 
     final _fincasController = StreamController<List<Finca>>.broadcast();
     final _parcelasController = StreamController<List<Parcela>>.broadcast();
-    final _plagaController = StreamController<List<Testplaga>>.broadcast();
+    final _plagaController = StreamController<List<TestSuelo>>.broadcast();
     final _plantaController = StreamController<List<Planta>>.broadcast();
     final _countPlantaControl = StreamController<List<Planta>>.broadcast();
     final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
@@ -33,7 +33,7 @@ class FincasBloc {
 
     Stream<List<Finca>> get fincaStream => _fincasController.stream;
     Stream<List<Parcela>> get parcelaStream => _parcelasController.stream;
-    Stream<List<Testplaga>> get plagaStream => _plagaController.stream;
+    Stream<List<TestSuelo>> get plagaStream => _plagaController.stream;
     Stream<List<Planta>> get plantaStream => _plantaController.stream;
     Stream<List<Planta>> get countPlanta => _countPlantaControl.stream;
     Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
@@ -98,17 +98,17 @@ class FincasBloc {
 
     //Plagas
     obtenerPlagas() async {
-        _plagaController.sink.add( await DBProvider.db.getTodasTestPlaga() );
+        _plagaController.sink.add( await DBProvider.db.getTodasTestSuelo() );
     }
     
-    addPlaga( Testplaga nuevaPlaga) async{
-        await DBProvider.db.nuevoTestPlaga(nuevaPlaga);
+    addPlaga( TestSuelo nuevaTest) async{
+        await DBProvider.db.nuevoTestSuelo(nuevaTest);
         obtenerPlagas();
         //obtenerParcelasIdFinca(idFinca);
     }
 
-    borrarTestPlaga( String idTest) async{
-        await DBProvider.db.deleteTestPlaga(idTest);
+    borrarTestSuelo( String idTest) async{
+        await DBProvider.db.deleteTestSuelo(idTest);
         obtenerPlagas();
     }
 
