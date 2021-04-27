@@ -45,7 +45,7 @@ dependencies:
   #Storage
   #ext_storage: ^1.0.3
   #imagenes
-  flutter_svg: ^0.19.1
+  flutter_svg: ^0.19.2+1
   #Indicador Circular o lineal
   percent_indicator: ^2.1.9+1
   #Visor img

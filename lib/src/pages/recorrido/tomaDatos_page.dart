@@ -37,28 +37,32 @@ class _TodaDatosState extends State<TodaDatos> {
             body: Column(
                 children: [
                     escabezadoEstacion( context, suelo ),
-                    TitulosPages(titulo: 'Estaciones'),
+                    TitulosPages(titulo: 'Titulo'),
                     Divider(),
                     Expanded(
-                        child: SingleChildScrollView(
-                            child: Text('no se'),
+                        
+                            child: ListView(
+                                children: [
+                                    _cardTest('Recorrido de parcela', 'recorridoPage'), 
+                                    _cardTest('Balance nutrientes', 'balancePage')
+                                ],
+                            ),
                         ),
-                    ),
+                    
                 ],
             ),
             // bottomNavigationBar: BottomAppBar(
-            //     child: _tomarDecisiones(countEstaciones, poda)
+            //     child: _tomarDecisiones(countEstaciones, suelo)
             // ),
         );
     }
 
 
 
-    Widget escabezadoEstacion( BuildContext context, TestSuelo poda ){
-
+    Widget escabezadoEstacion( BuildContext context, TestSuelo suelo ){
 
         return FutureBuilder(
-            future: _getdataFinca(poda),
+            future: _getdataFinca(suelo),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (!snapshot.hasData) {
                     return Center(child: CircularProgressIndicator());
@@ -118,99 +122,58 @@ class _TodaDatosState extends State<TodaDatos> {
         );        
     }
 
-    // Widget  _listaDeEstaciones( BuildContext context, TestPoda poda, List countEstaciones){
-    //     return ListView.builder(
-    //         itemBuilder: (context, index) {
-    //             String estadoConteo;
-    //             if (countEstaciones[index] >= 10){
-    //                 estadoConteo =  'Completo';
-    //             }else{
-    //                estadoConteo =  'Incompleto'; 
-    //             }
-    //             return GestureDetector(
+    Widget _cardTest(String titulo, String url){
+        return GestureDetector(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                     
-    //                 child: _cardTest(index+1,countEstaciones[index], estadoConteo),
-    //                 onTap: () => Navigator.pushNamed(context, 'plantas', arguments: [poda, index]),
-    //             );
-                
-               
-    //         },
-    //         shrinkWrap: true,
-    //         itemCount:  poda.estaciones,
-    //         padding: EdgeInsets.only(bottom: 30.0),
-    //         controller: ScrollController(keepScrollOffset: false),
-    //     );
-
-    // }
-
-    // Widget _cardTest(int estacion, int numeroPlantas, String estado){
-    //     return Container(
-    //         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-    //         width: double.infinity,
-    //         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                
-    //             decoration: BoxDecoration(
-    //                 color: Colors.white,
-    //                 borderRadius: BorderRadius.circular(13),
-    //                 boxShadow: [
-    //                     BoxShadow(
-    //                             color: Color(0xFF3A5160)
-    //                                 .withOpacity(0.05),
-    //                             offset: const Offset(1.1, 1.1),
-    //                             blurRadius: 17.0),
-    //                     ],
-    //             ),
-    //             child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //                 children: [
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(13),
+                        boxShadow: [
+                            BoxShadow(
+                                    color: Color(0xFF3A5160)
+                                        .withOpacity(0.05),
+                                    offset: const Offset(1.1, 1.1),
+                                    blurRadius: 17.0),
+                            ],
+                    ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
                         
-    //                     Flexible(
-    //                         child: Column(
-    //                             crossAxisAlignment: CrossAxisAlignment.start,
-    //                             children: <Widget>[
-                                
-    //                                 Padding(
-    //                                     padding: EdgeInsets.only(top: 10, bottom: 10.0),
-    //                                     child: Text(
-    //                                         "Estación $estacion",
-    //                                         softWrap: true,
-    //                                         overflow: TextOverflow.ellipsis,
-    //                                         maxLines: 2,
-    //                                         style: Theme.of(context).textTheme.headline6,
-    //                                     ),
-    //                                 ),
-                                    
-                                    
-    //                                 Padding(
-    //                                     padding: EdgeInsets.only( bottom: 10.0),
-    //                                     child: Text(
-    //                                         '$estado',
-    //                                         style: TextStyle(color: kLightBlackColor),
-    //                                     ),
-    //                                 ),
-    //                             ],  
-    //                         ),
-    //                     ),
-    //                     Container(
-    //                         child: CircularPercentIndicator(
-    //                             radius: 70.0,
-    //                             lineWidth: 5.0,
-    //                             animation: true,
-    //                             percent: numeroPlantas/10,
-    //                             center: new Text("${(numeroPlantas/10)*100}%"),
-    //                             progressColor: Color(0xFF498C37),
-    //                         ),
-    //                     )
+                        Padding(
+                            padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                            child: Text(
+                                titulo,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: Theme.of(context).textTheme.headline6,
+                            ),
+                        ),
+                        Container(
+                            child: Icon(Icons.check_circle, 
+                                //color: countEstacion == 0 ? Colors.black38 : Colors.green[900],
+                                color: Colors.black38,
+                                size: 30,
+                            ),
+                            
+                        ) 
                         
                         
                         
-    //                 ],
-    //             ),
-    //     );
-    // }
+                    ],
+                ),
+            ),
+            onTap: () => Navigator.pushNamed(context, url, arguments: []),
+        );
+    }
    
 
-    // Widget  _tomarDecisiones(List countEstaciones, TestPoda poda){
+    // Widget  _tomarDecisiones(List countEstaciones, Testsuelo suelo){
         
     //     if(countEstaciones[0] >= 10 && countEstaciones[1] >= 10 && countEstaciones[2] >= 10){
             
@@ -239,7 +202,7 @@ class _TodaDatosState extends State<TodaDatos> {
     //                                         .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
     //                                 ),
     //                                 padding:EdgeInsets.all(13),
-    //                                 onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: poda),
+    //                                 onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: suelo),
     //                             )
     //                         ),
     //                     );
@@ -260,7 +223,7 @@ class _TodaDatosState extends State<TodaDatos> {
     //                                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
     //                             ),
     //                             padding:EdgeInsets.all(13),
-    //                             onPressed: () => Navigator.pushNamed(context, 'reporte', arguments: poda.id),
+    //                             onPressed: () => Navigator.pushNamed(context, 'reporte', arguments: suelo.id),
     //                         )
     //                     ),
     //                 );

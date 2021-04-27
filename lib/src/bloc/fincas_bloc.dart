@@ -6,6 +6,8 @@ import 'package:app_suelo/src/models/planta_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 
+import '../models/decisiones_model.dart';
+
 class FincasBloc {
 
     static final FincasBloc _singleton = new FincasBloc._internal();
@@ -25,7 +27,8 @@ class FincasBloc {
     final _plagaController = StreamController<List<TestSuelo>>.broadcast();
     final _plantaController = StreamController<List<Planta>>.broadcast();
     final _countPlantaControl = StreamController<List<Planta>>.broadcast();
-    final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
+    final _puntosControl = StreamController<List<Punto>>.broadcast();
+    //final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
     
 
     final _fincasSelectControl = StreamController<List<Map<String, dynamic>>>.broadcast();
@@ -36,7 +39,8 @@ class FincasBloc {
     Stream<List<TestSuelo>> get plagaStream => _plagaController.stream;
     Stream<List<Planta>> get plantaStream => _plantaController.stream;
     Stream<List<Planta>> get countPlanta => _countPlantaControl.stream;
-    Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
+    Stream<List<Punto>> get puntoStream => _puntosControl.stream;
+    //Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
 
 
     Stream<List<Map<String, dynamic>>> get fincaSelect => _fincasSelectControl.stream;
@@ -113,8 +117,15 @@ class FincasBloc {
     }
 
 
-    //Plantas
-    
+    //Puntos
+    obtenerPuntos(String idTest) async {
+        _puntosControl.sink.add( await DBProvider.db.getPuntosIdTest(idTest) );
+    }
+
+    addPunto( Punto nuevaPunto) async{
+        await DBProvider.db.nuevoPunto(nuevaPunto);
+        obtenerPuntos(nuevaPunto.idTest);
+    }
 
     
 
@@ -136,7 +147,8 @@ class FincasBloc {
         _plagaController?.close();
         _plantaController?.close();
         _countPlantaControl?.close();
-        _decisionesControl?.close();
+        //_decisionesControl?.close();
+        _puntosControl?.close();
     }
 
     

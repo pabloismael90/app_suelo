@@ -10,6 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:app_suelo/src/models/finca_model.dart';
 export 'package:app_suelo/src/models/finca_model.dart';
 import 'package:app_suelo/src/models/parcela_model.dart';
+
+import '../models/decisiones_model.dart';
 export 'package:app_suelo/src/models/parcela_model.dart';
 
 class DBProvider {
@@ -77,6 +79,17 @@ class DBProvider {
                     ')'
                 );
 
+                await db.execute(
+                    'CREATE TABLE Punto ('
+                    'id TEXT PRIMARY KEY,'
+                    ' idPregunta INTEGER,'
+                    ' idItem INTEGER,'
+                    ' repuesta INTEGER,'
+                    ' idTest TEXT,'
+                    ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
+                    ')'
+                );
+
                
             }
         
@@ -106,6 +119,11 @@ class DBProvider {
     nuevoTestSuelo( TestSuelo nuevaPlaga ) async {
         final db  = await database;
         final res = await db.insert('TestSuelo',  nuevaPlaga.toJson() );
+        return res;
+    }
+    nuevoPunto( Punto nuevaPunto ) async {
+        final db  = await database;
+        final res = await db.insert('Punto',  nuevaPunto.toJson() );
         return res;
     }
 
@@ -175,6 +193,17 @@ class DBProvider {
         final res = await db.query('Parcela', where: 'idFinca = ?', whereArgs: [idFinca]);
         List<Parcela> list = res.isNotEmpty 
                     ? res.map( (c) => Parcela.fromJson(c) ).toList() 
+                    : [];
+        
+        return list;            
+    }
+
+    Future<List<Punto>> getPuntosIdTest(String idTest) async{
+
+        final db = await database;
+        final res = await db.query('Punto', where: 'idTest = ?', whereArgs: [idTest]);
+        List<Punto> list = res.isNotEmpty 
+                    ? res.map( (c) => Punto.fromJson(c) ).toList() 
                     : [];
         
         return list;            

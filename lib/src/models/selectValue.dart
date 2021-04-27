@@ -73,7 +73,6 @@ List<Map<String, dynamic>> listMeses(){
     return medidaItem;
 }
 
-
 List<Map<String, dynamic>> variedadCacao(){
     final List<Map<String, dynamic>>  variedadesCacao = [
             {
@@ -105,237 +104,180 @@ List<Map<String, dynamic>> variedadCacao(){
     return variedadesCacao;
 }
 
-List<Map<String, dynamic>> plagasCacao(){
-    final List<Map<String, dynamic>>  plagasCacao = [
+
+
+
+List<Map<String, dynamic>> puntos1(){
+    final List<Map<String, dynamic>>  repuesta = [
+        {
+            'value': '0',
+            'label': 'No'
+        },
+        {
+            'value': '1',
+            'label': 'Algo'
+        },
+        {
+            'value': '2',
+            'label': 'Severo'
+        }
+
+    ];
+
+    return repuesta;
+}
+
+List<Map<String, dynamic>> puntos2(){
+    final List<Map<String, dynamic>>  repuesta = [
+        {
+            'value': '0',
+            'label': 'No'
+        },
+        {
+            'value': '1',
+            'label': 'Mala'
+        },
+        {
+            'value': '2',
+            'label': 'Buena'
+        }
+
+    ];
+
+    return repuesta;
+}
+
+
+List<Map<String, dynamic>> erosion(){
+    final List<Map<String, dynamic>>  erosion = [
             {
                 'value': '0', 
-                'label': 'Monilia'
+                'label': 'Deslizamiento'
             },
             {
                 'value': '1', 
-                'label': 'Mazorca negra'
+                'label': 'Evidencia de erosión'
             },
             {
                 'value': '2', 
-                'label': 'Mal de machete'
+                'label': 'Cárcava'
             },
             {
                 'value': '3', 
-                'label': 'Ardilla/Rata'
+                'label': 'Acumulación de sedimiento'
             },
             {
                 'value': '4', 
-                'label': 'Barrenador'
+                'label': 'Pedegrosidad'
             },
             {
                 'value': '5', 
-                'label': 'Chupadores'
-            },
-            {
-                'value': '6', 
-                'label': 'Zompopos'
-            },
-            {
-                'value': '7', 
-                'label': 'Bejuco'
-            },
-            {
-                'value': '8', 
-                'label': 'Tanda/Planta parasitaria'
-            },
-            {
-                'value': '9', 
-                'label': 'Deficiencia de nutrientes'
-            },
+                'label': 'Raíces desnudos'
+            }
 
         ];
 
-    return plagasCacao;
+    return erosion;
 }
 
-List<Map<String, dynamic>> situacionPlaga(){
-    final List<Map<String, dynamic>>  situacionPlaga = [
-        {
-            'value': '0',
-            'label': 'Varias plagas en todos los puntos'
-        },
-        {
-            'value': '1',
-            'label': 'Varias plagas en algunos puntos'
-        },
-        {
-            'value': '2',
-            'label': 'Pocas plagas en todos los puntos'
-        },
-        {
-            'value': '3',
-            'label': 'Pocas plagas en algunos puntos'
-        },
-        {
-            'value': '4',
-            'label': 'Una plaga en todos los puntos'
-        },
-        {
-            'value': '5',
-            'label': 'Una plaga en algunos puntos'
-        }
+List<Map<String, dynamic>> drenaje(){
+    final List<Map<String, dynamic>>  drenaje = [
+            {
+                'value': '0', 
+                'label': 'Encharcamiento'
+            },
+            {
+                'value': '1', 
+                'label': 'Amarillamiento'
+            },
+            {
+                'value': '2', 
+                'label': 'Enfermedades'
+            },
+            
+        ];
 
-    ];
-
-    return situacionPlaga;
+    return drenaje;
 }
-List<Map<String, dynamic>> problemasPlagaSuelo(){
-    final List<Map<String, dynamic>>  problemasSuelo = [
-        {
-            'value': '0',
-            'label': 'Suelo erosionado'
-        },
-        {
-            'value': '1',
-            'label': 'Suelo poco fértil'
-        },
-        {
-            'value': '2',
-            'label': 'Mucha competencia'
-        },
-        {
-            'value': '3',
-            'label': 'Mal drenaje'
-        },
-        {
-            'value': '4',
-            'label': 'Falta obras de conservación'
-        },
-        {
-            'value': '5',
-            'label': 'Suelo compacto'
-        },
-        {
-            'value': '6',
-            'label': 'Suelo con poca Materia Orgánica'
-        },
-        {
-            'value': '7',
-            'label': 'No usa abono o fertilizante'
-        }
 
-    ];
+List<Map<String, dynamic>> raiz(){
+    final List<Map<String, dynamic>>  raiz = [
+            {
+                'value': '0', 
+                'label': 'Afectación nematodos'
+            },
+            {
+                'value': '1', 
+                'label': 'Afectación hongos'
+            }
+            
+        ];
 
-    return problemasSuelo;
+    return raiz;
 }
-List<Map<String, dynamic>> problemasPlagaSombra(){
-    final List<Map<String, dynamic>>  problemasSombra = [
-        {
-            'value': '0',
-            'label': 'Sombra muy densa'
-        },
-        {
-            'value': '1',
-            'label': 'Sombra muy rala'
-        },
-        {
-            'value': '2',
-            'label': 'Sombra mal distribuida'
-        },
-        {
-            'value': '3',
-            'label': 'Arboles de sombra no adecuada'
-        },
-        {
-            'value': '4',
-            'label': 'Mucha auto-sombra'
-        },
-        {
-            'value': '5',
-            'label': 'Mucho banano'
-        }
 
-    ];
 
-    return problemasSombra;
+List<Map<String, dynamic>> conservacion(){
+    final List<Map<String, dynamic>>  conservacion = [
+            {
+                'value': '0', 
+                'label': 'Barrera muerta'
+            },
+            {
+                'value': '1', 
+                'label': 'Barrera viva'
+            },
+            {
+                'value': '2', 
+                'label': 'Siembra a curva a nivel'
+            },
+            {
+                'value': '3', 
+                'label': 'Terraza'
+            },
+            {
+                'value': '4', 
+                'label': 'Cobertura de piso'
+            }
+
+        ];
+
+    return conservacion;
 }
-List<Map<String, dynamic>> problemasPlagaManejo(){
-    final List<Map<String, dynamic>>  problemasManejo = [
-        {
-            'value': '0',
-            'label': 'Poda no adecuada'
-        },
-        {
-            'value': '1',
-            'label': 'Piso no manejado'
-        },
-        {
-            'value': '2',
-            'label': 'No eliminan mazorcas enfermas'
-        },
-        {
-            'value': '3',
-            'label': 'No hay manejo de plagas'
-        },
-        {
-            'value': '4',
-            'label': 'Plantas desnutridas'
-        },
-        {
-            'value': '5',
-            'label': 'Plantación vieja'
-        },
-        {
-            'value': '6',
-            'label': 'Variedades susceptibles'
-        },
-        {
-            'value': '7',
-            'label': 'Variedades no productivas'
-        }
 
-    ];
+List<Map<String, dynamic>> obrasDrenaje(){
+    final List<Map<String, dynamic>>  conservacion = [
+            {
+                'value': '0', 
+                'label': 'Acequías'
+            },
+            {
+                'value': '1', 
+                'label': 'Canal a largo y ancho'
+            },
+            {
+                'value': '2', 
+                'label': 'Canal alrededor'
+            },
+            {
+                'value': '3', 
+                'label': 'Canal al lado'
+            }
 
-    return problemasManejo;
+        ];
+
+    return conservacion;
 }
-List<Map<String, dynamic>> solucionesXmes(){
-    final List<Map<String, dynamic>>  solucionesXmes = [
-        {
-            'value': '0',
-            'label': 'Recuento de plagas'
-        },
-        {
-            'value': '1',
-            'label': 'Cortar las mazorcas enfermas'
-        },
-        {
-            'value': '2',
-            'label': 'Abonar las plantas'
-        },
-        {
-            'value': '3',
-            'label': 'Aplicar Caldos'
-        },
-        {
-            'value': '4',
-            'label': 'Aplicar Fungicidas'
-        },
-        {
-            'value': '5',
-            'label': 'Manejo de sombra'
-        },
-        {
-            'value': '6',
-            'label': 'Podar las plantas de cacao'
-        },
-        {
-            'value': '7',
-            'label': 'Aplicar venenos para Zompopo'
-        },
-        {
-            'value': '8',
-            'label': 'Control de Comején'
-        }
 
-    ];
 
-    return solucionesXmes;
-}
+
+
+
+
+
+
+
+
 
 
 
