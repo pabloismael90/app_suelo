@@ -43,8 +43,8 @@ class _TodaDatosState extends State<TodaDatos> {
                         
                             child: ListView(
                                 children: [
-                                    _cardTest('Recorrido de parcela', 'recorridoPage'), 
-                                    _cardTest('Balance nutrientes', 'balancePage')
+                                    _cardTest('Recorrido de parcela', 'recorridoPage', suelo), 
+                                    _cardTest('Balance nutrientes', 'balancePage', suelo)
                                 ],
                             ),
                         ),
@@ -122,7 +122,7 @@ class _TodaDatosState extends State<TodaDatos> {
         );        
     }
 
-    Widget _cardTest(String titulo, String url){
+    Widget _cardTest(String titulo, String url, TestSuelo suelo){
         return GestureDetector(
             child: Container(
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -168,7 +168,7 @@ class _TodaDatosState extends State<TodaDatos> {
                     ],
                 ),
             ),
-            onTap: () => Navigator.pushNamed(context, url, arguments: []),
+            onTap: () => Navigator.pushNamed(context, url, arguments: suelo),
         );
     }
    

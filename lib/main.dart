@@ -5,6 +5,7 @@ import 'package:app_suelo/src/pages/galeria/image.dart';
 import 'package:app_suelo/src/pages/galeria/list_galeria.dart';
 import 'package:app_suelo/src/pages/parcelas/parcela_form.dart';
 import 'package:app_suelo/src/pages/parcelas/parcelas_page.dart';
+import 'package:app_suelo/src/pages/recorrido/punto_form.dart';
 import 'package:app_suelo/src/pages/recorrido/puntos_page.dart';
 import 'package:app_suelo/src/pages/recorrido/tomaDatos_page.dart';
 import 'package:app_suelo/src/pages/suelo/testSuelo_form.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         //toma de datos
         'tomaDatos': (BuildContext context) => TodaDatos(),
         'recorridoPage': (BuildContext context) => RecorridoPage(),
+        'agregarPunto': (BuildContext context) => AgregarPunto(),
 
         //Galeria de imagenes
         'galeria': (BuildContext context) => GaleriaImagenes(),
