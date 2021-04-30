@@ -35,7 +35,7 @@ class DBProvider {
 
         final path = join( documentsDirectory.path, 'herramienta.db' );
 
-        //print(path);
+        print(path);
 
         return await openDatabase(
             path,

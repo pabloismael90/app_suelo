@@ -2,7 +2,6 @@
 import 'dart:async';
 
 import 'package:app_suelo/src/models/decisiones_model.dart';
-import 'package:app_suelo/src/models/planta_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 
@@ -25,8 +24,6 @@ class FincasBloc {
     final _fincasController = StreamController<List<Finca>>.broadcast();
     final _parcelasController = StreamController<List<Parcela>>.broadcast();
     final _plagaController = StreamController<List<TestSuelo>>.broadcast();
-    final _plantaController = StreamController<List<Planta>>.broadcast();
-    final _countPlantaControl = StreamController<List<Planta>>.broadcast();
     final _puntosControl = StreamController<List<Punto>>.broadcast();
     //final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
     
@@ -37,8 +34,6 @@ class FincasBloc {
     Stream<List<Finca>> get fincaStream => _fincasController.stream;
     Stream<List<Parcela>> get parcelaStream => _parcelasController.stream;
     Stream<List<TestSuelo>> get plagaStream => _plagaController.stream;
-    Stream<List<Planta>> get plantaStream => _plantaController.stream;
-    Stream<List<Planta>> get countPlanta => _countPlantaControl.stream;
     Stream<List<Punto>> get puntoStream => _puntosControl.stream;
     //Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
 
@@ -145,8 +140,6 @@ class FincasBloc {
         _fincasSelectControl?.close();
         _parcelaSelectControl?.close();
         _plagaController?.close();
-        _plantaController?.close();
-        _countPlantaControl?.close();
         //_decisionesControl?.close();
         _puntosControl?.close();
     }
