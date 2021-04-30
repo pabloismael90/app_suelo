@@ -30,7 +30,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     void checkKeys(){
 
         for(int i = 0 ; i < itemErosion.length ; i ++){
-            checkErosion[itemErosion[i]['value']] = false;
+            checkErosion[itemErosion[i]['value']] = '-1';
         }
        
 
@@ -94,6 +94,37 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         
     }
 
+    Widget _labelTipo(int tipo){
+        
+        return  Column(
+            children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
+                                        .copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                        Container(
+                            width: 60,
+                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
+                        ),
+                        Container(
+                            width: 60,
+                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
+                        ),
+                        Container(
+                            width: 60,
+                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                        ),
+                    ],
+                ),
+                Divider(),
+            ],
+        );
+    }
+
 
     Widget _pageErosion(){
         List<Widget> listHierbaProblema = List<Widget>();
@@ -105,7 +136,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                         child: Padding(
                             padding: EdgeInsets.only(top: 20, bottom: 10),
                             child: Text(
-                                "Titulo",
+                                "Observaciones de erosión",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
                                     .headline5
@@ -114,33 +145,95 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                         )
                     ),
                     Divider(),
+                    
                 ],
             )
             
         );
+        listHierbaProblema.add(
+           _labelTipo(1)
+        );
+        
 
-       
-        for (var i = 0; i < itemErosion.length; i++) {
-            String labelPlaga = itemErosion.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
-            
-            
-            listHierbaProblema.add(
+        listHierbaProblema.add(
 
-                CheckboxListTile(
-                    title: Text('$labelPlaga',
-                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16),
-                    ),
-                    value: checkErosion[itemErosion[i]['value']], 
-                    onChanged: (value) {
-                        setState(() {
-                            checkErosion[itemErosion[i]['value']] = value;
-                            //print(value);
-                        });
-                    },
-                )                  
+            ListView.builder(
+                
+                itemBuilder: (BuildContext context, int index) {
                     
-            );
-        }
+                    String labelPlaga = itemErosion.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    
+                    return Column(
+                        children: [
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value: '1',
+                                                groupValue: checkErosion[itemErosion[index]],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkErosion[itemErosion[index]] = value;
+                                                        print(checkErosion[itemErosion[index]]);
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value:'2',
+                                                groupValue: checkErosion[itemErosion[index]],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkErosion[itemErosion[index]] = value;
+                                                        print(checkErosion[itemErosion[index]]);
+                                                    });
+                                                },
+                                                activeColor: Colors.red[900],
+                                            ),
+                                        ),
+                                    ),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value:'3',
+                                                groupValue: checkErosion[itemErosion[index]],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkErosion[itemErosion[index]] = value;
+                                                        print(checkErosion[itemErosion[index]]);
+                                                    });
+                                                },
+                                                activeColor: Colors.red[900],
+                                            ),
+                                        ),
+                                    ),
+                                
+
+                                ],
+                            ),
+                            Divider()
+                        ],
+                    );
+            
+                },
+                shrinkWrap: true,
+                itemCount: itemErosion.length,
+                physics: NeverScrollableScrollPhysics(),
+            )
+        );
         
         return SingleChildScrollView(
             child: Container(
