@@ -291,8 +291,6 @@ class DBProvider {
 
         final db  = await database;
         final res = await db.delete('Punto', where: 'idTest = ? AND nPunto = ?', whereArgs: [idTest, nPunto]);
-        print(idTest);
-        print(nPunto);
         return res;
     }
 
