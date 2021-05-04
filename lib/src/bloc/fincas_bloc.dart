@@ -1,11 +1,9 @@
 
 import 'dart:async';
 
-import 'package:app_suelo/src/models/decisiones_model.dart';
+import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
-
-import '../models/decisiones_model.dart';
 
 class FincasBloc {
 
@@ -120,6 +118,10 @@ class FincasBloc {
     addPunto( Punto nuevaPunto) async{
         await DBProvider.db.nuevoPunto(nuevaPunto);
         obtenerPuntos(nuevaPunto.idTest);
+    }
+    borrarPunto( Punto punto )async{
+        await DBProvider.db.deletePunto(punto.idTest, punto.nPunto);
+        obtenerPuntos(punto.idTest);
     }
 
     

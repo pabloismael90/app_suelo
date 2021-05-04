@@ -1,5 +1,5 @@
 
-import 'package:app_suelo/src/models/decisiones_model.dart';
+import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 
@@ -27,9 +27,15 @@ class _AgregarPuntoState extends State<AgregarPunto> {
 
     final List<Map<String, dynamic>>  itemErosion = selectMap.erosion();
     final List<Map<String, dynamic>>  itemConservacion = selectMap.conservacion();
+    final List<Map<String, dynamic>>  itemObservacion = selectMap.drenaje();
+    final List<Map<String, dynamic>>  itemObras = selectMap.obrasDrenaje();
+    final List<Map<String, dynamic>>  itemRaiz = selectMap.raiz();
     
     final Map checkErosion = {};
     final Map checkConservacion = {};
+    final Map checkObservacion = {};
+    final Map checkObras = {};
+    final Map checkRaiz = {};
 
     void checkKeys(){
 
@@ -39,6 +45,15 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         for(int i = 0 ; i < itemConservacion.length ; i ++){
             checkConservacion[itemConservacion[i]['value']] = '-1';
         }
+        for(int i = 0 ; i < itemObservacion.length ; i ++){
+            checkObservacion[itemObservacion[i]['value']] = '-1';
+        }
+        for(int i = 0 ; i < itemObras.length ; i ++){
+            checkObras[itemObras[i]['value']] = '-1';
+        }
+        for(int i = 0 ; i < itemRaiz.length ; i ++){
+            checkRaiz[itemRaiz[i]['value']] = '-1';
+        }
        
 
     }
@@ -47,7 +62,8 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     var uuid = Uuid();
     Punto punto = Punto();
     List<Punto> listaPuntos = [];
-    String idTestSuelo;   
+    String idTestSuelo;
+    int numeroPunto;   
     int variableVacia;
     
     @override
@@ -59,12 +75,17 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     @override
     Widget build(BuildContext context) {
 
-        idTestSuelo = ModalRoute.of(context).settings.arguments;
-
+        List dataPuntos = ModalRoute.of(context).settings.arguments;
+        idTestSuelo = dataPuntos[0];
+        numeroPunto = dataPuntos[1]+1;
+        
         List<Widget> pageItem = List<Widget>();
         
         pageItem.add(_pageErosion());
         pageItem.add(_pageConservacion());
+        pageItem.add(_pageObservacion());
+        pageItem.add(_pageObras());
+        pageItem.add(_pageRaiz());
 
         pageItem.add(_botonsubmit(idTestSuelo)); 
 
@@ -404,6 +425,336 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         );
     }
 
+    Widget _pageObservacion(){
+        List<Widget> _pageQuestion = List<Widget>();
+
+        _pageQuestion.add(
+            _tituloPregunta('Observaciones de drenaje')
+            
+        );
+        _pageQuestion.add(
+           _labelTipo(1)
+        );
+        
+
+        _pageQuestion.add(
+
+            ListView.builder(
+                
+                itemBuilder: (BuildContext context, int index) {
+                    
+                    String labelPlaga = itemObservacion.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    
+                    return Column(
+                        children: [
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value: '1',
+                                                groupValue: checkObservacion[itemObservacion[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkObservacion[itemObservacion[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value:'2',
+                                                groupValue: checkObservacion[itemObservacion[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkObservacion[itemObservacion[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value:'3',
+                                                groupValue: checkObservacion[itemObservacion[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkObservacion[itemObservacion[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                
+
+                                ],
+                            ),
+                            Divider()
+                        ],
+                    );
+            
+                },
+                shrinkWrap: true,
+                itemCount: itemObservacion.length,
+                physics: NeverScrollableScrollPhysics(),
+            )
+        );
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:_pageQuestion,)
+            ),
+        );
+    }
+
+    Widget _pageObras(){
+        List<Widget> _pageQuestion = List<Widget>();
+
+        _pageQuestion.add(
+            _tituloPregunta('Obras de drenaje')
+            
+        );
+        _pageQuestion.add(
+           _labelTipo(2)
+        );
+        
+
+        _pageQuestion.add(
+
+            ListView.builder(
+                
+                itemBuilder: (BuildContext context, int index) {
+                    
+                    String labelPlaga = itemObras.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    
+                    return Column(
+                        children: [
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value: '1',
+                                                groupValue: checkObras[itemObras[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkObras[itemObras[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value:'2',
+                                                groupValue: checkObras[itemObras[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkObras[itemObras[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value:'3',
+                                                groupValue: checkObras[itemObras[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkObras[itemObras[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                
+
+                                ],
+                            ),
+                            Divider()
+                        ],
+                    );
+            
+                },
+                shrinkWrap: true,
+                itemCount: itemObras.length,
+                physics: NeverScrollableScrollPhysics(),
+            )
+        );
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:_pageQuestion,)
+            ),
+        );
+    }
+
+    Widget _pageRaiz(){
+        List<Widget> _pageQuestion = List<Widget>();
+
+        _pageQuestion.add(
+            _tituloPregunta('Enfermedades de raíz')
+            
+        );
+        _pageQuestion.add(
+           _labelTipo(1)
+        );
+        
+
+        _pageQuestion.add(
+
+            ListView.builder(
+                
+                itemBuilder: (BuildContext context, int index) {
+                    
+                    String labelPlaga = itemRaiz.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    
+                    return Column(
+                        children: [
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value: '1',
+                                                groupValue: checkRaiz[itemRaiz[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkRaiz[itemRaiz[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value:'2',
+                                                groupValue: checkRaiz[itemRaiz[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkRaiz[itemRaiz[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                    Container(
+                                        width: 60,
+                                        child: Transform.scale(
+                                            scale: 1.2,
+                                            child: Radio(
+                                                value:'3',
+                                                groupValue: checkRaiz[itemRaiz[index]['value']],
+                                                onChanged: (value){
+                                                    setState(() {
+                                                        checkRaiz[itemRaiz[index]['value']] = value;
+                                                    });
+                                                },
+                                                activeColor: Colors.teal[900],
+                                            ),
+                                        ),
+                                    ),
+                                
+
+                                ],
+                            ),
+                            Divider()
+                        ],
+                    );
+            
+                },
+                shrinkWrap: true,
+                itemCount: itemRaiz.length,
+                physics: NeverScrollableScrollPhysics(),
+            )
+        );
+        
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:_pageQuestion,)
+            ),
+        );
+    }
+
 
     Widget  _botonsubmit(String idpoda){
 
@@ -460,10 +811,11 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         checksPregunta.forEach((key, value) {
             final Punto itemPunto = Punto();
             itemPunto.id = uuid.v1();
+            itemPunto.idTest = idTestSuelo;
+            itemPunto.nPunto = numeroPunto;
             itemPunto.idPregunta = pregunta;
             itemPunto.idItem = int.parse(key);
             itemPunto.repuesta = int.parse(value);
-            itemPunto.idTest = idTestSuelo;
             if (itemPunto.repuesta == -1) {
                 variableVacia ++;
             }

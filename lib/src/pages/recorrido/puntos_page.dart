@@ -1,5 +1,5 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
-import 'package:app_suelo/src/models/decisiones_model.dart';
+import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/utils/constants.dart';
 import 'package:app_suelo/src/utils/widget/dialogDelete.dart';
@@ -22,7 +22,6 @@ class _RecorridoPageState extends State<RecorridoPage> {
     Widget build(BuildContext context) {
         
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
-        List<Punto> puntos = [];
         fincasBloc.obtenerPuntos(suelo.id);
 
         return Scaffold(
@@ -33,8 +32,8 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     if (!snapshot.hasData) {
                         return CircularProgressIndicator();
                     }
-                    print(snapshot.data);
-                    puntos = snapshot.data;
+                    
+                    List<Punto> puntos = snapshot.data;
 
                     if (puntos.length == 0) {
                         return Column(
@@ -71,7 +70,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     color: kBackgroundColor,
                     child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
-                        child: _countPiso(puntos, suelo)
+                        child: _countPiso(suelo)
                     ),
                 ),
             ),
@@ -82,7 +81,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
 
         return ListView.builder(
             itemBuilder: (context, index) {
-
+                
                 return Dismissible(
                     key: UniqueKey(),
                     child: GestureDetector(
@@ -123,7 +122,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     direction: DismissDirection.endToStart,
                     background: backgroundTrash(context),
                     movementDuration: Duration(milliseconds: 500),
-                    //onDismissed: (direction) => fincasBloc.borrarPaso(paso[index]),
+                    onDismissed: (direction) => fincasBloc.borrarPunto(puntos[index]),
                 );
                 
             },
@@ -135,20 +134,25 @@ class _RecorridoPageState extends State<RecorridoPage> {
 
     }
 
-    Widget  _countPiso(List<Punto> puntos, TestSuelo suelo){
+    Widget  _countPiso(TestSuelo suelo){
                 
-                int value = puntos.length;
-                
-                if (value < 5) {
+        return StreamBuilder<List<Punto>>(
+            stream: fincasBloc.puntoStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+
+                 if (snapshot.data.length < 5) {
                     return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                            Text('Puntos: $value / 5',
+                            Text('Puntos: ${snapshot.data.length} / 5',
                                 style: Theme.of(context).textTheme
                                         .headline6
                                         .copyWith(fontWeight: FontWeight.w600)
                             ),
-                            _addPaso(suelo ),
+                            _addPaso(suelo, snapshot.data.length ),
                         ],
                     );
                 }else{
@@ -157,30 +161,36 @@ class _RecorridoPageState extends State<RecorridoPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                             Container(
-                                child: Text('Pasos: $value / 20',
+                                child: Text('Pasos: ${snapshot.data.length} / 5',
                                     style: Theme.of(context).textTheme
                                             .headline6
                                             .copyWith(fontWeight: FontWeight.w600)
                                 ),
                             ),
                             RaisedButton.icon(
-                                icon:Icon(Icons.navigate_next_rounded),                               
-                                label: Text('Siguiente caminata',
+                                icon:Icon(Icons.check_box_outlined),                               
+                                label: Text('Finalizar',
                                     style: Theme.of(context).textTheme
                                         .headline6
                                         .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16)
                                 ),
                                 padding:EdgeInsets.all(13),
-                                onPressed:() => Navigator.popAndPushNamed(context, 'pasos',),
+                                onPressed:() => Navigator.pop(context, 'tomaDatos'),
                             )
                         ],
                     );
                 }
 
+            },
+        );
+                
+               
+
             
     }
 
-    Widget  _addPaso(TestSuelo suelo){
+    Widget  _addPaso(TestSuelo suelo, int indicePunto){
+        //print(indicePunto);
         return RaisedButton.icon(
             
             icon:Icon(Icons.add_circle_outline_outlined),
@@ -191,7 +201,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16)
             ),
             padding:EdgeInsets.all(13),
-            onPressed:() => Navigator.pushNamed(context, 'agregarPunto', arguments: suelo.id),
+            onPressed:() => Navigator.pushNamed(context, 'agregarPunto', arguments: [suelo.id, indicePunto]),
         );
     }
     

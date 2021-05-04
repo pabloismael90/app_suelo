@@ -11,7 +11,7 @@ import 'package:app_suelo/src/models/finca_model.dart';
 export 'package:app_suelo/src/models/finca_model.dart';
 import 'package:app_suelo/src/models/parcela_model.dart';
 
-import '../models/decisiones_model.dart';
+import '../models/punto_model.dart';
 export 'package:app_suelo/src/models/parcela_model.dart';
 
 class DBProvider {
@@ -82,10 +82,11 @@ class DBProvider {
                 await db.execute(
                     'CREATE TABLE Punto ('
                     'id TEXT PRIMARY KEY,'
+                    ' idTest TEXT,'
+                    ' nPunto INTEGER,'
                     ' idPregunta INTEGER,'
                     ' idItem INTEGER,'
                     ' repuesta INTEGER,'
-                    ' idTest TEXT,'
                     ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
                     ')'
                 );
@@ -201,11 +202,10 @@ class DBProvider {
     Future<List<Punto>> getPuntosIdTest(String idTest) async{
 
         final db = await database;
-        final res = await db.query('Punto', where: 'idTest = ?', whereArgs: [idTest]);
+        final res = await db.rawQuery("SELECT * FROM Punto WHERE idTest = '$idTest' group by nPunto");
         List<Punto> list = res.isNotEmpty 
                     ? res.map( (c) => Punto.fromJson(c) ).toList() 
                     : [];
-        
         return list;            
     }
 
@@ -284,6 +284,15 @@ class DBProvider {
 
         final db  = await database;
         final res = await db.delete('TestSuelo', where: 'id = ?', whereArgs: [idTest]);
+        return res;
+    }
+
+    Future<int> deletePunto( String idTest, int nPunto ) async {
+
+        final db  = await database;
+        final res = await db.delete('Punto', where: 'idTest = ? AND nPunto = ?', whereArgs: [idTest, nPunto]);
+        print(idTest);
+        print(nPunto);
         return res;
     }
 

@@ -1,24 +1,21 @@
 class Punto {
     Punto({
         this.id,
-        this.idTest,
-        this.nPunto,
+        this.idPunto,
         this.idPregunta,
         this.idItem,
         this.repuesta,
     });
 
     String id;
-    String idTest;
-    int nPunto;
+    String idPunto;
     int idPregunta;
     int idItem;
     int repuesta;
 
     factory Punto.fromJson(Map<String, dynamic> json) => Punto(
         id: json["id"],
-        idTest: json["idTest"],
-        nPunto: json["nPunto"],
+        idPunto: json["idPunto"],
         idPregunta: json["idPregunta"],
         idItem: json["idItem"],
         repuesta: json["repuesta"],
@@ -26,8 +23,7 @@ class Punto {
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "idTest": idTest,
-        "nPunto": nPunto,
+        "idPunto": idPunto,
         "idPregunta": idPregunta,
         "idItem": idItem,
         "repuesta": repuesta,

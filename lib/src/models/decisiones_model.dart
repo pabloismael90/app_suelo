@@ -1,5 +1,5 @@
-class Punto {
-    Punto({
+class Desiciones {
+    Desiciones({
         this.id,
         this.idPregunta,
         this.idItem,
@@ -13,7 +13,7 @@ class Punto {
     int repuesta;
     String idTest;
 
-    factory Punto.fromJson(Map<String, dynamic> json) => Punto(
+    factory Desiciones.fromJson(Map<String, dynamic> json) => Desiciones(
         id: json["id"],
         idPregunta: json["idPregunta"],
         idItem: json["idItem"],
