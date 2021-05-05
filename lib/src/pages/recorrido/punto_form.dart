@@ -831,6 +831,9 @@ class _AgregarPuntoState extends State<AgregarPunto> {
 
         _listaPuntos(checkErosion, 1);
         _listaPuntos(checkConservacion, 2);
+        _listaPuntos(checkObservacion, 3);
+        _listaPuntos(checkObras, 4);
+        _listaPuntos(checkRaiz, 5);
 
 
         if  ( variableVacia !=  0){

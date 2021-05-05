@@ -14,6 +14,9 @@ class TodaDatos extends StatefulWidget {
   _TodaDatosState createState() => _TodaDatosState();
 }
 
+int flagRecorrido = 0;
+int flagBalance = 0;
+
 class _TodaDatosState extends State<TodaDatos> {
 
     final fincasBloc = new FincasBloc();
@@ -26,11 +29,16 @@ class _TodaDatosState extends State<TodaDatos> {
         return [finca, parcela];
     }
 
+
+    @override
+    void initState() {
+        super.initState();
+    }
     @override
     Widget build(BuildContext context) {
         
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
-        
+        fincasBloc.obtenerPuntos(suelo.id);
 
        return Scaffold(
             appBar: AppBar(),
@@ -43,7 +51,7 @@ class _TodaDatosState extends State<TodaDatos> {
                         
                             child: ListView(
                                 children: [
-                                    _cardTest('Recorrido de parcela', 'recorridoPage', suelo), 
+                                    _cardRecorrido(suelo), 
                                     _cardTest('Balance nutrientes', 'balancePage', suelo)
                                 ],
                             ),
@@ -122,7 +130,72 @@ class _TodaDatosState extends State<TodaDatos> {
         );        
     }
 
+    Widget _cardRecorrido(TestSuelo suelo){
+
+        return StreamBuilder(
+            stream: fincasBloc.puntoStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+                
+                flagRecorrido = snapshot.data.length;
+                
+                
+                return GestureDetector(
+                    child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                            
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(13),
+                            boxShadow: [
+                                BoxShadow(
+                                        color: Color(0xFF3A5160)
+                                            .withOpacity(0.05),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 17.0),
+                                ],
+                        ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                                
+                                Padding(
+                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                    child: Text(
+                                        'Recorrido de parcela',
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.headline6,
+                                    ),
+                                ),
+                                Container(
+                                    child: Icon(Icons.check_circle, 
+                                        color: flagRecorrido < 5 ? Colors.black38 : Colors.green[900],
+                                        size: 30,
+                                    ),
+                                    
+                                ) 
+                                
+                                
+                                
+                            ],
+                        ),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, 'recorridoPage', arguments: suelo),
+                );
+            },
+        );
+
+    }
+    
+    
     Widget _cardTest(String titulo, String url, TestSuelo suelo){
+        
         return GestureDetector(
             child: Container(
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

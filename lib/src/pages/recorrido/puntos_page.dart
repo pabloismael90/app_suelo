@@ -53,7 +53,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     
                     return Column(
                         children: [
-                            TitulosPages(titulo: 'Titulo'),
+                            TitulosPages(titulo: 'Recorrido de parcela'),
                             Divider(),                            
                             Expanded(
                                 child: SingleChildScrollView(
