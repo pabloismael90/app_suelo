@@ -5,7 +5,10 @@ import 'package:app_suelo/src/pages/galeria/image.dart';
 import 'package:app_suelo/src/pages/galeria/list_galeria.dart';
 import 'package:app_suelo/src/pages/parcelas/parcela_form.dart';
 import 'package:app_suelo/src/pages/parcelas/parcelas_page.dart';
-import 'package:app_suelo/src/pages/recorrido/balance_page.dart';
+import 'package:app_suelo/src/pages/recorrido/CosechaAnual.dart';
+import 'package:app_suelo/src/pages/recorrido/abono_form.dart';
+import 'package:app_suelo/src/pages/recorrido/abonos_page.dart';
+import 'package:app_suelo/src/pages/recorrido/analisisSuelo.dart';
 import 'package:app_suelo/src/pages/recorrido/punto_form.dart';
 import 'package:app_suelo/src/pages/recorrido/puntos_page.dart';
 import 'package:app_suelo/src/pages/recorrido/tomaDatos_page.dart';
@@ -59,7 +62,10 @@ class MyApp extends StatelessWidget {
                 'tomaDatos': (BuildContext context) => TodaDatos(),
                 'recorridoPage': (BuildContext context) => RecorridoPage(),
                 'agregarPunto': (BuildContext context) => AgregarPunto(),
-                'balancePage': (BuildContext context) => BalancePage(),
+                'cosechaAnual': (BuildContext context) => CosechaAnual(),
+                'analisisSuelo': (BuildContext context) => AnalisiSuelo(),
+                'abonosPage': (BuildContext context) => AbonosPage(),
+                'AddAbono': (BuildContext context) => AddAbono(),
 
                 //Galeria de imagenes
                 'galeria': (BuildContext context) => GaleriaImagenes(),

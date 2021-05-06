@@ -4,7 +4,6 @@ import 'package:app_suelo/src/models/parcela_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:app_suelo/src/utils/constants.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 
 class TodaDatos extends StatefulWidget {
@@ -45,17 +44,29 @@ class _TodaDatosState extends State<TodaDatos> {
             body: Column(
                 children: [
                     escabezadoEstacion( context, suelo ),
-                    TitulosPages(titulo: 'Titulo'),
-                    Divider(),
                     Expanded(
                         
-                            child: ListView(
-                                children: [
-                                    _cardRecorrido(suelo), 
-                                    _cardTest('Balance nutrientes', 'balancePage', suelo)
-                                ],
-                            ),
+                    child: ListView(
+                            children: [
+                                _cardRecorrido(suelo),
+                                Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                        'Balance nutrientes',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context).textTheme
+                                            .headline5
+                                            .copyWith(fontWeight: FontWeight.w900, fontSize: 22 )
+                                    ),
+                                ),
+                                Divider(),
+
+                                _cardBalanceItem('Cosecha anual', 'cosechaAnual', suelo),
+                                _cardBalanceItem('Uso de abono anual', 'abonosPage', suelo),
+                                _cardBalanceItem('Análisis de suelo', 'analisisSuelo', suelo),
+                            ],
                         ),
+                    ),
                     
                 ],
             ),
@@ -194,7 +205,7 @@ class _TodaDatosState extends State<TodaDatos> {
     }
     
     
-    Widget _cardTest(String titulo, String url, TestSuelo suelo){
+    Widget _cardBalanceItem(String titulo, String url, TestSuelo suelo){
         
         return GestureDetector(
             child: Container(

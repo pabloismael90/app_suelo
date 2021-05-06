@@ -147,6 +147,7 @@ List<Map<String, dynamic>> puntos2(){
     return repuesta;
 }
 
+//Preguntas de Puntos
 
 List<Map<String, dynamic>> erosion(){
     final List<Map<String, dynamic>>  erosion = [
@@ -215,7 +216,6 @@ List<Map<String, dynamic>> raiz(){
 
     return raiz;
 }
-
 
 List<Map<String, dynamic>> conservacion(){
     final List<Map<String, dynamic>>  conservacion = [
