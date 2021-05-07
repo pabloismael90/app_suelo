@@ -1,9 +1,12 @@
+import 'package:app_suelo/src/bloc/fincas_bloc.dart';
+import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 
 import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
+import 'package:app_suelo/src/utils/validaciones.dart' as utils;
 import 'package:select_form_field/select_form_field.dart';
 import 'package:uuid/uuid.dart';
 
@@ -17,9 +20,11 @@ class AnalisiSuelo extends StatefulWidget {
 class _AnalisiSueloState extends State<AnalisiSuelo> {
     final formKey = GlobalKey<FormState>();
     final scaffoldKey = GlobalKey<ScaffoldState>();
-
+    FincasBloc fincasBloc = FincasBloc();
+    SueloNutriente sueloNutriente = SueloNutriente();
     bool _guardando = false;
     var uuid = Uuid();
+    TestSuelo suelo;
 
     String tituloBtn;
 
@@ -28,9 +33,20 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
     Widget build(BuildContext context) {
 
         Size size = MediaQuery.of(context).size;
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        List data = ModalRoute.of(context).settings.arguments;
+        
+        suelo = data[0];
+        sueloNutriente = data[1];
 
-        tituloBtn = 'Guardar';
+        sueloNutriente.idTest = suelo.id;
+
+        if (sueloNutriente.id == null) {
+            sueloNutriente.idTest = suelo.id;
+            tituloBtn = 'Guardar';
+            
+        } else {
+            tituloBtn = 'Actualizar';
+        }
         
         return Scaffold(
             key: scaffoldKey,
@@ -136,7 +152,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
         
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.ph.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -146,17 +162,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.ph = double.parse(value),
                     ),
                 ),
                 
@@ -185,7 +197,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 ),                
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.densidadAparente.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -195,17 +207,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.densidadAparente = double.parse(value),
                     ),
                 ),
                 
@@ -234,7 +242,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.materiaOrganica.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -244,17 +252,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.materiaOrganica = double.parse(value),
                     ),
                 ),
                 
@@ -283,7 +287,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.nitrogeno.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -293,17 +297,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.nitrogeno = double.parse(value),
                     ),
                 ),
                 Flexible(child: Container(
@@ -331,7 +331,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.fosforo.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -341,17 +341,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.fosforo = double.parse(value),
                     ),
                 ),
                 
@@ -380,7 +376,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.potasio.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -390,17 +386,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.potasio = double.parse(value),
                     ),
                 ),
                 
@@ -429,7 +421,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.azufre.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -439,17 +431,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.azufre = double.parse(value),
                     ),
                 ),
                 
@@ -478,7 +466,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.calcio.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -488,17 +476,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.calcio = double.parse(value),
                     ),
                 ),
                 
@@ -527,7 +511,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.magnesio.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -537,17 +521,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.magnesio = double.parse(value),
                     ),
                 ),
                 
@@ -576,7 +556,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.hierro.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -586,17 +566,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.hierro = double.parse(value),
                     ),
                 ),
                 
@@ -625,7 +601,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.manganeso.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -635,17 +611,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.manganeso = double.parse(value),
                     ),
                 ),
                 
@@ -674,7 +646,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.cadmio.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -684,17 +656,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.cadmio = double.parse(value),
                     ),
                 ),
                 
@@ -723,7 +691,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.zinc.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -733,17 +701,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.zinc = double.parse(value),
                     ),
                 ),
                 
@@ -772,7 +736,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.boro.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -782,17 +746,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.boro = double.parse(value),
                     ),
                 ),
                 
@@ -821,7 +781,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: sueloNutriente.acidez.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -831,17 +791,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => sueloNutriente.acidez = double.parse(value),
                     ),
                 ),
                 
@@ -870,8 +826,8 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: SelectFormField(
-                        initialValue: '',
-                        items: selectMap.dimenciones(),
+                        initialValue: sueloNutriente.textura.toString(),
+                        items: selectMap.texturasSuelo(),
                         validator: (value){
                             if(value.length < 1){
                                 return 'Selecione un elemento';
@@ -881,7 +837,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                         },
 
                         //onChanged: (val) => print(val),
-                        //onSaved: (value) => finca.tipoMedida = int.parse(value),
+                        onSaved: (value) => sueloNutriente.textura = int.parse(value),
                     ),
                 ),
                 
@@ -904,8 +860,8 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: SelectFormField(
-                        initialValue: '',
-                        items: selectMap.dimenciones(),
+                        initialValue: sueloNutriente.tipoSuelo.toString(),
+                        items: selectMap.tiposSuelo(),
                         validator: (value){
                             if(value.length < 1){
                                 return 'Selecione un elemento';
@@ -915,7 +871,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                         },
 
                         //onChanged: (val) => print(val),
-                        //onSaved: (value) => finca.tipoMedida = int.parse(value),
+                        onSaved: (value) => sueloNutriente.tipoSuelo = int.parse(value),
                     ),
                 ),
                 
@@ -943,7 +899,6 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             ),
             padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
             onPressed:(_guardando) ? null : _submit,
-           // onPressed: _submit,
         );
     }
 
@@ -952,7 +907,6 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
         
 
         if  ( !formKey.currentState.validate() ){
-            
             //Cuendo el form no es valido
             return null;
         }
@@ -962,18 +916,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
 
         setState(() {_guardando = true;});
 
-        // print(parcela.id);
-        // print(parcela.idFinca);
-        // print(parcela.nombreLote);
-        // print(parcela.areaLote);
-        // if(parcela.id == null){
-        //     parcela.id = uuid.v1();
-        //     fincasBloc.addParcela(parcela, parcela.idFinca);
-        // }else{
-        //     fincasBloc.actualizarParcela(parcela, parcela.idFinca);
-        // }
-        //fincasBloc.addParcela(parcela);
-        //DBProvider.db.nuevoParcela(parcela);
+        if(sueloNutriente.id == null){
+            sueloNutriente.id = uuid.v1();
+            fincasBloc.addSuelo(sueloNutriente);
+            
+        }else{
+            fincasBloc.actualizarSuelo(sueloNutriente);
+        }
 
         setState(() {_guardando = false;});
         

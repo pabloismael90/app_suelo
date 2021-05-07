@@ -1,8 +1,11 @@
+import 'package:app_suelo/src/bloc/fincas_bloc.dart';
+import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 
 import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:app_suelo/src/utils/validaciones.dart' as utils;
 import 'package:uuid/uuid.dart';
 
 class CosechaAnual extends StatefulWidget {
@@ -15,9 +18,11 @@ class CosechaAnual extends StatefulWidget {
 class _CosechaAnualState extends State<CosechaAnual> {
     final formKey = GlobalKey<FormState>();
     final scaffoldKey = GlobalKey<ScaffoldState>();
-
+    FincasBloc fincasBloc = FincasBloc();
+    SalidaNutriente salidaNutriente = SalidaNutriente();
     bool _guardando = false;
     var uuid = Uuid();
+    TestSuelo suelo;
 
     String tituloBtn;
 
@@ -26,10 +31,20 @@ class _CosechaAnualState extends State<CosechaAnual> {
     Widget build(BuildContext context) {
 
         Size size = MediaQuery.of(context).size;
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        List data = ModalRoute.of(context).settings.arguments;
 
-        tituloBtn = 'Guardar';
+        suelo = data[0];
+        salidaNutriente = data[1];
+
+        if (salidaNutriente.id == null) {
+            salidaNutriente.idTest = suelo.id;
+            tituloBtn = 'Guardar';
+            
+        } else {
+            tituloBtn = 'Actualizar';
+        }
         
+
         return Scaffold(
             key: scaffoldKey,
             appBar: AppBar(),
@@ -112,7 +127,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: salidaNutriente.cacao.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -122,17 +137,14 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
+                            
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => salidaNutriente.cacao = double.parse(value),
                     ),
                 ),
                 
@@ -161,7 +173,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 ),                
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: salidaNutriente.lena.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -171,17 +183,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => salidaNutriente.lena = double.parse(value),
                     ),
                 ),
                 
@@ -210,7 +218,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: salidaNutriente.fruta.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -220,17 +228,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => salidaNutriente.fruta = double.parse(value),
                     ),
                 ),
                 
@@ -259,7 +263,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: salidaNutriente.musacea.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -269,17 +273,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => salidaNutriente.musacea = double.parse(value),
                     ),
                 ),
                 Flexible(child: Container(
@@ -307,7 +307,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: salidaNutriente.madera.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -317,17 +317,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => salidaNutriente.madera = double.parse(value),
                     ),
                 ),
                 
@@ -356,7 +352,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: '0.0',
+                        initialValue: salidaNutriente.cascaraCacao.toString(),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
@@ -366,17 +362,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            final isDigitsOnly = int.tryParse(value);
-                            if (isDigitsOnly == null) {
-                                return 'Solo números enteros';
-                            }
-                            if (isDigitsOnly <= 0) {
-                                return 'Valor invalido';
-                            }else{
+                            if (utils.isNumeric(value)){
                                 return null;
+                            }else{
+                                return 'Solo números';
                             }
                         },
-                        //onSaved: (value) => finca.nombreFinca = value,
+                        onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value),
                     ),
                 ),
                 
@@ -404,7 +396,6 @@ class _CosechaAnualState extends State<CosechaAnual> {
             ),
             padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
             onPressed:(_guardando) ? null : _submit,
-           // onPressed: _submit,
         );
     }
 
@@ -413,7 +404,6 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
 
         if  ( !formKey.currentState.validate() ){
-            
             //Cuendo el form no es valido
             return null;
         }
@@ -423,24 +413,22 @@ class _CosechaAnualState extends State<CosechaAnual> {
 
         setState(() {_guardando = true;});
 
-        // print(parcela.id);
-        // print(parcela.idFinca);
-        // print(parcela.nombreLote);
-        // print(parcela.areaLote);
-        // if(parcela.id == null){
-        //     parcela.id = uuid.v1();
-        //     fincasBloc.addParcela(parcela, parcela.idFinca);
-        // }else{
-        //     fincasBloc.actualizarParcela(parcela, parcela.idFinca);
-        // }
-        //fincasBloc.addParcela(parcela);
+
+        if(salidaNutriente.id == null){
+            salidaNutriente.id = uuid.v1();
+            fincasBloc.addSalida(salidaNutriente);
+            
+        }else{
+            fincasBloc.actualizarSalida(salidaNutriente);
+        }
+        
         //DBProvider.db.nuevoParcela(parcela);
 
         setState(() {_guardando = false;});
         
 
 
-        Navigator.pop(context, 'fincas');
+        Navigator.pop(context, 'tomaDatos');
        
         
     }

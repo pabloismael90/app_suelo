@@ -1,6 +1,8 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
 import 'package:app_suelo/src/models/finca_model.dart';
 import 'package:app_suelo/src/models/parcela_model.dart';
+import 'package:app_suelo/src/models/salidaNutriente_model.dart';
+import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:app_suelo/src/utils/constants.dart';
@@ -38,6 +40,8 @@ class _TodaDatosState extends State<TodaDatos> {
         
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
         fincasBloc.obtenerPuntos(suelo.id);
+        fincasBloc.obtenerSalida(suelo.id);
+        fincasBloc.obtenerSuelo(suelo.id);
 
        return Scaffold(
             appBar: AppBar(),
@@ -60,10 +64,11 @@ class _TodaDatosState extends State<TodaDatos> {
                                     ),
                                 ),
                                 Divider(),
-
-                                _cardBalanceItem('Cosecha anual', 'cosechaAnual', suelo),
-                                _cardBalanceItem('Uso de abono anual', 'abonosPage', suelo),
-                                _cardBalanceItem('Análisis de suelo', 'analisisSuelo', suelo),
+                                _cardSalidaNutriente(suelo),
+                                
+                                
+                                _cardBalanceItem('Uso de abono anual', 'abonosPage', suelo, false),
+                                _cardSueloNutriente(suelo)
                             ],
                         ),
                     ),
@@ -204,8 +209,128 @@ class _TodaDatosState extends State<TodaDatos> {
 
     }
     
+    Widget _cardSalidaNutriente(TestSuelo suelo){
+
+        return StreamBuilder(
+            stream: fincasBloc.salidaStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+                
+                SalidaNutriente salidaNutriente = snapshot.data;
+                
+                
+                return GestureDetector(
+                    child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                            
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(13),
+                            boxShadow: [
+                                BoxShadow(
+                                        color: Color(0xFF3A5160)
+                                            .withOpacity(0.05),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 17.0),
+                                ],
+                        ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                                
+                                Padding(
+                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                    child: Text(
+                                        'Cosecha anual',
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.headline6,
+                                    ),
+                                ),
+                                Container(
+                                    child: Icon(Icons.check_circle, 
+                                        color: salidaNutriente.id == null ? Colors.black38 : Colors.green[900],
+                                        size: 30,
+                                    ),
+                                    
+                                )
+                            ],
+                        ),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, 'cosechaAnual', arguments: [suelo, salidaNutriente]),
+                );
+            },
+        );
+
+    }
     
-    Widget _cardBalanceItem(String titulo, String url, TestSuelo suelo){
+    Widget _cardSueloNutriente(TestSuelo suelo){
+
+        return StreamBuilder(
+            stream: fincasBloc.sueloStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+                
+                SueloNutriente sueloNutriente = snapshot.data;
+                
+                
+                return GestureDetector(
+                    child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                            
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(13),
+                            boxShadow: [
+                                BoxShadow(
+                                        color: Color(0xFF3A5160)
+                                            .withOpacity(0.05),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 17.0),
+                                ],
+                        ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                                
+                                Padding(
+                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                    child: Text(
+                                        'Análisis de suelo',
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.headline6,
+                                    ),
+                                ),
+                                Container(
+                                    child: Icon(Icons.check_circle, 
+                                        color: sueloNutriente.id == null ? Colors.black38 : Colors.green[900],
+                                        size: 30,
+                                    ),
+                                    
+                                )
+                            ],
+                        ),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, 'analisisSuelo', arguments: [suelo,sueloNutriente]),
+                );
+            },
+        );
+
+    }
+    
+    
+    Widget _cardBalanceItem(String titulo, String url, TestSuelo suelo, bool flag){
         
         return GestureDetector(
             child: Container(
@@ -240,8 +365,7 @@ class _TodaDatosState extends State<TodaDatos> {
                         ),
                         Container(
                             child: Icon(Icons.check_circle, 
-                                //color: countEstacion == 0 ? Colors.black38 : Colors.green[900],
-                                color: Colors.black38,
+                                color: flag ? Colors.green[900] : Colors.black38,
                                 size: 30,
                             ),
                             

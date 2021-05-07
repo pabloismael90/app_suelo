@@ -1,6 +1,8 @@
 import 'dart:io';
 
 
+import 'package:app_suelo/src/models/salidaNutriente_model.dart';
+import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -39,7 +41,7 @@ class DBProvider {
 
         return await openDatabase(
             path,
-            version: 1,
+            version: 2,
             onOpen: (db) {},
             onConfigure: _onConfigure,
             onCreate: ( Database db, int version ) async {
@@ -91,6 +93,61 @@ class DBProvider {
                     ')'
                 );
 
+                await db.execute(
+                    'CREATE TABLE salidaNutriente ('
+                    'id TEXT PRIMARY KEY,'
+                    ' idTest TEXT,'
+                    ' cacao REAL,'
+                    ' lena REAL,'
+                    ' fruta REAL,'
+                    ' musacea REAL,'
+                    ' madera REAL,'
+                    ' cascaraCacao REAL,'
+                    ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
+                    ')'
+                );
+
+                await db.execute(
+                    'CREATE TABLE entradaNutriente ('
+                    'id TEXT PRIMARY KEY,'
+                    ' idTest TEXT,'
+                    ' idAbono INTEGER,'
+                    ' densidad INTEGER,'
+                    ' humedad REAL,'
+                    ' cantidad REAL,'
+                    ' frecuencia INTEGER,'
+                    ' unidad INTEGER,'
+                    ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
+                    ')'
+                );
+
+                await db.execute(
+                    'CREATE TABLE sueloNutriente ('
+                    'id TEXT PRIMARY KEY,'
+                    ' idTest TEXT,'
+                    ' ph REAL,'
+                    ' densidadAparente REAL,'
+                    ' materiaOrganica REAL,'
+                    ' nitrogeno REAL,'
+                    ' fosforo REAL,'
+                    ' potasio REAL,'
+                    ' azufre REAL,'
+                    ' calcio REAL,'
+                    ' magnesio REAL,'
+                    ' hierro REAL,'
+                    ' manganeso REAL,'
+                    ' cadmio REAL,'
+                    ' zinc REAL,'
+                    ' boro REAL,'
+                    ' acidez REAL,'
+                    ' textura INTEGER,'
+                    ' tipoSuelo INTEGER,'
+                    ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
+                    ')'
+                );
+
+
+
                
             }
         
@@ -122,9 +179,22 @@ class DBProvider {
         final res = await db.insert('TestSuelo',  nuevaPlaga.toJson() );
         return res;
     }
+    
     nuevoPunto( Punto nuevaPunto ) async {
         final db  = await database;
         final res = await db.insert('Punto',  nuevaPunto.toJson() );
+        return res;
+    }
+    
+    nuevoSalida( SalidaNutriente nuevaSalida ) async {
+        final db  = await database;
+        final res = await db.insert('salidaNutriente',  nuevaSalida.toJson() );
+        return res;
+    }
+    
+    nuevoSueloAnalisis( SueloNutriente nuevaSuelo ) async {
+        final db  = await database;
+        final res = await db.insert('sueloNutriente',  nuevaSuelo.toJson() );
         return res;
     }
 
@@ -209,6 +279,20 @@ class DBProvider {
         return list;            
     }
 
+    Future<SalidaNutriente> getSalidaNutrientes(String idTest) async{
+        SalidaNutriente salidaNutriente = SalidaNutriente();
+        final db = await database;
+        final res = await db.query('salidaNutriente', where: 'idTest = ?', whereArgs: [idTest]);
+        return res.isNotEmpty ? SalidaNutriente.fromJson(res.first) : salidaNutriente;           
+    }
+
+    Future<SueloNutriente> getSueloNutrientes(String idTest) async{
+        SueloNutriente suelo = SueloNutriente();
+        final db = await database;
+        final res = await db.query('sueloNutriente', where: 'idTest = ?', whereArgs: [idTest]);
+        return res.isNotEmpty ? SueloNutriente.fromJson(res.first) : suelo;          
+    }
+
     
 
 
@@ -259,6 +343,22 @@ class DBProvider {
 
         final db  = await database;
         final res = await db.update('TestSuelo', nuevaPlaga.toJson(), where: 'id = ?', whereArgs: [nuevaPlaga.id] );
+        return res;
+
+    }
+
+    Future<int> updateSalidaNutriente( SalidaNutriente nuevaSalida ) async {
+
+        final db  = await database;
+        final res = await db.update('salidaNutriente', nuevaSalida.toJson(), where: 'id = ?', whereArgs: [nuevaSalida.id] );
+        return res;
+
+    }
+
+    Future<int> updateSueloNutriente( SueloNutriente nuevaSuelo ) async {
+
+        final db  = await database;
+        final res = await db.update('sueloNutriente', nuevaSuelo.toJson(), where: 'id = ?', whereArgs: [nuevaSuelo.id] );
         return res;
 
     }

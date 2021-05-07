@@ -2,6 +2,8 @@
 import 'dart:async';
 
 import 'package:app_suelo/src/models/punto_model.dart';
+import 'package:app_suelo/src/models/salidaNutriente_model.dart';
+import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 
@@ -23,6 +25,8 @@ class FincasBloc {
     final _parcelasController = StreamController<List<Parcela>>.broadcast();
     final _plagaController = StreamController<List<TestSuelo>>.broadcast();
     final _puntosControl = StreamController<List<Punto>>.broadcast();
+    final _salidaControl = StreamController<SalidaNutriente>.broadcast();
+    final _sueloControl = StreamController<SueloNutriente>.broadcast();
     //final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
     
 
@@ -33,6 +37,8 @@ class FincasBloc {
     Stream<List<Parcela>> get parcelaStream => _parcelasController.stream;
     Stream<List<TestSuelo>> get plagaStream => _plagaController.stream;
     Stream<List<Punto>> get puntoStream => _puntosControl.stream;
+    Stream<SalidaNutriente> get salidaStream => _salidaControl.stream;
+    Stream<SueloNutriente> get sueloStream => _sueloControl.stream;
     //Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
 
 
@@ -124,6 +130,35 @@ class FincasBloc {
         obtenerPuntos(punto.idTest);
     }
 
+    //Balance de Nutrientes
+    obtenerSalida(String idTest) async {
+        _salidaControl.sink.add( await DBProvider.db.getSalidaNutrientes(idTest) );
+    }
+
+    addSalida( SalidaNutriente nuevaSalida) async{
+        await DBProvider.db.nuevoSalida(nuevaSalida);
+        obtenerSalida(nuevaSalida.idTest);
+    }
+
+    actualizarSalida( SalidaNutriente nuevaSalida) async{
+        await DBProvider.db.updateSalidaNutriente(nuevaSalida);
+        obtenerSalida(nuevaSalida.idTest);
+    }
+
+    obtenerSuelo(String idTest) async {
+        _sueloControl.sink.add( await DBProvider.db.getSueloNutrientes(idTest) );
+    }
+
+    addSuelo( SueloNutriente nuevaSuelo ) async{
+        await DBProvider.db.nuevoSueloAnalisis(nuevaSuelo);
+        obtenerSuelo(nuevaSuelo.idTest);
+    }
+
+    actualizarSuelo( SueloNutriente nuevaSuelo) async{
+        await DBProvider.db.updateSueloNutriente(nuevaSuelo);
+        obtenerSuelo(nuevaSuelo.idTest);
+    }
+
     
 
 
@@ -144,6 +179,8 @@ class FincasBloc {
         _plagaController?.close();
         //_decisionesControl?.close();
         _puntosControl?.close();
+        _salidaControl?.close();
+        _sueloControl?.close();
     }
 
     
