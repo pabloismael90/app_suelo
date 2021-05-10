@@ -1,4 +1,5 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
+import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:select_form_field/select_form_field.dart';
@@ -19,17 +20,20 @@ class _AddAbonoState extends State<AddAbono> {
     final formKey = GlobalKey<FormState>();
     final scaffoldKey = GlobalKey<ScaffoldState>();
  
-
     final fincasBloc = new FincasBloc();
+    EntradaNutriente entradaNutriente = EntradaNutriente();
 
     bool _guardando = false;
     var uuid = Uuid();
+    TestSuelo suelo;
 
     @override
     Widget build(BuildContext context) {
 
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        suelo = ModalRoute.of(context).settings.arguments;
         String tituloBtn = 'Guardar';
+
+        entradaNutriente.idTest = suelo.id;
 
         
         return Scaffold(
@@ -87,7 +91,7 @@ class _AddAbonoState extends State<AddAbono> {
 
     Widget _selectAbono(){
         return SelectFormField(
-            initialValue: '',
+            initialValue: entradaNutriente.idAbono.toString(),
             type: SelectFormFieldType.dialog,
             labelText: 'Selecione abono',
             dialogTitle: 'Seleccione abono',
@@ -96,42 +100,48 @@ class _AddAbonoState extends State<AddAbono> {
             dialogSearchHint: 'Buscar abono',
             items: selectMap.listAbonos(),
             validator: (value){
-                if(value.length < 1){
-                    return 'Selecione variedad';
+                final isDigitsOnly = int.tryParse(value);
+                if (isDigitsOnly == null) {
+                    return 'Solo números enteros';
+                }
+                if (isDigitsOnly <= 0) {
+                    return 'Valor invalido';
                 }else{
                     return null;
-                } 
+                }
             },
-
-            //onChanged: (val) => print(val),
-            //onSaved: (value) => parcela.variedadCacao = int.parse(value),
+            onSaved: (value) => entradaNutriente.idAbono = int.parse(value),
         );
     }
 
     Widget _densidadxPlanta(){
 
         return TextFormField(
-            initialValue: '0.0',
+            initialValue: entradaNutriente.densidad.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Plantas por manzana'
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
-                    return null;
+                final isDigitsOnly = int.tryParse(value);
+                if (isDigitsOnly == null) {
+                    return 'Solo números enteros';
+                }
+                if (isDigitsOnly <= 0) {
+                    return 'Valor invalido';
                 }else{
-                    return 'Solo números';
+                    return null;
                 }
             },
-            //onSaved: (value) => parcela.areaLote = double.parse(value),
+            onSaved: (value) => entradaNutriente.densidad = int.parse(value),
         );
     }
 
     Widget _humedadAbono(){
 
         return TextFormField(
-            initialValue: '0.0',
+            initialValue: entradaNutriente.humedad.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Humedad (%)'
@@ -144,14 +154,14 @@ class _AddAbonoState extends State<AddAbono> {
                     return 'Solo números';
                 }
             },
-            //onSaved: (value) => parcela.areaLote = double.parse(value),
+            onSaved: (value) => entradaNutriente.humedad = double.parse(value),
         );
     }
 
     Widget _cantidadAbono(){
 
         return TextFormField(
-            initialValue: '0.0',
+            initialValue: entradaNutriente.cantidad.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Cantidad'
@@ -164,45 +174,48 @@ class _AddAbonoState extends State<AddAbono> {
                     return 'Solo números';
                 }
             },
-            //onSaved: (value) => parcela.areaLote = double.parse(value),
+            onSaved: (value) => entradaNutriente.cantidad = double.parse(value),
         );
     }
 
     Widget _frecuenciaAbono(){
 
         return TextFormField(
-            initialValue: '0.0',
+            initialValue: entradaNutriente.frecuencia.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Frecuencia'
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
-                    return null;
+                final isDigitsOnly = int.tryParse(value);
+                if (isDigitsOnly == null) {
+                    return 'Solo números enteros';
+                }
+                if (isDigitsOnly <= 0) {
+                    return 'Valor invalido';
                 }else{
-                    return 'Solo números';
+                    return null;
                 }
             },
-            //onSaved: (value) => parcela.areaLote = double.parse(value),
+            onSaved: (value) => entradaNutriente.frecuencia = int.parse(value),
         );
     }
 
     Widget _selectUnidad(){
         return SelectFormField(
-            initialValue: '',
+            initialValue: entradaNutriente.unidad.toString(),
             labelText: 'Selecione Unidad',
             items: selectMap.unidadAbono(),
             validator: (value){
                 if(value.length < 1){
-                    return 'Selecione variedad';
+                    return 'Selecione un elemento';
                 }else{
                     return null;
                 } 
             },
 
-            //onChanged: (val) => print(val),
-            //onSaved: (value) => parcela.variedadCacao = int.parse(value),
+            onSaved: (value) => entradaNutriente.unidad = int.parse(value),
         );
     }
 
@@ -221,7 +234,6 @@ class _AddAbonoState extends State<AddAbono> {
             ),
             padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
             onPressed:(_guardando) ? null : _submit,
-           // onPressed: _submit,
         );
     }
 
@@ -230,7 +242,6 @@ class _AddAbonoState extends State<AddAbono> {
         
 
         if  ( !formKey.currentState.validate() ){
-            
             //Cuendo el form no es valido
             return null;
         }
@@ -240,24 +251,18 @@ class _AddAbonoState extends State<AddAbono> {
 
         setState(() {_guardando = true;});
 
-        // print(parcela.id);
-        // print(parcela.idFinca);
-        // print(parcela.nombreLote);
-        // print(parcela.areaLote);
-        // if(parcela.id == null){
-        //     parcela.id = uuid.v1();
-        //     fincasBloc.addParcela(parcela, parcela.idFinca);
-        // }else{
-        //     fincasBloc.actualizarParcela(parcela, parcela.idFinca);
-        // }
-        //fincasBloc.addParcela(parcela);
-        //DBProvider.db.nuevoParcela(parcela);
+        if(entradaNutriente.id == null){
+            entradaNutriente.id = uuid.v1();
+            fincasBloc.addEntrada(entradaNutriente);
+        }else{
+            fincasBloc.addEntrada(entradaNutriente);
+        }
 
         setState(() {_guardando = false;});
         
 
 
-        Navigator.pop(context, 'fincas');
+        Navigator.pop(context, 'tomaDatos');
        
         
     }

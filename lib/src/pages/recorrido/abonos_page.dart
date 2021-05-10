@@ -1,6 +1,10 @@
+import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
+import 'package:app_suelo/src/pages/parcelas/parcelas_page.dart';
 import 'package:app_suelo/src/utils/constants.dart';
+import 'package:app_suelo/src/utils/widget/dialogDelete.dart';
 import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 
 class AbonosPage extends StatefulWidget {
@@ -15,21 +19,47 @@ class _AbonosPageState extends State<AbonosPage> {
     Widget build(BuildContext context) {
 
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        fincasBloc.obtenerEntradas(suelo.id);
         
         return Scaffold(
             appBar: AppBar(),
-            body: Column(
-                children: [
-                    TitulosPages(titulo: 'Titulo'),
-                    Divider(), 
-                    Expanded(child: Center(
-                        child: Text('No hay datos: \nIngrese datos de pasos', 
-                        textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline6,
-                            )
-                        )
-                    )
-                ],
+            body: StreamBuilder(
+                stream: fincasBloc.entradaStream ,
+                builder: (BuildContext context, AsyncSnapshot snapshot){
+                    if (!snapshot.hasData) {
+                        return CircularProgressIndicator();
+                    }
+                    
+                    List<EntradaNutriente> entradas = snapshot.data;
+
+                    if (entradas.length == 0) {
+                        return Column(
+                            children: [
+                                TitulosPages(titulo: 'Lista de Abonos'),
+                                Divider(), 
+                                Expanded(child: Center(
+                                    child: Text('No hay datos: \nIngrese datos de abonos', 
+                                    textAlign: TextAlign.center,
+                                        style: Theme.of(context).textTheme.headline6,
+                                        )
+                                    )
+                                )
+                            ],
+                        );
+                    }
+                    return Column(
+                        children: [
+                            TitulosPages(titulo: 'Lista de Abonos'),
+                            Divider(),                            
+                            Expanded(
+                                child: SingleChildScrollView(
+                                    child: _listaDePisos(entradas, context)
+                                    
+                                )
+                            ),
+                        ],
+                    );
+                },
             ),
             bottomNavigationBar: BottomAppBar(
                 child: Container(
@@ -42,6 +72,66 @@ class _AbonosPageState extends State<AbonosPage> {
             ),
         );
     }
+
+    Widget  _listaDePisos(List<EntradaNutriente> entradas, BuildContext context){
+
+        return ListView.builder(
+            itemBuilder: (context, index) {
+                
+                String labelAbono = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entradas[index].idAbono}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                return Dismissible(
+                    key: UniqueKey(),
+                    child: GestureDetector(
+                        child:Container(
+                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                                
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.5),
+                                    boxShadow: [
+                                        BoxShadow(
+                                            color: Color(0xFF3A5160)
+                                                .withOpacity(0.05),
+                                            offset: const Offset(1.1, 1.1),
+                                            blurRadius: 17.0),
+                                        ],
+                                ),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                        
+                                        Padding(
+                                            padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                            child: Text(
+                                                labelAbono,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                style: Theme.of(context).textTheme.headline6,
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                        )
+                    ),
+                    confirmDismiss: (direction) => confirmacionUser(direction, context),
+                    direction: DismissDirection.endToStart,
+                    background: backgroundTrash(context),
+                    movementDuration: Duration(milliseconds: 500),
+                    onDismissed: (direction) => fincasBloc.borrarEntrada(entradas[index]),
+                );
+                
+            },
+            shrinkWrap: true,
+            itemCount: entradas.length,
+            padding: EdgeInsets.only(bottom: 30.0),
+            controller: ScrollController(keepScrollOffset: false),
+        );
+
+    }
+
 
     Widget _addAbono(TestSuelo suelo){
         return Container(

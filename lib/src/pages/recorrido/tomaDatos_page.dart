@@ -1,6 +1,8 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
+import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/finca_model.dart';
 import 'package:app_suelo/src/models/parcela_model.dart';
+import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
@@ -16,7 +18,9 @@ class TodaDatos extends StatefulWidget {
 }
 
 int flagRecorrido = 0;
-int flagBalance = 0;
+int flagSalida = 0;
+int flagSuelo = 0;
+int flagEntrada = 0;
 
 class _TodaDatosState extends State<TodaDatos> {
 
@@ -42,6 +46,7 @@ class _TodaDatosState extends State<TodaDatos> {
         fincasBloc.obtenerPuntos(suelo.id);
         fincasBloc.obtenerSalida(suelo.id);
         fincasBloc.obtenerSuelo(suelo.id);
+        fincasBloc.obtenerEntradas(suelo.id);
 
        return Scaffold(
             appBar: AppBar(),
@@ -67,7 +72,7 @@ class _TodaDatosState extends State<TodaDatos> {
                                 _cardSalidaNutriente(suelo),
                                 
                                 
-                                _cardBalanceItem('Uso de abono anual', 'abonosPage', suelo, false),
+                                _cardEntrada(suelo),
                                 _cardSueloNutriente(suelo)
                             ],
                         ),
@@ -75,9 +80,9 @@ class _TodaDatosState extends State<TodaDatos> {
                     
                 ],
             ),
-            // bottomNavigationBar: BottomAppBar(
-            //     child: _tomarDecisiones(countEstaciones, suelo)
-            // ),
+            bottomNavigationBar: BottomAppBar(
+                child: _tomarDecisiones(suelo)
+            ),
         );
     }
 
@@ -155,9 +160,13 @@ class _TodaDatosState extends State<TodaDatos> {
                     return CircularProgressIndicator();
                 }
                 
-                flagRecorrido = snapshot.data.length;
-                
-                
+                List<Punto> puntos= snapshot.data;
+                if (puntos.length >= 5) {
+                  flagRecorrido = 1;                    
+                }else{
+                    flagRecorrido = 0; 
+                }
+                                
                 return GestureDetector(
                     child: Container(
                         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -191,7 +200,7 @@ class _TodaDatosState extends State<TodaDatos> {
                                 ),
                                 Container(
                                     child: Icon(Icons.check_circle, 
-                                        color: flagRecorrido < 5 ? Colors.black38 : Colors.green[900],
+                                        color: puntos.length < 5 ? Colors.black38 : Colors.green[900],
                                         size: 30,
                                     ),
                                     
@@ -329,59 +338,103 @@ class _TodaDatosState extends State<TodaDatos> {
 
     }
     
-    
-    Widget _cardBalanceItem(String titulo, String url, TestSuelo suelo, bool flag){
-        
-        return GestureDetector(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                    
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(13),
-                        boxShadow: [
-                            BoxShadow(
-                                    color: Color(0xFF3A5160)
-                                        .withOpacity(0.05),
-                                    offset: const Offset(1.1, 1.1),
-                                    blurRadius: 17.0),
-                            ],
-                    ),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                        
-                        Padding(
-                            padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                            child: Text(
-                                titulo,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: Theme.of(context).textTheme.headline6,
-                            ),
-                        ),
-                        Container(
-                            child: Icon(Icons.check_circle, 
-                                color: flag ? Colors.green[900] : Colors.black38,
-                                size: 30,
-                            ),
+    Widget _cardEntrada(TestSuelo suelo){
+
+        return StreamBuilder(
+            stream: fincasBloc.entradaStream ,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+                
+                List<EntradaNutriente> entradas = snapshot.data;
+                
+                
+                return GestureDetector(
+                    child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                             
-                        ) 
-                        
-                        
-                        
-                    ],
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(13),
+                            boxShadow: [
+                                BoxShadow(
+                                        color: Color(0xFF3A5160)
+                                            .withOpacity(0.05),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 17.0),
+                                ],
+                        ),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                                
+                                Padding(
+                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
+                                    child: Text(
+                                        'Uso de abono anual',
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.headline6,
+                                    ),
+                                ),
+                                Container(
+                                    child: Icon(Icons.check_circle, 
+                                        color: entradas.length == 0 ? Colors.black38 : Colors.green[900],
+                                        size: 30,
+                                    ),
+                                    
+                                )
+                            ],
+                        ),
+                    ),
+                    onTap: () => Navigator.pushNamed(context, 'abonosPage', arguments: suelo),
+                );
+            },
+        );
+
+    }
+    
+    
+    
+
+    Widget  _tomarDecisiones(TestSuelo suelo){
+        if (flagRecorrido == 1) {
+          return Container(
+                            color: kBackgroundColor,
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                                child: RaisedButton.icon(
+                                    icon:Icon(Icons.add_circle_outline_outlined),
+                                    
+                                    label: Text('Toma de decisiones',
+                                        style: Theme.of(context).textTheme
+                                            .headline6
+                                            .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                                    ),
+                                    padding:EdgeInsets.all(13),
+                                    onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: suelo),
+                                )
+                            ),
+                        );
+        } else {
+            return Container(
+            color: kBackgroundColor,
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Text(
+                    "Complete las estaciones",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme
+                        .headline5
+                        .copyWith(fontWeight: FontWeight.w900, color: kRedColor, fontSize: 22)
                 ),
             ),
-            onTap: () => Navigator.pushNamed(context, url, arguments: suelo),
         );
-    }
-   
-
-    // Widget  _tomarDecisiones(List countEstaciones, Testsuelo suelo){
+        }
         
     //     if(countEstaciones[0] >= 10 && countEstaciones[1] >= 10 && countEstaciones[2] >= 10){
             
@@ -397,25 +450,9 @@ class _TodaDatosState extends State<TodaDatos> {
 
     //                 if (desiciones.length == 0){
 
-    //                     return Container(
-    //                         color: kBackgroundColor,
-    //                         child: Padding(
-    //                             padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-    //                             child: RaisedButton.icon(
-    //                                 icon:Icon(Icons.add_circle_outline_outlined),
-                                    
-    //                                 label: Text('Toma de decisiones',
-    //                                     style: Theme.of(context).textTheme
-    //                                         .headline6
-    //                                         .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-    //                                 ),
-    //                                 padding:EdgeInsets.all(13),
-    //                                 onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: suelo),
-    //                             )
-    //                         ),
-    //                     );
                         
-    //                 }
+                        
+                    // }
 
 
     //                 return Container(
@@ -454,5 +491,5 @@ class _TodaDatosState extends State<TodaDatos> {
     //             ),
     //         ),
     //     );
-    // }
+    }
 }

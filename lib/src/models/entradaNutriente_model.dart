@@ -1,5 +1,5 @@
-class SalidaNutriente {
-    SalidaNutriente({
+class EntradaNutriente {
+    EntradaNutriente({
         this.id,
         this.idTest,
         this.idAbono = 0,
@@ -19,7 +19,7 @@ class SalidaNutriente {
     int frecuencia;
     int unidad;
 
-    factory SalidaNutriente.fromJson(Map<String, dynamic> json) => SalidaNutriente(
+    factory EntradaNutriente.fromJson(Map<String, dynamic> json) => EntradaNutriente(
         id: json["id"],
         idTest: json["idTest"],
         idAbono: json["idAbono"],

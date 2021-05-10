@@ -1,6 +1,7 @@
 import 'dart:io';
 
 
+import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
@@ -198,6 +199,12 @@ class DBProvider {
         return res;
     }
 
+    nuevoEntrada( EntradaNutriente nuevoEntrada ) async {
+        final db  = await database;
+        final res = await db.insert('entradaNutriente',  nuevoEntrada.toJson() );
+        return res;
+    }
+
 
 
     
@@ -293,6 +300,16 @@ class DBProvider {
         return res.isNotEmpty ? SueloNutriente.fromJson(res.first) : suelo;          
     }
 
+    Future<List<EntradaNutriente>> getEntradas(String idTest) async{
+        final db = await database;
+        final res = await db.query('entradaNutriente', where: 'idTest = ?', whereArgs: [idTest]);
+        List<EntradaNutriente> list = res.isNotEmpty 
+                    ? res.map( (c) => EntradaNutriente.fromJson(c) ).toList() 
+                    : [];
+        
+        return list;         
+    }
+
     
 
 
@@ -373,6 +390,7 @@ class DBProvider {
         final res = await db.delete('Finca', where: 'id = ?', whereArgs: [idFinca]);
         return res;
     }
+    
     Future<int> deleteParcela( String idParcela ) async {
 
         final db  = await database;
@@ -391,6 +409,13 @@ class DBProvider {
 
         final db  = await database;
         final res = await db.delete('Punto', where: 'idTest = ? AND nPunto = ?', whereArgs: [idTest, nPunto]);
+        return res;
+    }
+
+    Future<int> deleteEntrada( String id) async {
+
+        final db  = await database;
+        final res = await db.delete('entradaNutriente', where: 'id = ?', whereArgs: [id]);
         return res;
     }
 

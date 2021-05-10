@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
@@ -27,6 +28,7 @@ class FincasBloc {
     final _puntosControl = StreamController<List<Punto>>.broadcast();
     final _salidaControl = StreamController<SalidaNutriente>.broadcast();
     final _sueloControl = StreamController<SueloNutriente>.broadcast();
+    final _entradaControl = StreamController<List<EntradaNutriente>>.broadcast();
     //final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
     
 
@@ -39,6 +41,7 @@ class FincasBloc {
     Stream<List<Punto>> get puntoStream => _puntosControl.stream;
     Stream<SalidaNutriente> get salidaStream => _salidaControl.stream;
     Stream<SueloNutriente> get sueloStream => _sueloControl.stream;
+    Stream<List<EntradaNutriente>> get entradaStream => _entradaControl.stream;
     //Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
 
 
@@ -159,7 +162,19 @@ class FincasBloc {
         obtenerSuelo(nuevaSuelo.idTest);
     }
 
-    
+    obtenerEntradas(String idTest) async {
+        _entradaControl.sink.add( await DBProvider.db.getEntradas(idTest) );
+    }
+
+    addEntrada( EntradaNutriente nuevaEntrada) async{
+        await DBProvider.db.nuevoEntrada(nuevaEntrada);
+        obtenerEntradas(nuevaEntrada.idTest);
+    }
+
+    borrarEntrada( EntradaNutriente nuevaEntrada )async{
+        await DBProvider.db.deleteEntrada(nuevaEntrada.id);
+        obtenerEntradas(nuevaEntrada.idTest);
+    }
 
 
 
@@ -181,6 +196,7 @@ class FincasBloc {
         _puntosControl?.close();
         _salidaControl?.close();
         _sueloControl?.close();
+        _entradaControl?.close();
     }
 
     

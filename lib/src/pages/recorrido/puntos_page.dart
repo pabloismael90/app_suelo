@@ -38,10 +38,10 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     if (puntos.length == 0) {
                         return Column(
                             children: [
-                                TitulosPages(titulo: 'Titulo'),
+                                TitulosPages(titulo: 'Recorrido de parcela'),
                                 Divider(), 
                                 Expanded(child: Center(
-                                    child: Text('No hay datos: \nIngrese datos de pasos', 
+                                    child: Text('No hay datos: \nIngrese datos de puntos', 
                                     textAlign: TextAlign.center,
                                         style: Theme.of(context).textTheme.headline6,
                                         )
