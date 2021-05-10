@@ -88,8 +88,13 @@ class _AddAbonoState extends State<AddAbono> {
     Widget _selectAbono(){
         return SelectFormField(
             initialValue: '',
+            type: SelectFormFieldType.dialog,
             labelText: 'Selecione abono',
-            items: selectMap.variedadCacao(),
+            dialogTitle: 'Seleccione abono',
+            dialogCancelBtn: 'Cerrar',
+            enableSearch: true,
+            dialogSearchHint: 'Buscar abono',
+            items: selectMap.listAbonos(),
             validator: (value){
                 if(value.length < 1){
                     return 'Selecione variedad';
@@ -187,7 +192,7 @@ class _AddAbonoState extends State<AddAbono> {
         return SelectFormField(
             initialValue: '',
             labelText: 'Selecione Unidad',
-            items: selectMap.variedadCacao(),
+            items: selectMap.unidadAbono(),
             validator: (value){
                 if(value.length < 1){
                     return 'Selecione variedad';
