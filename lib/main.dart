@@ -1,4 +1,5 @@
 import 'package:app_suelo/src/pages/PDFView.dart';
+import 'package:app_suelo/src/pages/decisiones/desiones_form.dart';
 import 'package:app_suelo/src/pages/finca/finca_form.dart';
 import 'package:app_suelo/src/pages/finca/finca_page.dart';
 import 'package:app_suelo/src/pages/galeria/image.dart';
@@ -66,6 +67,10 @@ class MyApp extends StatelessWidget {
                 'analisisSuelo': (BuildContext context) => AnalisiSuelo(),
                 'abonosPage': (BuildContext context) => AbonosPage(),
                 'AddAbono': (BuildContext context) => AddAbono(),
+
+                //Decisiones
+                'decisiones': (BuildContext context) => DecisionesPage(),
+                
 
                 //Galeria de imagenes
                 'galeria': (BuildContext context) => GaleriaImagenes(),

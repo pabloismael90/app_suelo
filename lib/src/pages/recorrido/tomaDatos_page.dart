@@ -402,39 +402,25 @@ class _TodaDatosState extends State<TodaDatos> {
     
 
     Widget  _tomarDecisiones(TestSuelo suelo){
-        if (flagRecorrido == 1) {
-          return Container(
-                            color: kBackgroundColor,
-                            child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-                                child: RaisedButton.icon(
-                                    icon:Icon(Icons.add_circle_outline_outlined),
-                                    
-                                    label: Text('Toma de decisiones',
-                                        style: Theme.of(context).textTheme
-                                            .headline6
-                                            .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                                    ),
-                                    padding:EdgeInsets.all(13),
-                                    onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: suelo),
-                                )
-                            ),
-                        );
-        } else {
-            return Container(
+        
+        return Container(
             color: kBackgroundColor,
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Text(
-                    "Complete las estaciones",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme
-                        .headline5
-                        .copyWith(fontWeight: FontWeight.w900, color: kRedColor, fontSize: 22)
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                child: RaisedButton.icon(
+                    icon:Icon(Icons.add_circle_outline_outlined),
+                    
+                    label: Text('Toma de decisiones',
+                        style: Theme.of(context).textTheme
+                            .headline6
+                            .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                    ),
+                    padding:EdgeInsets.all(13),
+                    onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: suelo),
+                )
             ),
         );
-        }
+        
         
     //     if(countEstaciones[0] >= 10 && countEstaciones[1] >= 10 && countEstaciones[2] >= 10){
             

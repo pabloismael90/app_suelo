@@ -296,45 +296,6 @@ List<Map<String, dynamic>> texturasSuelo(){
     return texturaTipo;
 }
 // Abonos
-
-List<Map<String, dynamic>> tiposSuelo(){
-    final List<Map<String, dynamic>>  sueloTipo = [
-        {
-            'value': '0', 
-            'label': 'Vertisoles',
-            'N': 60,
-            'P': 50,
-            'K': 65,
-            'Ca': 65,
-            'Mg': 65,
-            'S': 70,
-        },
-        {
-            'value': '1', 
-            'label': 'Andisoles o Volcanicos',
-            'N': 65,
-            'P': 35,
-            'K': 80,
-            'Ca': 80,
-            'Mg': 80,
-            'S': 70,
-        },
-        {
-            'value': '2', 
-            'label': 'Ultisoles / Suelos Rojos',
-            'N': 55,
-            'P': 40,
-            'K': 70,
-            'Ca': 70,
-            'Mg': 70,
-            'S': 70,
-        }
-
-        ];
-
-    return sueloTipo;
-}
-
 List<Map<String, dynamic>> listAbonos(){
     final List<Map<String, dynamic>>  abonos = [
     
@@ -595,6 +556,96 @@ List<Map<String, dynamic>> unidadAbono(){
     return unidad;
 }
 
+
+
+//Suelo
+List<Map<String, dynamic>> tiposSuelo(){
+    final List<Map<String, dynamic>>  sueloTipo = [
+        {
+            'value': '0', 
+            'label': 'Vertisoles',
+            'N': 60,
+            'P': 50,
+            'K': 65,
+            'Ca': 65,
+            'Mg': 65,
+            'S': 70,
+        },
+        {
+            'value': '1', 
+            'label': 'Andisoles o Volcanicos',
+            'N': 65,
+            'P': 35,
+            'K': 80,
+            'Ca': 80,
+            'Mg': 80,
+            'S': 70,
+        },
+        {
+            'value': '2', 
+            'label': 'Ultisoles / Suelos Rojos',
+            'N': 55,
+            'P': 40,
+            'K': 70,
+            'Ca': 70,
+            'Mg': 70,
+            'S': 70,
+        }
+
+        ];
+
+    return sueloTipo;
+}
+
+
+//Salidas Nutrientes
+List<Map<String, dynamic>> valoresSalida(){
+    final List<Map<String, dynamic>>  salida = [
+        {
+            "value": 1,
+            "label": "Grano de Cacao (lb/qq seco)",
+            "N": 2,
+            "P": 0.4,
+            "K": 1,
+            "Ca": 0.12,
+            "Mg": 0.34,
+            "S": 0.14
+        },
+        {
+            "value": 2,
+            "label": "Cascara (lb /qq seco)",
+            "N": 1.5,
+            "P": 0.2,
+            "K": 5,
+            "Ca": 0.43,
+            "Mg": 0.24,
+            "S": 0.14
+        },
+        {
+            "value": 3,
+            "label": "Leña (lb/carga de 125lb)",
+            "N": 1.1,
+            "P": 1,
+            "K": 0.6,
+            "Ca": 0,
+            "Mg": 0,
+            "S": 0
+        },
+        {
+            "value": 4,
+            "label": "Cabezas de Banano (lb/Cabeza)",
+            "N": 0.068,
+            "P": 0.009,
+            "K": 0.234,
+            "Ca": 0,
+            "Mg": 0,
+            "S": 0
+        }
+
+    ];
+
+    return salida;
+}
 
 
 

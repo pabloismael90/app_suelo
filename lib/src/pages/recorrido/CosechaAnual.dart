@@ -84,15 +84,15 @@ class _CosechaAnualState extends State<CosechaAnual> {
                                         Divider(),
                                         _cacao(size),
                                         Divider(),
-                                        _lena(size),
+                                        _cascaraCacao(size),
                                         Divider(),
-                                        _frutas(size),
+                                        _lena(size),
                                         Divider(),
                                         _musaceas(size),
                                         Divider(),
-                                        _madera(size),
+                                        _frutas(size),
                                         Divider(),
-                                        _cascaraCacao(size),
+                                        _madera(size),
                                         Divider(),
                                         SizedBox(height: 40,),
                                         _botonsubmit(tituloBtn),
@@ -160,6 +160,51 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
     }
 
+    Widget _cascaraCacao(Size size){
+
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+                Flexible(child: Container(
+                        width: size.width * 0.2,
+                        child: _titulosForm('Cascara de Cacao'),
+                    ),
+                ),
+                
+                Expanded(
+                    child: TextFormField(
+                        initialValue: salidaNutriente.cascaraCacao.toString(),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                        ),
+                        validator: (value){
+                            if (utils.isNumeric(value)){
+                                return null;
+                            }else{
+                                return 'Solo números';
+                            }
+                        },
+                        onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value),
+                    ),
+                ),
+                
+                Flexible(child: Container(
+                        width: size.width * 0.2,
+                        child: _titulosForm('QQ seco'),
+                    ),
+                ),
+                
+            ],
+        );
+        
+    }
+
     Widget _lena(Size size){
 
         return Row(
@@ -196,51 +241,6 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 Flexible(child: Container(
                         width: size.width * 0.2,
                         child: _titulosForm('Carga'),
-                    ),
-                ),
-                
-            ],
-        );
-        
-    }
-
-    Widget _frutas(Size size){
-
-        return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-                Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Frutas'),
-                    ),
-                ),
-                
-                Expanded(
-                    child: TextFormField(
-                        initialValue: salidaNutriente.fruta.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                        ),
-                        validator: (value){
-                            if (utils.isNumeric(value)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
-                        onSaved: (value) => salidaNutriente.fruta = double.parse(value),
-                    ),
-                ),
-                
-                Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Sacos'),
                     ),
                 ),
                 
@@ -293,6 +293,51 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
     }
 
+    Widget _frutas(Size size){
+
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+                Flexible(child: Container(
+                        width: size.width * 0.2,
+                        child: _titulosForm('Frutas'),
+                    ),
+                ),
+                
+                Expanded(
+                    child: TextFormField(
+                        initialValue: salidaNutriente.fruta.toString(),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                        ),
+                        validator: (value){
+                            if (utils.isNumeric(value)){
+                                return null;
+                            }else{
+                                return 'Solo números';
+                            }
+                        },
+                        onSaved: (value) => salidaNutriente.fruta = double.parse(value),
+                    ),
+                ),
+                
+                Flexible(child: Container(
+                        width: size.width * 0.2,
+                        child: _titulosForm('Sacos'),
+                    ),
+                ),
+                
+            ],
+        );
+        
+    }
+    
     Widget _madera(Size size){
 
         return Row(
@@ -338,51 +383,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
     }
 
-    Widget _cascaraCacao(Size size){
-
-        return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-                Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Cascara de Cacao'),
-                    ),
-                ),
-                
-                Expanded(
-                    child: TextFormField(
-                        initialValue: salidaNutriente.cascaraCacao.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                        ),
-                        validator: (value){
-                            if (utils.isNumeric(value)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
-                        onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value),
-                    ),
-                ),
-                
-                Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('QQ seco'),
-                    ),
-                ),
-                
-            ],
-        );
-        
-    }
-
+    
 
     Widget  _botonsubmit(String tituloBtn){
         return RaisedButton.icon(
