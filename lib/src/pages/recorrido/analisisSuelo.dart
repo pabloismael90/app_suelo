@@ -97,11 +97,11 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                                         Divider(),
                                         _potasio(size),
                                         Divider(),
-                                        _azufre(size),
-                                        Divider(),
                                         _calcio(size),
                                         Divider(),
                                         _magnesio(size),
+                                        Divider(),
+                                        _azufre(size),
                                         Divider(),
                                         _hierro(size),
                                         Divider(),
@@ -153,10 +153,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.ph.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -198,10 +195,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.densidadAparente.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -243,10 +237,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.materiaOrganica.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -288,10 +279,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.nitrogeno.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -332,10 +320,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.fosforo.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -377,10 +362,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.potasio.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -422,10 +404,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.azufre.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -467,10 +446,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.calcio.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -512,10 +488,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.magnesio.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -557,10 +530,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.hierro.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -602,10 +572,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.manganeso.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -647,10 +614,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.cadmio.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -692,10 +656,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.zinc.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -737,10 +698,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.boro.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -782,10 +740,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 Expanded(
                     child: TextFormField(
                         initialValue: sueloNutriente.acidez.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),

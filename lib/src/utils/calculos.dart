@@ -2,250 +2,183 @@
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
+import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 
 
 
 
 
-
-salidaNitrogeno(SalidaNutriente salidaNutriente){
-    double nitrogeno;
+//Salida
+salidaElemeto(SalidaNutriente salidaNutriente, String elemento){
+    double totalElemeto;
     
     double valorCacao =  salidaNutriente.cacao;
     double valorCascara=  salidaNutriente.cascaraCacao;
     double valorLena =  salidaNutriente.lena;
     double valorMusacea =  salidaNutriente.musacea;
 
-    final factorCacao = selectMap.valoresSalida().firstWhere((e) => e['value'] == 1)['N'];
-    final factorCascara = selectMap.valoresSalida().firstWhere((e) => e['value'] == 2)['N'];
-    final factorLena = selectMap.valoresSalida().firstWhere((e) => e['value'] == 3)['N'];
-    final factorMusacea = selectMap.valoresSalida().firstWhere((e) => e['value'] == 4)['N'];
+    final factorCacao = selectMap.valoresSalida().firstWhere((e) => e['value'] == 1)[elemento];
+    final factorCascara = selectMap.valoresSalida().firstWhere((e) => e['value'] == 2)[elemento];
+    final factorLena = selectMap.valoresSalida().firstWhere((e) => e['value'] == 3)[elemento];
+    final factorMusacea = selectMap.valoresSalida().firstWhere((e) => e['value'] == 4)[elemento];
 
     
-    nitrogeno =(valorCacao * factorCacao) + ( valorCascara * factorCascara) + (valorLena * factorLena) + (valorMusacea * factorMusacea);
+    totalElemeto =(valorCacao * factorCacao) + ( valorCascara * factorCascara) + (valorLena * factorLena) + (valorMusacea * factorMusacea);
     
-    return nitrogeno;
-    
-}
-
-salidaFosforo(SalidaNutriente salidaNutriente){
-    double fosforo;
-    
-    double valorCacao =  salidaNutriente.cacao;
-    double valorCascara=  salidaNutriente.cascaraCacao;
-    double valorLena =  salidaNutriente.lena;
-    double valorMusacea =  salidaNutriente.musacea;
-
-    final factorCacao = selectMap.valoresSalida().firstWhere((e) => e['value'] == 1)['P'];
-    final factorCascara = selectMap.valoresSalida().firstWhere((e) => e['value'] == 2)['P'];
-    final factorLena = selectMap.valoresSalida().firstWhere((e) => e['value'] == 3)['P'];
-    final factorMusacea = selectMap.valoresSalida().firstWhere((e) => e['value'] == 4)['P'];
-
-    
-    fosforo =(valorCacao * factorCacao) + ( valorCascara * factorCascara) + (valorLena * factorLena) + (valorMusacea * factorMusacea);
-    
-    return fosforo;
-    
-}
-
-salidaPotasio(SalidaNutriente salidaNutriente){
-    double potasio;
-    
-    double valorCacao =  salidaNutriente.cacao;
-    double valorCascara=  salidaNutriente.cascaraCacao;
-    double valorLena =  salidaNutriente.lena;
-    double valorMusacea =  salidaNutriente.musacea;
-
-    final factorCacao = selectMap.valoresSalida().firstWhere((e) => e['value'] == 1)['K'];
-    final factorCascara = selectMap.valoresSalida().firstWhere((e) => e['value'] == 2)['K'];
-    final factorLena = selectMap.valoresSalida().firstWhere((e) => e['value'] == 3)['K'];
-    final factorMusacea = selectMap.valoresSalida().firstWhere((e) => e['value'] == 4)['K'];
-
-    
-    potasio =(valorCacao * factorCacao) + ( valorCascara * factorCascara) + (valorLena * factorLena) + (valorMusacea * factorMusacea);
-    
-    return potasio;
-    
-}
-
-salidaCalcio(SalidaNutriente salidaNutriente){
-    double calcio;
-    
-    double valorCacao =  salidaNutriente.cacao;
-    double valorCascara=  salidaNutriente.cascaraCacao;
-    double valorLena =  salidaNutriente.lena;
-    double valorMusacea =  salidaNutriente.musacea;
-
-    final factorCacao = selectMap.valoresSalida().firstWhere((e) => e['value'] == 1)['Ca'];
-    final factorCascara = selectMap.valoresSalida().firstWhere((e) => e['value'] == 2)['Ca'];
-    final factorLena = selectMap.valoresSalida().firstWhere((e) => e['value'] == 3)['Ca'];
-    final factorMusacea = selectMap.valoresSalida().firstWhere((e) => e['value'] == 4)['Ca'];
-
-    
-    calcio =(valorCacao * factorCacao) + ( valorCascara * factorCascara) + (valorLena * factorLena) + (valorMusacea * factorMusacea);
-    
-    return calcio;
-    
-}
-
-salidaMagnesio(SalidaNutriente salidaNutriente){
-    double magnesio;
-    
-    double valorCacao =  salidaNutriente.cacao;
-    double valorCascara=  salidaNutriente.cascaraCacao;
-    double valorLena =  salidaNutriente.lena;
-    double valorMusacea =  salidaNutriente.musacea;
-
-    final factorCacao = selectMap.valoresSalida().firstWhere((e) => e['value'] == 1)['Mg'];
-    final factorCascara = selectMap.valoresSalida().firstWhere((e) => e['value'] == 2)['Mg'];
-    final factorLena = selectMap.valoresSalida().firstWhere((e) => e['value'] == 3)['Mg'];
-    final factorMusacea = selectMap.valoresSalida().firstWhere((e) => e['value'] == 4)['Mg'];
-
-    
-    magnesio =(valorCacao * factorCacao) + ( valorCascara * factorCascara) + (valorLena * factorLena) + (valorMusacea * factorMusacea);
-    
-    return magnesio;
-    
-}
-
-salidaAzufre(SalidaNutriente salidaNutriente){
-    double azufre;
-    
-    double valorCacao =  salidaNutriente.cacao;
-    double valorCascara=  salidaNutriente.cascaraCacao;
-    double valorLena =  salidaNutriente.lena;
-    double valorMusacea =  salidaNutriente.musacea;
-
-    final factorCacao = selectMap.valoresSalida().firstWhere((e) => e['value'] == 1)['S'];
-    final factorCascara = selectMap.valoresSalida().firstWhere((e) => e['value'] == 2)['S'];
-    final factorLena = selectMap.valoresSalida().firstWhere((e) => e['value'] == 3)['S'];
-    final factorMusacea = selectMap.valoresSalida().firstWhere((e) => e['value'] == 4)['S'];
-
-    
-    azufre =(valorCacao * factorCacao) + ( valorCascara * factorCascara) + (valorLena * factorLena) + (valorMusacea * factorMusacea);
-    
-    return azufre;
+    return totalElemeto;
     
 }
 
 
-entradaNitrogeno(List<EntradaNutriente> entradas){
-    double totalNitrogeno = 0;
+
+//Entrada
+entradaElemento(List<EntradaNutriente> entradas, SueloNutriente sueloNutriente, String elemento){
+    double totalElemento = 0;
+    int elementoSuelo = selectMap.tiposSuelo().firstWhere((e) => e['value'] == '${sueloNutriente.tipoSuelo}')[elemento];
+    
 
     for (var entrada in entradas) {
-        totalNitrogeno = totalNitrogeno+selectFuncion(entrada);
+        totalElemento = totalElemento+selectFuncionElemento(entrada, elemento);
     }
+    
+    
 
-    print(totalNitrogeno);
-
-    return 0.0;
+    return totalElemento * (elementoSuelo/100);
 }
 
-selectFuncion(EntradaNutriente entrada) { 
+selectFuncionElemento(EntradaNutriente entrada, String label) { 
     switch(entrada.unidad.toString()) { 
-        case '0': { return oz_planta(entrada);  } 
+        case '0': { return totalOzPlanta(entrada, label);  } 
         break; 
         
-        case '1': { return lb_planta(entrada); } 
+        case '1': { return totalLbPlanta(entrada, label); } 
         break; 
         
-        case '2': { return g_planta(entrada); } 
+        case '2': { return totalGPlanta(entrada, label); } 
         break; 
         
-        case '3': { return kg_mz(entrada); } 
+        case '3': { return totalKgMz(entrada, label); } 
         break;
 
-        case '4': {  return lb_mz(entrada); } 
+        case '4': { return totalLbMz(entrada, label); } 
         break; 
 
-        case '5': { return l_mz(entrada); } 
+        case '5': { return totalLMz(entrada, label); } 
         break; 
         
         
     }
 } 
 
-oz_planta(EntradaNutriente entrada){
-    double nitrogeno;
+double totalOzPlanta(EntradaNutriente entrada, String label){
+    double total;
     double b13 = entrada.cantidad;
-    int b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')['N'];
+    double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     double h10 = entrada.humedad;
     int b16 = entrada.frecuencia;
     int d5 = entrada.densidad;
 
-    nitrogeno = ((b13/16)*((100-h10)/100)*(b10/100)*d5)*b16;
+    total = ((b13/16)*((100-h10)/100)*(b10/100)*d5)*b16;
 
-    return nitrogeno;
+    return total;
 }
 
-lb_planta(EntradaNutriente entrada){
-    double nitrogeno;
+double totalLbPlanta(EntradaNutriente entrada, String label){
+    double total;
     double b13 = entrada.cantidad;
-    int b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')['N'];
+    double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     double h10 = entrada.humedad;
     int b16 = entrada.frecuencia;
     int d5 = entrada.densidad;
 
-    nitrogeno = (b13*((100-h10)/100)*(b10/100)*d5)*b16;
+    total = (b13*((100-h10)/100)*(b10/100)*d5)*b16;
 
-    return nitrogeno;
+    return total;
 }
 
-g_planta(EntradaNutriente entrada){
-    double nitrogeno;
+double totalGPlanta(EntradaNutriente entrada, String label){
+    double total;
     double b13 = entrada.cantidad;
-    int b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')['N'];
+    double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     double h10 = entrada.humedad;
     int b16 = entrada.frecuencia;
     int d5 = entrada.densidad;
 
-    nitrogeno = ((b13/456)*((100-h10)/100)*(b10/100)*d5)*b16;
+    total = ((b13/456)*((100-h10)/100)*(b10/100)*d5)*b16;
 
-    return nitrogeno;
+    return total;
 }
 
-kg_mz(EntradaNutriente entrada){
-    double nitrogeno;
+double totalKgMz(EntradaNutriente entrada, String label){
+    double total;
     double b13 = entrada.cantidad;
-    int b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')['N'];
+    double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     double h10 = entrada.humedad;
     int b16 = entrada.frecuencia;
 
-    nitrogeno = ((b13*2.2)*((100-h10)/100)*(b10/100))*b16;
+    total = ((b13*2.2)*((100-h10)/100)*(b10/100))*b16;
 
-    return nitrogeno;
+    return total;
 }
 
-lb_mz(EntradaNutriente entrada){
-    double nitrogeno;
+double totalLbMz(EntradaNutriente entrada, String label){
+    double total;
     double b13 = entrada.cantidad;
-    int b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')['N'];
+    double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     double h10 = entrada.humedad;
     int b16 = entrada.frecuencia;
     
     
-    nitrogeno = (b13*(b10/100)*((100-h10)/100))*b16;
+    total = (b13*(b10/100)*((100-h10)/100))*b16;
+    
 
-    return nitrogeno;
+    return total;
 }
 
-l_mz(EntradaNutriente entrada){
-    double nitrogeno;
+double totalLMz(EntradaNutriente entrada, String label){
+    double total;
     double b13 = entrada.cantidad;
-    int b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')['N'];
+    double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     int b16 = entrada.frecuencia;
     
-    nitrogeno = ((b10/100)*b13)*b16;
+    total = ((b10/100)*b13)*b16;
 
-    return nitrogeno;
+    return total;
 }
 
-//(    
-// SI($C13="lb/planta",$B13*((100-$H10)/100)*(B10/100)*$D$5,
-// SI($C13="oz/planta",($B13/16)*((100-$H10)/100)*(B10/100)*$D$5,
-// SI($C13="g/planta",($B13/456)*((100-$H10)/100)*(B10/100)*$D$5,
-// SI($C13="kg/mz",($B13*2.2)*((100-$H10)/100)*(B10/100),
-// SI($C13="lb/mz",$B13*(B10/100)*((100-$H10)/100),
-//     SI($C13="L/mz",(B10/100)*$B13) 
-// )
-// )))))*$B16
+//Suelo
+
+nutrienteSuelo(SueloNutriente sueloNutriente, String elemento){
+    double elementoTotal;
+    int factor = selectMap.tiposSuelo().firstWhere((e) => e['value'] == '${sueloNutriente.tipoSuelo}')[elemento];
+    elementoTotal = selectFuncionSuelo(sueloNutriente, elemento);
+
+    return elementoTotal*(factor/100);
+}
+
+
+selectFuncionSuelo(SueloNutriente sueloNutriente, String label) { 
+    switch(label) { 
+        case 'N': { return ((10000*0.3*sueloNutriente.densidadAparente*1000)*(sueloNutriente.nitrogeno/100))*0.01*(2.2*0.7072); } 
+        break; 
+        
+        case 'P': { return (((((1000*3000*sueloNutriente.densidadAparente)*sueloNutriente.fosforo)/1000000)*2.2*0.7072)); } 
+        break; 
+        
+        case 'K': { return 780*sueloNutriente.densidadAparente*sueloNutriente.potasio*2.2*0.7; } 
+        break; 
+        
+        case 'Ca': { return 400*sueloNutriente.densidadAparente*sueloNutriente.calcio*2.2*0.7026; } 
+        break;
+
+        case 'Mg': { return 240*sueloNutriente.densidadAparente*sueloNutriente.magnesio*2.2*0.7026; } 
+        break; 
+
+        case 'S': { return (((1000*3000*1.15)*sueloNutriente.azufre)/1000000)*2.2*0.7072; } 
+        break; 
+        
+        
+    }
+} 
+
+

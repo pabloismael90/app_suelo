@@ -809,6 +809,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     _listaPuntos(Map checksPregunta, int pregunta){
        
         checksPregunta.forEach((key, value) {
+            
             final Punto itemPunto = Punto();
             itemPunto.id = uuid.v1();
             itemPunto.idTest = idTestSuelo;
@@ -827,6 +828,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
 
     void _submit(){
         variableVacia = 0;
+        listaPuntos = [];
         setState(() {_guardando = true;});
 
         _listaPuntos(checkErosion, 1);
@@ -840,6 +842,8 @@ class _AgregarPuntoState extends State<AgregarPunto> {
             mostrarSnackbar(variableVacia);
             return null;
         }
+
+        print(listaPuntos.length);
 
         listaPuntos.forEach((punto) {
             DBProvider.db.nuevoPunto(punto);

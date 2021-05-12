@@ -105,48 +105,6 @@ List<Map<String, dynamic>> variedadCacao(){
 }
 
 
-
-
-List<Map<String, dynamic>> puntos1(){
-    final List<Map<String, dynamic>>  repuesta = [
-        {
-            'value': '0',
-            'label': 'No'
-        },
-        {
-            'value': '1',
-            'label': 'Algo'
-        },
-        {
-            'value': '2',
-            'label': 'Severo'
-        }
-
-    ];
-
-    return repuesta;
-}
-
-List<Map<String, dynamic>> puntos2(){
-    final List<Map<String, dynamic>>  repuesta = [
-        {
-            'value': '0',
-            'label': 'No'
-        },
-        {
-            'value': '1',
-            'label': 'Mala'
-        },
-        {
-            'value': '2',
-            'label': 'Buena'
-        }
-
-    ];
-
-    return repuesta;
-}
-
 //Preguntas de Puntos
  
 List<Map<String, dynamic>> erosion(){
@@ -271,6 +229,44 @@ List<Map<String, dynamic>> obrasDrenaje(){
 
 
 //Analisis Suelo
+//Suelo
+List<Map<String, dynamic>> tiposSuelo(){
+    final List<Map<String, dynamic>>  sueloTipo = [
+        {
+            'value': '0', 
+            'label': 'Vertisoles',
+            'N': 60,
+            'P': 50,
+            'K': 65,
+            'Ca': 65,
+            'Mg': 65,
+            'S': 70,
+        },
+        {
+            'value': '1', 
+            'label': 'Andisoles o Volcanicos',
+            'N': 65,
+            'P': 35,
+            'K': 80,
+            'Ca': 80,
+            'Mg': 80,
+            'S': 70,
+        },
+        {
+            'value': '2', 
+            'label': 'Ultisoles / Suelos Rojos',
+            'N': 55,
+            'P': 40,
+            'K': 70,
+            'Ca': 70,
+            'Mg': 70,
+            'S': 70,
+        }
+
+        ];
+
+    return sueloTipo;
+}
 
 List<Map<String, dynamic>> texturasSuelo(){
     final List<Map<String, dynamic>>  texturaTipo = [
@@ -302,12 +298,12 @@ List<Map<String, dynamic>> listAbonos(){
     {
         'value': '1',
         'label': 'Ceniza',
-        'N': 0,
+        'N': 0.0,
         'P': 0.89,
         'K': 3.8,
-        'Ca': 18,
+        'Ca': 18.0,
         'Mg': 1.5,
-        'S': 0
+        'S': 0.0
     },
     {
         'value': '2',
@@ -558,44 +554,6 @@ List<Map<String, dynamic>> unidadAbono(){
 
 
 
-//Suelo
-List<Map<String, dynamic>> tiposSuelo(){
-    final List<Map<String, dynamic>>  sueloTipo = [
-        {
-            'value': '0', 
-            'label': 'Vertisoles',
-            'N': 60,
-            'P': 50,
-            'K': 65,
-            'Ca': 65,
-            'Mg': 65,
-            'S': 70,
-        },
-        {
-            'value': '1', 
-            'label': 'Andisoles o Volcanicos',
-            'N': 65,
-            'P': 35,
-            'K': 80,
-            'Ca': 80,
-            'Mg': 80,
-            'S': 70,
-        },
-        {
-            'value': '2', 
-            'label': 'Ultisoles / Suelos Rojos',
-            'N': 55,
-            'P': 40,
-            'K': 70,
-            'Ca': 70,
-            'Mg': 70,
-            'S': 70,
-        }
-
-        ];
-
-    return sueloTipo;
-}
 
 
 //Salidas Nutrientes

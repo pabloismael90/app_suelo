@@ -382,6 +382,19 @@ class DBProvider {
 
 
     //Conteos analisis
+    Future<double> countPunto( String idTest,int idPregunta,int idItem, int repuesta ) async {
+
+
+        final db = await database;
+        String query =  "SELECT COUNT(*) FROM Punto WHERE idTest = '$idTest' AND idPregunta = '$idPregunta' AND idItem = '$idItem' AND repuesta = '$repuesta'";
+        double res = Sqflite.firstIntValue(await db.rawQuery(query)) * 1.0;
+        
+        
+        return res;
+
+    }
+
+
    
     // Eliminar registros
     Future<int> deleteFinca( String idFinca ) async {

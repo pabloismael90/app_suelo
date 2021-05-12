@@ -1,7 +1,9 @@
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/finca_model.dart';
 import 'package:app_suelo/src/models/parcela_model.dart';
+import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
+import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:app_suelo/src/utils/constants.dart';
@@ -19,6 +21,12 @@ class DecisionesPage extends StatefulWidget {
   _DecisionesPageState createState() => _DecisionesPageState();
 }
 
+Future<double> _count(String idTest,int idPregunta, int idItem, int repuesta) async{
+    double countPalga = await DBProvider.db.countPunto(idTest,idPregunta, idItem, repuesta);
+
+    return (countPalga/5)*100;
+}
+
 class _DecisionesPageState extends State<DecisionesPage> {
 
     Size size;
@@ -32,9 +40,11 @@ class _DecisionesPageState extends State<DecisionesPage> {
         Future _getdataFinca() async{
             Finca finca = await DBProvider.db.getFincaId(suelo.idFinca);
             Parcela parcela = await DBProvider.db.getParcelaId(suelo.idLote);
+            List<Punto> puntos = await DBProvider.db.getPuntosIdTest(suelo.id);
             SalidaNutriente salidaNutriente = await DBProvider.db.getSalidaNutrientes(suelo.id);
             List<EntradaNutriente> entradas = await DBProvider.db.getEntradas(suelo.id);
-            return [finca, parcela, salidaNutriente, entradas];
+            SueloNutriente sueloNutriente = await DBProvider.db.getSueloNutrientes(suelo.id);
+            return [finca, parcela, salidaNutriente, entradas, sueloNutriente, puntos];
         }
 
 
@@ -52,8 +62,12 @@ class _DecisionesPageState extends State<DecisionesPage> {
                     Parcela parcela = snapshot.data[1];
                     SalidaNutriente salidaNutriente = snapshot.data[2];
                     List<EntradaNutriente> entradas = snapshot.data[3];
+                    SueloNutriente sueloNutriente  = snapshot.data[4];
+                    List<Punto> puntos = snapshot.data[5];
 
-                    pageItem.add(_salidaData(finca, parcela, salidaNutriente, entradas));
+                    pageItem.add(_balanceNeto(finca, parcela, salidaNutriente, entradas, sueloNutriente));
+                    pageItem.add(_disponibilidad(finca, parcela, salidaNutriente, entradas, sueloNutriente));
+                    pageItem.add(_recorrido(suelo, puntos));
 
                     return Column(
                         children: [
@@ -115,10 +129,10 @@ class _DecisionesPageState extends State<DecisionesPage> {
         );
     }
     
-    Widget _titulosForm(String titulo){
+    Widget _titulosForm(String titulo, double ancho){
         return Flexible(
             child: Container(
-                width: size.width * 0.4,
+                width: ancho,
                 child: Text(titulo, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
                 .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
             ),
@@ -244,7 +258,9 @@ class _DecisionesPageState extends State<DecisionesPage> {
 
     } 
 
-    Widget _salidaData(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas){
+
+
+    Widget _balanceNeto(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente sueloNutriente){
     
         return Container(
             decoration: BoxDecoration(
@@ -269,7 +285,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
                                                     children: [
                                                         Container(                                                                    
                                                             child: Text(
-                                                                "Porcentaje de cobertura",
+                                                                "Balance neto del Sistema SAF",
                                                                 textAlign: TextAlign.center,
                                                                 style: Theme.of(context).textTheme
                                                                     .headline5
@@ -310,24 +326,48 @@ class _DecisionesPageState extends State<DecisionesPage> {
                                                     Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         children: [
-                                                            _titulosForm('Kg/año'),
-                                                            _titulosForm('Salida'),
-                                                            _titulosForm('Entrada'),
-                                                            _titulosForm('Balance'),
+                                                            _titulosForm('Kg/año', size.width * 0.4),
+                                                            _titulosForm('Salida', size.width * 0.4),
+                                                            _titulosForm('Entrada', size.width * 0.4),
+                                                            _titulosForm('Balance', size.width * 0.4),
                                                         ],
                                                     ),
                                                     Divider(),
-                                                    _rowData('Nitrogeno', calculos.salidaNitrogeno(salidaNutriente), calculos.entradaNitrogeno(entradas)),
+                                                    _rowData(
+                                                        'Nitrogeno', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'N')
+                                                    ),
                                                     Divider(),
-                                                    _rowData('Fósforo', calculos.salidaFosforo(salidaNutriente), 0),
+                                                    _rowData(
+                                                        'Fósforo', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'P'),
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'P')
+                                                    ),
                                                     Divider(),
-                                                    _rowData('Potasio', calculos.salidaPotasio(salidaNutriente), 0),
+                                                    _rowData(
+                                                        'Potasio',
+                                                        calculos.salidaElemeto(salidaNutriente, 'K'),
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'K')
+                                                    ),
                                                     Divider(),
-                                                    _rowData('Calcio', calculos.salidaCalcio(salidaNutriente), 0),
+                                                    _rowData(
+                                                        'Calcio', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'Ca'),
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Ca')
+                                                    ),
                                                     Divider(),
-                                                    _rowData('Magnesio', calculos.salidaMagnesio(salidaNutriente), 0),
+                                                    _rowData(
+                                                        'Magnesio', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'Mg'),
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Mg')
+                                                    ),
                                                     Divider(),
-                                                    _rowData('Azufre', calculos.salidaAzufre(salidaNutriente), 0),
+                                                    _rowData(
+                                                        'Azufre', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'S'), 
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'S')
+                                                    ),
                                                     Divider(),
                                                     
                                                 ],
@@ -349,7 +389,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
         return Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-                _titulosForm(tituloRow),
+                _titulosForm(tituloRow, size.width * 0.4),
                 Flexible(
                     child: Container(
                         width: size.width * 0.4,
@@ -359,13 +399,13 @@ class _DecisionesPageState extends State<DecisionesPage> {
                 Flexible(
                     child: Container(
                         width: size.width * 0.4,
-                        child: Text('0.0', textAlign: TextAlign.center)
+                        child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center)
                     ),
                 ),
                 Flexible(
                     child: Container(
                         width: size.width * 0.4,
-                        child: Text('0.0', textAlign: TextAlign.center)
+                        child: Text((entrada - salida).toStringAsFixed(1) == '-0.0' ? '0.0' : (entrada - salida).toStringAsFixed(1) , textAlign: TextAlign.center)
                     ),
                 ),
                 
@@ -375,7 +415,338 @@ class _DecisionesPageState extends State<DecisionesPage> {
 
 
 
+    Widget _disponibilidad(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente sueloNutriente){
+    
+        return Container(
+            decoration: BoxDecoration(
+                
+            ),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+                children: [
+                    Expanded(
+                        child: SingleChildScrollView(
+                            child: Container(
+                                color: Colors.white,
+                                child: Column(
+                                    children: [
+                                        Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 10),
+                                            child: InkWell(
+                                                child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                        Container(                                                                    
+                                                            child: Text(
+                                                                "Disponibilidad de nutriente",
+                                                                textAlign: TextAlign.center,
+                                                                style: Theme.of(context).textTheme
+                                                                    .headline5
+                                                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                                            ),
+                                                        ),
+                                                        Padding(
+                                                            padding: EdgeInsets.only(left: 10),
+                                                            child: Icon(
+                                                                Icons.info_outline_rounded,
+                                                                color: Colors.green,
+                                                                size: 22.0,
+                                                            ),
+                                                        ),
+                                                    ],
+                                                ),
+                                                onTap: () => _dialogText(context),
+                                            ),
+                                        ),
+                                        
+                                        Container(
+                                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                            width: double.infinity,
+                                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(10),
+                                                boxShadow: [
+                                                    BoxShadow(
+                                                            color: Color(0xFF3A5160)
+                                                                .withOpacity(0.05),
+                                                            offset: const Offset(1.1, 1.1),
+                                                            blurRadius: 17.0),
+                                                    ],
+                                            ),
+                                            child: Column(
+                                                children: [
+                                                    Row(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: [
+                                                            _titulosForm('Kg/año', size.width * 0.2),
+                                                            _titulosForm('Salida', size.width * 0.2),
+                                                            _titulosForm('Entrada', size.width * 0.2),
+                                                            _titulosForm('Suelo', size.width * 0.2),
+                                                            _titulosForm('Balance', size.width * 0.2),
+                                                        ],
+                                                    ),
+                                                    Divider(),
+                                                    _rowDisponibilidad(
+                                                        'N', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'N'),
+                                                        calculos.nutrienteSuelo(sueloNutriente, 'N'),
+                                                    ),
+                                                    Divider(),
+                                                    _rowDisponibilidad(
+                                                        'P', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'P'),
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'P'),
+                                                        calculos.nutrienteSuelo(sueloNutriente, 'P'),
+                                                    ),
+                                                    Divider(),
+                                                    _rowDisponibilidad(
+                                                        'K',
+                                                        calculos.salidaElemeto(salidaNutriente, 'K'),
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'K'),
+                                                        calculos.nutrienteSuelo(sueloNutriente, 'K'),
+                                                    ),
+                                                    Divider(),
+                                                    _rowDisponibilidad(
+                                                        'Ca', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'Ca'),
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Ca'),
+                                                        calculos.nutrienteSuelo(sueloNutriente, 'Ca'),
+                                                    ),
+                                                    Divider(),
+                                                    _rowDisponibilidad(
+                                                        'Mg', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'Mg'),
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Mg'),
+                                                        calculos.nutrienteSuelo(sueloNutriente, 'Mg'),
+                                                    ),
+                                                    Divider(),
+                                                    _rowDisponibilidad(
+                                                        'S', 
+                                                        calculos.salidaElemeto(salidaNutriente, 'S'), 
+                                                        calculos.entradaElemento(entradas, sueloNutriente, 'S'),
+                                                        calculos.nutrienteSuelo(sueloNutriente, 'S'),
+                                                    ),
+                                                    Divider(),
+                                                    
+                                                ],
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                            ),
+                        ),
+                    )
+                    
+                ],
+            ),
+        );
+            
+    }
 
+    Widget _rowDisponibilidad( String tituloRow, double salida, double entrada, double suelo){
+
+        double balance = (entrada + suelo) - salida;
+
+        return Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+                _titulosForm(tituloRow, size.width * 0.2),
+                Flexible(
+                    child: Container(
+                        width: size.width * 0.2,
+                        child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center)
+                    ),
+                ),
+                Flexible(
+                    child: Container(
+                        width: size.width * 0.2,
+                        child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center)
+                    ),
+                ),
+                Flexible(
+                    child: Container(
+                        width: size.width * 0.2,
+                        child: Text(suelo.toStringAsFixed(1) == '-0.0' ? '0.0' : suelo.toStringAsFixed(1) , textAlign: TextAlign.center)
+                    ),
+                ),
+                Flexible(
+                    child: Container(
+                        width: size.width * 0.2,
+                        child: Text(balance.toStringAsFixed(1) == '-0.0' ? '0.0' : balance.toStringAsFixed(1) , textAlign: TextAlign.center)
+                    ),
+                ),
+                
+            ],
+        );
+    }
+
+
+    Widget _tituloPregunta(String titulo){
+        
+        return  Column(
+            children: [
+                Container(
+                    child: Padding(
+                        padding: EdgeInsets.only(top: 20, bottom: 10),
+                        child: Text(
+                            titulo,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme
+                                .headline5
+                                .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                        ),
+                    )
+                ),
+                Divider(),
+                
+            ],
+        );
+    }
+
+    Widget _labelTipo(int tipo){
+        
+        return  Column(
+            children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
+                                        .copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                        Container(
+                            width: 60,
+                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
+                        ),
+                        Container(
+                            width: 60,
+                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
+                        ),
+                        Container(
+                            width: 60,
+                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                        ),
+                    ],
+                ),
+                Divider(),
+            ],
+        );
+    }
+
+    Widget _rowRecorrido(String idTest,int tipo, String titulo, int pregunta, List<Map<String, dynamic>> preguntaItem){
+        List<Widget> prueba = [];
+
+        prueba.add(_tituloPregunta(titulo));
+        prueba.add(_labelTipo(tipo));
+
+        for (var item in preguntaItem) {
+            
+            prueba.add(
+                 Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6
+                                        .copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                        Container(
+                            width: 60,
+                            child: FutureBuilder(
+                                future: _count(idTest,pregunta,int.parse(item['value']),1),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return Text('0.0', textAlign: TextAlign.center);
+                                    }
+                                    
+                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 60,
+                            child: FutureBuilder(
+                                future: _count(idTest,pregunta,int.parse(item['value']), 2),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return Text('0.0', textAlign: TextAlign.center);
+                                    }
+                                    
+                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                        Container(
+                            width: 60,
+                            child: FutureBuilder(
+                                future: _count(idTest,pregunta,int.parse(item['value']),3),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (!snapshot.hasData) {
+                                        return Text('0.0', textAlign: TextAlign.center);
+                                    }
+                                    
+                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
+                                },
+                            ),
+                        ),
+                    ],
+                ),
+            );
+            prueba.add(Divider());
+        }
+        return  Column(
+            children:prueba,
+        );
+ 
+    }
+
+    Widget _recorrido(TestSuelo suelo,List<Punto> puntos){
+    
+        return Container(
+            decoration: BoxDecoration(
+                
+            ),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+                children: [
+                    Expanded(
+                        child: SingleChildScrollView(
+                            child: Container(
+                                color: Colors.white,
+                                child: Container(
+                                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                            BoxShadow(
+                                                    color: Color(0xFF3A5160)
+                                                        .withOpacity(0.05),
+                                                    offset: const Offset(1.1, 1.1),
+                                                    blurRadius: 17.0),
+                                            ],
+                                    ),
+                                    child: Column(
+                                        children: [
+                                            
+                                            _rowRecorrido(suelo.id,1, 'Observaciones de erosión', 1, selectMap.erosion()),
+                                            
+                                            _rowRecorrido(suelo.id, 2, 'Obras de conservación de suelo', 2, selectMap.conservacion())
+                                            
+                                        ],
+                                    ),
+                                ),
+                            ),
+                        ),
+                    )
+                    
+                ],
+            ),
+        );
+            
+    }
 
 
 }

@@ -128,10 +128,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 Expanded(
                     child: TextFormField(
                         initialValue: salidaNutriente.cacao.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -175,10 +172,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 Expanded(
                     child: TextFormField(
                         initialValue: salidaNutriente.cascaraCacao.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -219,10 +213,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 Expanded(
                     child: TextFormField(
                         initialValue: salidaNutriente.lena.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -264,10 +255,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 Expanded(
                     child: TextFormField(
                         initialValue: salidaNutriente.musacea.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -308,10 +296,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 Expanded(
                     child: TextFormField(
                         initialValue: salidaNutriente.fruta.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -353,10 +338,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 Expanded(
                     child: TextFormField(
                         initialValue: salidaNutriente.madera.toString(),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                        ],
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
