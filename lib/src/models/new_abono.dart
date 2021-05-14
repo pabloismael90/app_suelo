@@ -1,5 +1,5 @@
-class EntradaNutriente {
-    EntradaNutriente({
+class NewAbono {
+    NewAbono({
         this.id,
         this.idTest,
         this.idAbono = 0,
@@ -19,7 +19,7 @@ class EntradaNutriente {
     int unidad;
     int tipo;
 
-    factory EntradaNutriente.fromJson(Map<String, dynamic> json) => EntradaNutriente(
+    factory NewAbono.fromJson(Map<String, dynamic> json) => NewAbono(
         id: json["id"],
         idTest: json["idTest"],
         idAbono: json["idAbono"],

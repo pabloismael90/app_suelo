@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
+import 'package:app_suelo/src/models/new_abono.dart';
 import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
@@ -29,6 +30,7 @@ class FincasBloc {
     final _salidaControl = StreamController<SalidaNutriente>.broadcast();
     final _sueloControl = StreamController<SueloNutriente>.broadcast();
     final _entradaControl = StreamController<List<EntradaNutriente>>.broadcast();
+    final _newAbonoControl = StreamController<List<NewAbono>>.broadcast();
     //final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
     
 
@@ -42,6 +44,7 @@ class FincasBloc {
     Stream<SalidaNutriente> get salidaStream => _salidaControl.stream;
     Stream<SueloNutriente> get sueloStream => _sueloControl.stream;
     Stream<List<EntradaNutriente>> get entradaStream => _entradaControl.stream;
+    Stream<List<NewAbono>> get newAbono => _newAbonoControl.stream;
     //Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
 
 
@@ -162,6 +165,8 @@ class FincasBloc {
         obtenerSuelo(nuevaSuelo.idTest);
     }
 
+
+
     obtenerEntradas(String idTest) async {
         _entradaControl.sink.add( await DBProvider.db.getEntradas(idTest) );
     }
@@ -174,6 +179,21 @@ class FincasBloc {
     borrarEntrada( EntradaNutriente nuevaEntrada )async{
         await DBProvider.db.deleteEntrada(nuevaEntrada.id);
         obtenerEntradas(nuevaEntrada.idTest);
+    }
+
+
+    obtenerNewAbono(String idTest) async {
+        _newAbonoControl.sink.add( await DBProvider.db.getNewAbono(idTest) );
+    }
+
+    addNewEntrada( NewAbono newAbono) async{
+        await DBProvider.db.nuevoAbono(newAbono);
+        obtenerNewAbono(newAbono.idTest);
+    }
+
+    borrarNewEntrada( NewAbono newAbono )async{
+        await DBProvider.db.deleteNewAbono(newAbono.id);
+        obtenerNewAbono(newAbono.idTest);
     }
 
 
@@ -197,6 +217,7 @@ class FincasBloc {
         _salidaControl?.close();
         _sueloControl?.close();
         _entradaControl?.close();
+        _newAbonoControl?.close();
     }
 
     

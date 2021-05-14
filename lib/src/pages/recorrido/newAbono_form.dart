@@ -1,5 +1,5 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
-import 'package:app_suelo/src/models/entradaNutriente_model.dart';
+import 'package:app_suelo/src/models/new_abono.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:select_form_field/select_form_field.dart';
@@ -8,20 +8,20 @@ import 'package:app_suelo/src/utils/validaciones.dart' as utils;
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 
-class AddAbono extends StatefulWidget {
-  AddAbono({Key key}) : super(key: key);
+class AddNewAbono extends StatefulWidget {
+  AddNewAbono({Key key}) : super(key: key);
 
   @override
-  _AddAbonoState createState() => _AddAbonoState();
+  _AddNewAbonoState createState() => _AddNewAbonoState();
 }
 
-class _AddAbonoState extends State<AddAbono> {
+class _AddNewAbonoState extends State<AddNewAbono> {
 
     final formKey = GlobalKey<FormState>();
     final scaffoldKey = GlobalKey<ScaffoldState>();
  
     final fincasBloc = new FincasBloc();
-    EntradaNutriente entradaNutriente = EntradaNutriente();
+    NewAbono entradaNutriente = NewAbono();
 
     bool _guardando = false;
     var uuid = Uuid();
@@ -30,7 +30,7 @@ class _AddAbonoState extends State<AddAbono> {
     @override
     Widget build(BuildContext context) {
 
-        suelo = ModalRoute.of(context).settings.arguments;
+        suelo = ModalRoute.of(context).settings.arguments ;
         String tituloBtn = 'Guardar';
 
         entradaNutriente.idTest = suelo.id;
@@ -221,7 +221,7 @@ class _AddAbonoState extends State<AddAbono> {
 
         
         entradaNutriente.id = uuid.v1();
-        fincasBloc.addEntrada(entradaNutriente);
+        fincasBloc.addNewEntrada(entradaNutriente);
         
 
         setState(() {_guardando = false;});

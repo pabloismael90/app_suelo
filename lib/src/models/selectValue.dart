@@ -291,6 +291,10 @@ List<Map<String, dynamic>> texturasSuelo(){
 
     return texturaTipo;
 }
+
+
+
+
 // Abonos
 List<Map<String, dynamic>> listAbonos(){
     final List<Map<String, dynamic>>  abonos = [
@@ -514,6 +518,16 @@ List<Map<String, dynamic>> listAbonos(){
         'Ca': 4,
         'Mg': 0.4,
         'S': 0.25
+    },
+    {
+        'value': '23',
+        'label': 'Completo 0-0-60',
+        'N': 0,
+        'P': 0,
+        'K': 60,
+        'Ca': 0,
+        'Mg': 0,
+        'S': 0
     }
 ];
 

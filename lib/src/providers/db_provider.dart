@@ -2,6 +2,7 @@ import 'dart:io';
 
 
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
+import 'package:app_suelo/src/models/new_abono.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
@@ -36,13 +37,13 @@ class DBProvider {
 
         Directory documentsDirectory = await getApplicationDocumentsDirectory();
 
-        final path = join( documentsDirectory.path, 'herramienta.db' );
+        final path = join( documentsDirectory.path, 'sueloHerramienta.db' );
 
         print(path);
 
         return await openDatabase(
             path,
-            version: 2,
+            version: 1,
             onOpen: (db) {},
             onConfigure: _onConfigure,
             onCreate: ( Database db, int version ) async {
@@ -113,11 +114,25 @@ class DBProvider {
                     'id TEXT PRIMARY KEY,'
                     ' idTest TEXT,'
                     ' idAbono INTEGER,'
-                    ' densidad INTEGER,'
                     ' humedad REAL,'
                     ' cantidad REAL,'
                     ' frecuencia INTEGER,'
                     ' unidad INTEGER,'
+                    ' tipo INTEGER,'
+                    ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
+                    ')'
+                );
+
+                await db.execute(
+                    'CREATE TABLE newAbono ('
+                    'id TEXT PRIMARY KEY,'
+                    ' idTest TEXT,'
+                    ' idAbono INTEGER,'
+                    ' humedad REAL,'
+                    ' cantidad REAL,'
+                    ' frecuencia INTEGER,'
+                    ' unidad INTEGER,'
+                    ' tipo INTEGER,'
                     ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
                     ')'
                 );
@@ -144,6 +159,16 @@ class DBProvider {
                     ' textura INTEGER,'
                     ' tipoSuelo INTEGER,'
                     ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
+                    ')'
+                );
+
+                await db.execute(
+                    'CREATE TABLE Acciones ('
+                    'id TEXT PRIMARY KEY,'
+                    ' idItem INTEGER,'
+                    ' repuesta TEXT,'
+                    ' idTest TEXT,'
+                    ' CONSTRAINT fk_acciones FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
                     ')'
                 );
 
@@ -202,6 +227,12 @@ class DBProvider {
     nuevoEntrada( EntradaNutriente nuevoEntrada ) async {
         final db  = await database;
         final res = await db.insert('entradaNutriente',  nuevoEntrada.toJson() );
+        return res;
+    }
+
+    nuevoAbono( NewAbono nuevoAbono ) async {
+        final db  = await database;
+        final res = await db.insert('newAbono',  nuevoAbono.toJson() );
         return res;
     }
 
@@ -305,6 +336,16 @@ class DBProvider {
         final res = await db.query('entradaNutriente', where: 'idTest = ?', whereArgs: [idTest]);
         List<EntradaNutriente> list = res.isNotEmpty 
                     ? res.map( (c) => EntradaNutriente.fromJson(c) ).toList() 
+                    : [];
+        
+        return list;         
+    }
+
+    Future<List<NewAbono>> getNewAbono(String idTest) async{
+        final db = await database;
+        final res = await db.query('newAbono', where: 'idTest = ?', whereArgs: [idTest]);
+        List<NewAbono> list = res.isNotEmpty 
+                    ? res.map( (c) => NewAbono.fromJson(c) ).toList() 
                     : [];
         
         return list;         
@@ -429,6 +470,13 @@ class DBProvider {
 
         final db  = await database;
         final res = await db.delete('entradaNutriente', where: 'id = ?', whereArgs: [id]);
+        return res;
+    }
+
+    Future<int> deleteNewAbono( String id) async {
+
+        final db  = await database;
+        final res = await db.delete('newAbono', where: 'id = ?', whereArgs: [id]);
         return res;
     }
 

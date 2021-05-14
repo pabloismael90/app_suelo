@@ -1,5 +1,6 @@
 
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
+import 'package:app_suelo/src/models/parcela_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
@@ -32,13 +33,13 @@ salidaElemeto(SalidaNutriente salidaNutriente, String elemento){
 
 
 //Entrada
-entradaElemento(List<EntradaNutriente> entradas, SueloNutriente sueloNutriente, String elemento){
+entradaElemento(List<EntradaNutriente> entradas, SueloNutriente sueloNutriente, String elemento, Parcela parcela){
     double totalElemento = 0;
     int elementoSuelo = selectMap.tiposSuelo().firstWhere((e) => e['value'] == '${sueloNutriente.tipoSuelo}')[elemento];
     
 
     for (var entrada in entradas) {
-        totalElemento = totalElemento+selectFuncionElemento(entrada, elemento);
+        totalElemento = totalElemento+selectFuncionElemento(entrada, elemento, parcela.numeroPlanta);
     }
     
     
@@ -46,15 +47,15 @@ entradaElemento(List<EntradaNutriente> entradas, SueloNutriente sueloNutriente, 
     return totalElemento * (elementoSuelo/100);
 }
 
-selectFuncionElemento(EntradaNutriente entrada, String label) { 
+selectFuncionElemento(EntradaNutriente entrada, String label, int densidad) { 
     switch(entrada.unidad.toString()) { 
-        case '0': { return totalOzPlanta(entrada, label);  } 
+        case '0': { return totalOzPlanta(entrada, label, densidad);  } 
         break; 
         
-        case '1': { return totalLbPlanta(entrada, label); } 
+        case '1': { return totalLbPlanta(entrada, label, densidad); } 
         break; 
         
-        case '2': { return totalGPlanta(entrada, label); } 
+        case '2': { return totalGPlanta(entrada, label, densidad); } 
         break; 
         
         case '3': { return totalKgMz(entrada, label); } 
@@ -70,39 +71,39 @@ selectFuncionElemento(EntradaNutriente entrada, String label) {
     }
 } 
 
-double totalOzPlanta(EntradaNutriente entrada, String label){
+double totalOzPlanta(EntradaNutriente entrada, String label, int densidad){
     double total;
     double b13 = entrada.cantidad;
     double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     double h10 = entrada.humedad;
     int b16 = entrada.frecuencia;
-    int d5 = entrada.densidad;
+    int d5 = densidad;
 
     total = ((b13/16)*((100-h10)/100)*(b10/100)*d5)*b16;
 
     return total;
 }
 
-double totalLbPlanta(EntradaNutriente entrada, String label){
+double totalLbPlanta(EntradaNutriente entrada, String label, int densidad){
     double total;
     double b13 = entrada.cantidad;
     double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     double h10 = entrada.humedad;
     int b16 = entrada.frecuencia;
-    int d5 = entrada.densidad;
+    int d5 = densidad;
 
     total = (b13*((100-h10)/100)*(b10/100)*d5)*b16;
-
+    
     return total;
 }
 
-double totalGPlanta(EntradaNutriente entrada, String label){
+double totalGPlanta(EntradaNutriente entrada, String label, int densidad){
     double total;
     double b13 = entrada.cantidad;
     double b10 = selectMap.listAbonos().firstWhere((e) => e['value'] == '${entrada.idAbono}')[label] * 1.0;
     double h10 = entrada.humedad;
     int b16 = entrada.frecuencia;
-    int d5 = entrada.densidad;
+    int d5 = densidad;
 
     total = ((b13/456)*((100-h10)/100)*(b10/100)*d5)*b16;
 

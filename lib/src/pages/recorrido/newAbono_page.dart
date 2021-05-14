@@ -1,4 +1,5 @@
-import 'package:app_suelo/src/models/entradaNutriente_model.dart';
+
+import 'package:app_suelo/src/models/new_abono.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/pages/parcelas/parcelas_page.dart';
 import 'package:app_suelo/src/utils/constants.dart';
@@ -7,39 +8,38 @@ import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 
-class AbonosPage extends StatefulWidget {
-  AbonosPage({Key key}) : super(key: key);
+class NewAbonoPage extends StatefulWidget {
+  NewAbonoPage({Key key}) : super(key: key);
 
   @override
-  _AbonosPageState createState() => _AbonosPageState();
+  _NewAbonoPageState createState() => _NewAbonoPageState();
 }
 
-class _AbonosPageState extends State<AbonosPage> {
+class _NewAbonoPageState extends State<NewAbonoPage> {
     @override
     Widget build(BuildContext context) {
-
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
         
         
-        fincasBloc.obtenerEntradas(suelo.id);
+        fincasBloc.obtenerNewAbono(suelo.id);
         
         
         
         return Scaffold(
             appBar: AppBar(),
             body: StreamBuilder(
-                stream: fincasBloc.entradaStream ,
+                stream: fincasBloc.newAbono,
                 builder: (BuildContext context, AsyncSnapshot snapshot){
                     if (!snapshot.hasData) {
                         return CircularProgressIndicator();
                     }
                     
-                    List<EntradaNutriente> entradas = snapshot.data;
+                    List<NewAbono> entradas = snapshot.data;
 
                     if (entradas.length == 0) {
                         return Column(
                             children: [
-                                TitulosPages(titulo: 'Lista de Abonos'),
+                                TitulosPages(titulo: 'Propuesta de Abonos'),
                                 Divider(), 
                                 Expanded(child: Center(
                                     child: Text('No hay datos: \nIngrese datos de abonos', 
@@ -53,7 +53,7 @@ class _AbonosPageState extends State<AbonosPage> {
                     }
                     return Column(
                         children: [
-                            TitulosPages(titulo: 'Lista de Abonos'),
+                            TitulosPages(titulo: 'Propuesta de Abonos'),
                             Divider(),                            
                             Expanded(
                                 child: SingleChildScrollView(
@@ -77,7 +77,7 @@ class _AbonosPageState extends State<AbonosPage> {
         );
     }
 
-    Widget  _listaDePisos(List<EntradaNutriente> entradas, BuildContext context){
+    Widget  _listaDePisos(List<NewAbono> entradas, BuildContext context){
 
         return ListView.builder(
             itemBuilder: (context, index) {
@@ -124,7 +124,7 @@ class _AbonosPageState extends State<AbonosPage> {
                     direction: DismissDirection.endToStart,
                     background: backgroundTrash(context),
                     movementDuration: Duration(milliseconds: 500),
-                    onDismissed: (direction) => fincasBloc.borrarEntrada(entradas[index]),
+                    onDismissed: (direction) => fincasBloc.borrarNewEntrada(entradas[index]),
                 );
                 
             },
@@ -151,7 +151,7 @@ class _AbonosPageState extends State<AbonosPage> {
                             .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                     ),
                     padding:EdgeInsets.all(13),
-                    onPressed: () => Navigator.pushNamed(context, 'AddAbono', arguments: suelo),
+                    onPressed: () => Navigator.pushNamed(context, 'AddNewAbono', arguments: suelo),
                 )
             ),
         );

@@ -1,10 +1,7 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
-import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/finca_model.dart';
 import 'package:app_suelo/src/models/parcela_model.dart';
 import 'package:app_suelo/src/models/punto_model.dart';
-import 'package:app_suelo/src/models/salidaNutriente_model.dart';
-import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:app_suelo/src/utils/constants.dart';
@@ -29,7 +26,6 @@ class _TodaDatosState extends State<TodaDatos> {
     Future _getdataFinca(TestSuelo textPlaga) async{
         Finca finca = await DBProvider.db.getFincaId(textPlaga.idFinca);
         Parcela parcela = await DBProvider.db.getParcelaId(textPlaga.idLote);
-        //List<Decisiones> desiciones = await DBProvider.db.getDecisionesIdTest(textPlaga.id);
         
         return [finca, parcela];
     }
@@ -47,6 +43,7 @@ class _TodaDatosState extends State<TodaDatos> {
         fincasBloc.obtenerSalida(suelo.id);
         fincasBloc.obtenerSuelo(suelo.id);
         fincasBloc.obtenerEntradas(suelo.id);
+        fincasBloc.obtenerNewAbono(suelo.id);
 
        return Scaffold(
             appBar: AppBar(),
@@ -58,22 +55,19 @@ class _TodaDatosState extends State<TodaDatos> {
                     child: ListView(
                             children: [
                                 _cardRecorrido(suelo),
-                                Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                        'Balance nutrientes',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context).textTheme
-                                            .headline5
-                                            .copyWith(fontWeight: FontWeight.w900, fontSize: 22 )
-                                    ),
-                                ),
+                                _botonResultado( suelo, 'Resultado recorrido', 'recorridoResultado', fincasBloc.puntoStream, 5 ),
                                 Divider(),
-                                _cardSalidaNutriente(suelo),
-                                
-                                
-                                _cardEntrada(suelo),
-                                _cardSueloNutriente(suelo)
+                                _tituloDivider('Balance nutrientes actual'),
+                                Divider(),
+                                _cardNutriente(suelo, 'Cosecha anual', 'cosechaAnual', fincasBloc.salidaStream),
+                                _cardNutriente(suelo, 'Análisis de suelo', 'analisisSuelo', fincasBloc.sueloStream),
+                                _cardEntrada(suelo, fincasBloc.entradaStream, 'Uso de abono anual', 'abonosPage' ),
+                                _botonTemporal(suelo, 'Balance nutrientes actual', 1),
+                                Divider(),
+                                _tituloDivider('Balance nutrientes actual'),
+                                Divider(),
+                                _cardEntrada(suelo,fincasBloc.newAbono, 'Uso de abono anual2', 'NewAbonosPage'),
+                                //_botonTemporal(suelo, 'Propuesta balance nutrientes', 2),
                             ],
                         ),
                     ),
@@ -86,6 +80,18 @@ class _TodaDatosState extends State<TodaDatos> {
         );
     }
 
+    Widget _tituloDivider(String titulo){
+        return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+                titulo,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme
+                    .headline5
+                    .copyWith(fontWeight: FontWeight.w900, fontSize: 20 )
+            ),
+        );
+    }
 
 
     Widget escabezadoEstacion( BuildContext context, TestSuelo suelo ){
@@ -218,16 +224,16 @@ class _TodaDatosState extends State<TodaDatos> {
 
     }
     
-    Widget _cardSalidaNutriente(TestSuelo suelo){
+    Widget _cardNutriente(TestSuelo suelo, String titulo, String url, Stream streamData){
 
         return StreamBuilder(
-            stream: fincasBloc.salidaStream,
+            stream: streamData,
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                 }
                 
-                SalidaNutriente salidaNutriente = snapshot.data;
+                var nutrientes = snapshot.data;
                 
                 
                 return GestureDetector(
@@ -254,7 +260,7 @@ class _TodaDatosState extends State<TodaDatos> {
                                 Padding(
                                     padding: EdgeInsets.only(top: 10, bottom: 10.0),
                                     child: Text(
-                                        'Cosecha anual',
+                                        titulo,
                                         softWrap: true,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
@@ -263,7 +269,7 @@ class _TodaDatosState extends State<TodaDatos> {
                                 ),
                                 Container(
                                     child: Icon(Icons.check_circle, 
-                                        color: salidaNutriente.id == null ? Colors.black38 : Colors.green[900],
+                                        color: nutrientes.id == null ? Colors.black38 : Colors.green[900],
                                         size: 30,
                                     ),
                                     
@@ -271,23 +277,24 @@ class _TodaDatosState extends State<TodaDatos> {
                             ],
                         ),
                     ),
-                    onTap: () => Navigator.pushNamed(context, 'cosechaAnual', arguments: [suelo, salidaNutriente]),
+                    onTap: () => Navigator.pushNamed(context, url, arguments: [suelo, nutrientes]),
                 );
             },
         );
 
     }
     
-    Widget _cardSueloNutriente(TestSuelo suelo){
+
+    Widget _cardEntrada(TestSuelo suelo, Stream streamData, String titulo, String url){
 
         return StreamBuilder(
-            stream: fincasBloc.sueloStream,
+            stream: streamData,
             builder: (BuildContext context, AsyncSnapshot snapshot){
                 if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                 }
                 
-                SueloNutriente sueloNutriente = snapshot.data;
+                List entradas = snapshot.data;
                 
                 
                 return GestureDetector(
@@ -314,67 +321,7 @@ class _TodaDatosState extends State<TodaDatos> {
                                 Padding(
                                     padding: EdgeInsets.only(top: 10, bottom: 10.0),
                                     child: Text(
-                                        'Análisis de suelo',
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline6,
-                                    ),
-                                ),
-                                Container(
-                                    child: Icon(Icons.check_circle, 
-                                        color: sueloNutriente.id == null ? Colors.black38 : Colors.green[900],
-                                        size: 30,
-                                    ),
-                                    
-                                )
-                            ],
-                        ),
-                    ),
-                    onTap: () => Navigator.pushNamed(context, 'analisisSuelo', arguments: [suelo,sueloNutriente]),
-                );
-            },
-        );
-
-    }
-    
-    Widget _cardEntrada(TestSuelo suelo){
-
-        return StreamBuilder(
-            stream: fincasBloc.entradaStream ,
-            builder: (BuildContext context, AsyncSnapshot snapshot){
-                if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                }
-                
-                List<EntradaNutriente> entradas = snapshot.data;
-                
-                
-                return GestureDetector(
-                    child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                            
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(13),
-                            boxShadow: [
-                                BoxShadow(
-                                        color: Color(0xFF3A5160)
-                                            .withOpacity(0.05),
-                                        offset: const Offset(1.1, 1.1),
-                                        blurRadius: 17.0),
-                                ],
-                        ),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                                
-                                Padding(
-                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                    child: Text(
-                                        'Uso de abono anual',
+                                        titulo,
                                         softWrap: true,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
@@ -391,13 +338,58 @@ class _TodaDatosState extends State<TodaDatos> {
                             ],
                         ),
                     ),
-                    onTap: () => Navigator.pushNamed(context, 'abonosPage', arguments: suelo),
+                    onTap: () => Navigator.pushNamed(context, url, arguments: suelo),
                 );
             },
         );
 
     }
     
+   
+
+    Widget  _botonResultado(TestSuelo suelo, String titulo, String url, Stream streamData, int validacion ){
+        
+        return StreamBuilder(
+            stream: streamData ,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+                return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+                    child: RaisedButton(
+                        child: Text(titulo,
+                            style: Theme.of(context).textTheme
+                                .headline6
+                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                        ),
+                        padding:EdgeInsets.all(13),
+                        onPressed: snapshot.data.length == validacion ? () => Navigator.pushNamed(context, url, arguments: suelo) : null,
+                    ),
+                );
+            },
+        );
+
+        
+        
+    }
+
+    Widget  _botonTemporal(TestSuelo suelo, String titulo, int tipo){
+        
+        return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+            child: RaisedButton(
+                child: Text(titulo,
+                    style: Theme.of(context).textTheme
+                        .headline6
+                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                ),
+                padding:EdgeInsets.all(13),
+                onPressed: () => Navigator.pushNamed(context, 'ResultadoNutrientes', arguments: [suelo, titulo, tipo]),
+            ),
+        );
+
+    }
     
     
 
@@ -421,61 +413,5 @@ class _TodaDatosState extends State<TodaDatos> {
             ),
         );
         
-        
-    //     if(countEstaciones[0] >= 10 && countEstaciones[1] >= 10 && countEstaciones[2] >= 10){
-            
-    //         return StreamBuilder(
-    //         stream: fincasBloc.decisionesStream ,
-    //             builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //                 if (!snapshot.hasData) {
-    //                     return Center(child: CircularProgressIndicator());
-    //                 }
-    //                 List<Decisiones> desiciones = snapshot.data;
-
-    //                 //print(desiciones);
-
-    //                 if (desiciones.length == 0){
-
-                        
-                        
-                    // }
-
-
-    //                 return Container(
-    //                     color: kBackgroundColor,
-    //                     child: Padding(
-    //                         padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-    //                         child: RaisedButton.icon(
-    //                             icon:Icon(Icons.receipt_rounded),
-                            
-    //                             label: Text('Consultar decisiones',
-    //                                 style: Theme.of(context).textTheme
-    //                                     .headline6
-    //                                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-    //                             ),
-    //                             padding:EdgeInsets.all(13),
-    //                             onPressed: () => Navigator.pushNamed(context, 'reporte', arguments: suelo.id),
-    //                         )
-    //                     ),
-    //                 );
-                                       
-    //             },  
-    //         );
-    //     }
-        
-
-    //     return Container(
-    //         color: kBackgroundColor,
-    //         child: Padding(
-    //             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-    //             child: Text(
-    //                 "Complete las estaciones",
-    //                 textAlign: TextAlign.center,
-    //                 style: Theme.of(context).textTheme
-    //                     .headline5
-    //                     .copyWith(fontWeight: FontWeight.w900, color: kRedColor, fontSize: 22)
-    //             ),
-    //         ),
-    //     );
     }
 }

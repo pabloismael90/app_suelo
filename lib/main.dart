@@ -10,9 +10,13 @@ import 'package:app_suelo/src/pages/recorrido/CosechaAnual.dart';
 import 'package:app_suelo/src/pages/recorrido/abono_form.dart';
 import 'package:app_suelo/src/pages/recorrido/abonos_page.dart';
 import 'package:app_suelo/src/pages/recorrido/analisisSuelo.dart';
+import 'package:app_suelo/src/pages/recorrido/newAbono_form.dart';
+import 'package:app_suelo/src/pages/recorrido/newAbono_page.dart';
 import 'package:app_suelo/src/pages/recorrido/punto_form.dart';
 import 'package:app_suelo/src/pages/recorrido/puntos_page.dart';
 import 'package:app_suelo/src/pages/recorrido/tomaDatos_page.dart';
+import 'package:app_suelo/src/pages/salidas/balance_actual.dart';
+import 'package:app_suelo/src/pages/salidas/recorrido_salida.dart';
 import 'package:app_suelo/src/pages/suelo/testSuelo_form.dart';
 import 'package:app_suelo/src/pages/suelo/testSuelo_page.dart';
 import 'package:app_suelo/src/utils/constants.dart';
@@ -67,8 +71,12 @@ class MyApp extends StatelessWidget {
                 'analisisSuelo': (BuildContext context) => AnalisiSuelo(),
                 'abonosPage': (BuildContext context) => AbonosPage(),
                 'AddAbono': (BuildContext context) => AddAbono(),
+                'NewAbonosPage': (BuildContext context) => NewAbonoPage(),
+                'AddNewAbono': (BuildContext context) => AddNewAbono(),
 
-                //Decisiones
+                //Resultados
+                'recorridoResultado': (BuildContext context) => RecorridoResultado(),
+                'ResultadoNutrientes': (BuildContext context) => BalanceActual(),
                 'decisiones': (BuildContext context) => DecisionesPage(),
                 
 
@@ -99,6 +107,12 @@ class MyApp extends StatelessWidget {
                     ),
                     textTheme: ButtonTextTheme.primary,
                     buttonColor: Color(0xFF3f2a56),
+                ),
+                textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        backgroundColor: Color(0xFF3f2a56)
+                    ),
                 )
             ),
         );
