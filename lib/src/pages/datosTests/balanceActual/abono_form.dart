@@ -30,10 +30,14 @@ class _AddAbonoState extends State<AddAbono> {
     @override
     Widget build(BuildContext context) {
 
-        suelo = ModalRoute.of(context).settings.arguments;
+        List dataRoute = ModalRoute.of(context).settings.arguments;
+        suelo = dataRoute[0];
         String tituloBtn = 'Guardar';
 
+
         entradaNutriente.idTest = suelo.id;
+        entradaNutriente.tipo = dataRoute[1];
+        print(entradaNutriente.tipo);
 
         
         return Scaffold(

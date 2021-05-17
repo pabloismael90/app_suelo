@@ -1,8 +1,5 @@
-import 'package:app_suelo/src/bloc/fincas_bloc.dart';
+
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
-import 'package:app_suelo/src/models/finca_model.dart';
-import 'package:app_suelo/src/models/parcela_model.dart';
-import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
@@ -11,60 +8,50 @@ import 'package:app_suelo/src/utils/constants.dart';
 import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:app_suelo/src/utils/calculos.dart' as calculos;
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-class DecisionesPage extends StatefulWidget {
-  DecisionesPage({Key key}) : super(key: key);
+class BalanceActual extends StatefulWidget {
+  BalanceActual({Key key}) : super(key: key);
 
   @override
-  _DecisionesPageState createState() => _DecisionesPageState();
+  _BalanceActualState createState() => _BalanceActualState();
 }
 
-Future<double> _count(String idTest,int idPregunta, int idItem, int repuesta) async{
-    double countPalga = await DBProvider.db.countPunto(idTest,idPregunta, idItem, repuesta);
-
-    return (countPalga/5)*100;
-}
-
-class _DecisionesPageState extends State<DecisionesPage> {
+class _BalanceActualState extends State<BalanceActual> {
 
     Size size;
-    final fincasBloc = new FincasBloc();
 
-    Future _getdataFinca( TestSuelo suelo, int tipo) async{
+    Future _getdataFinca( TestSuelo suelo, String titulo ) async{
+            
+
             Finca finca = await DBProvider.db.getFincaId(suelo.idFinca);
             Parcela parcela = await DBProvider.db.getParcelaId(suelo.idLote);
-            List<Punto> puntos = await DBProvider.db.getPuntosIdTest(suelo.id);
             SalidaNutriente salidaNutriente = await DBProvider.db.getSalidaNutrientes(suelo.id);
-            List<EntradaNutriente> entradas = await DBProvider.db.getEntradas(suelo.id, tipo);
+            List<EntradaNutriente> entradas = await DBProvider.db.getEntradas(suelo.id, 2);
             SueloNutriente sueloNutriente = await DBProvider.db.getSueloNutrientes(suelo.id);
             
-            return [finca, parcela, salidaNutriente, entradas, sueloNutriente, puntos];
+            return [finca, parcela, salidaNutriente, entradas, sueloNutriente];
         }
 
     @override
     Widget build(BuildContext context) {
 
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
-        size = MediaQuery.of(context).size;
-        fincasBloc.obtenerNewAbono(suelo.id);
-        
+        List dataRoute = ModalRoute.of(context).settings.arguments;
+        TestSuelo suelo = dataRoute[0];
+        String titulo = dataRoute[1];
 
-        
-        
+        size = MediaQuery.of(context).size;
 
         return Scaffold(
             appBar: AppBar(),
             body: FutureBuilder(
-            future:  _getdataFinca(suelo, 1),
+            future:  _getdataFinca(suelo, titulo),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
                         return CircularProgressIndicator();
                     }
 
-                    
 
                     List<Widget> pageItem = List<Widget>();
                     Finca finca = snapshot.data[0];
@@ -72,53 +59,14 @@ class _DecisionesPageState extends State<DecisionesPage> {
                     SalidaNutriente salidaNutriente = snapshot.data[2];
                     List<EntradaNutriente> entradas = snapshot.data[3];
                     SueloNutriente sueloNutriente  = snapshot.data[4];
-                    List<Punto> puntos = snapshot.data[5];
-                    List<EntradaNutriente> fertilizacion = snapshot.data[6];
 
                     pageItem.add(_balanceNeto(finca, parcela, salidaNutriente, entradas, sueloNutriente));
                     pageItem.add(_disponibilidad('Disponibilidad de nutriente', finca, parcela, salidaNutriente, entradas, sueloNutriente));
-                    pageItem.add(_disponibilidad('Nueva Disponibilidad de nutriente', finca, parcela, salidaNutriente, fertilizacion, sueloNutriente));
-                    pageItem.add(_recorrido(suelo, puntos));
 
                     return Column(
                         children: [
                             Container(
-                                child: Column(
-                                    children: [
-                                        TitulosPages(titulo: 'Toma de Decisiones'),
-                                        Divider(),
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: Row(
-                                          
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                children: [
-                                                    Container(
-                                                        width: 200,
-                                                        child: Text(
-                                                                "Deslice hacia la derecha para continuar con el formulario",
-                                                                textAlign: TextAlign.center,
-                                                                style: Theme.of(context).textTheme
-                                                                    .headline5
-                                                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 14)
-                                                            )
-                                                    
-                                                    ),
-                                                    
-                                                    
-                                                    Transform.rotate(
-                                                        angle: 90 * math.pi / 180,
-                                                        child: Icon(
-                                                            Icons.arrow_circle_up_rounded,
-                                                            size: 25,
-                                                        ),
-                                                        
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                    ],
-                                )
+                                child: TitulosPages(titulo: titulo),
                             ),
                             Expanded(
                                 
@@ -139,7 +87,6 @@ class _DecisionesPageState extends State<DecisionesPage> {
             
         );
     }
-    
 
 
     //Balance neto SAF
@@ -345,37 +292,37 @@ class _DecisionesPageState extends State<DecisionesPage> {
                                                         ],
                                                     ),
                                                     Divider(),
-                                                    _rowData(
+                                                    _rowBalance(
                                                         'Nitrogeno', 
                                                         calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
                                                         calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela)
                                                     ),
                                                     Divider(),
-                                                    _rowData(
+                                                    _rowBalance(
                                                         'Fósforo', 
                                                         calculos.salidaElemeto(salidaNutriente, 'P'),
                                                         calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela)
                                                     ),
                                                     Divider(),
-                                                    _rowData(
+                                                    _rowBalance(
                                                         'Potasio',
                                                         calculos.salidaElemeto(salidaNutriente, 'K'),
                                                         calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela)
                                                     ),
                                                     Divider(),
-                                                    _rowData(
+                                                    _rowBalance(
                                                         'Calcio', 
                                                         calculos.salidaElemeto(salidaNutriente, 'Ca'),
                                                         calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela)
                                                     ),
                                                     Divider(),
-                                                    _rowData(
+                                                    _rowBalance(
                                                         'Magnesio', 
                                                         calculos.salidaElemeto(salidaNutriente, 'Mg'),
                                                         calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela)
                                                     ),
                                                     Divider(),
-                                                    _rowData(
+                                                    _rowBalance(
                                                         'Azufre', 
                                                         calculos.salidaElemeto(salidaNutriente, 'S'), 
                                                         calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela)
@@ -397,7 +344,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
             
     }
 
-    Widget _rowData( String tituloRow, double salida, double entrada ){
+    Widget _rowBalance( String tituloRow, double salida, double entrada ){
         return Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -594,182 +541,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
         );
     }
 
-
-    //Pagina de Conteo de puntos
-    Widget _tituloPregunta(String titulo){
-        
-        return  Column(
-            children: [
-                Container(
-                    child: Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            titulo,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme
-                                .headline5
-                                .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
-                        ),
-                    )
-                ),
-                Divider(),
-                
-            ],
-        );
-    }
-
-    Widget _labelTipo(int tipo){
-        
-        return  Column(
-            children: [
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
-                                        .copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
-                        Container(
-                            width: 60,
-                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
-                        ),
-                        Container(
-                            width: 60,
-                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
-                        ),
-                        Container(
-                            width: 60,
-                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
-                        ),
-                    ],
-                ),
-                Divider(),
-            ],
-        );
-    }
-
-    Widget _rowRecorrido(String idTest,int tipo, String titulo, int pregunta, List<Map<String, dynamic>> preguntaItem){
-        List<Widget> prueba = [];
-
-        prueba.add(_tituloPregunta(titulo));
-        prueba.add(_labelTipo(tipo));
-
-        for (var item in preguntaItem) {
-            
-            prueba.add(
-                 Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6
-                                        .copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
-                        Container(
-                            width: 60,
-                            child: FutureBuilder(
-                                future: _count(idTest,pregunta,int.parse(item['value']),1),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return Text('0.0', textAlign: TextAlign.center);
-                                    }
-                                    
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 60,
-                            child: FutureBuilder(
-                                future: _count(idTest,pregunta,int.parse(item['value']), 2),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return Text('0.0', textAlign: TextAlign.center);
-                                    }
-                                    
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 60,
-                            child: FutureBuilder(
-                                future: _count(idTest,pregunta,int.parse(item['value']),3),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return Text('0.0', textAlign: TextAlign.center);
-                                    }
-                                    
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                    ],
-                ),
-            );
-            prueba.add(Divider());
-        }
-        return  Column(
-            children:prueba,
-        );
- 
-    }
-
-    Widget _recorrido(TestSuelo suelo,List<Punto> puntos){
-    
-        return Container(
-            decoration: BoxDecoration(
-                
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-                children: [
-                    Expanded(
-                        child: SingleChildScrollView(
-                            child: Container(
-                                color: Colors.white,
-                                child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                            BoxShadow(
-                                                    color: Color(0xFF3A5160)
-                                                        .withOpacity(0.05),
-                                                    offset: const Offset(1.1, 1.1),
-                                                    blurRadius: 17.0),
-                                            ],
-                                    ),
-                                    child: Column(
-                                        children: [
-                                            
-                                            _rowRecorrido(suelo.id,1, 'Observaciones de erosión', 1, selectMap.erosion()),
-                                            _rowRecorrido(suelo.id, 2, 'Obras de conservación de suelo', 2, selectMap.conservacion()),
-                                            _rowRecorrido(suelo.id, 1, 'Observaciones de drenaje', 3, selectMap.drenaje()),
-                                            _rowRecorrido(suelo.id, 2, 'Obras de drenaje', 4, selectMap.obrasDrenaje()),
-                                            _rowRecorrido(suelo.id, 1, 'Enfermedades de raíz', 5, selectMap.raiz()),
-                                            
-                                        ],
-                                    ),
-                                ),
-                            ),
-                        ),
-                    )
-                    
-                ],
-            ),
-        );
-            
-    }
-    
-
-    //Propuesta de abonos
-
-
-
 }
-
 
 Future<void> _dialogText(BuildContext context) async {
     return showDialog<void>(

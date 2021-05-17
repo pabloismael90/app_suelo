@@ -167,18 +167,18 @@ class FincasBloc {
 
 
 
-    obtenerEntradas(String idTest) async {
-        _entradaControl.sink.add( await DBProvider.db.getEntradas(idTest) );
+    obtenerEntradas(String idTest, int tipo) async {
+        _entradaControl.sink.add( await DBProvider.db.getEntradas(idTest, tipo) );
     }
 
     addEntrada( EntradaNutriente nuevaEntrada) async{
         await DBProvider.db.nuevoEntrada(nuevaEntrada);
-        obtenerEntradas(nuevaEntrada.idTest);
+        obtenerEntradas(nuevaEntrada.idTest, nuevaEntrada.tipo);
     }
 
     borrarEntrada( EntradaNutriente nuevaEntrada )async{
         await DBProvider.db.deleteEntrada(nuevaEntrada.id);
-        obtenerEntradas(nuevaEntrada.idTest);
+        obtenerEntradas(nuevaEntrada.idTest, nuevaEntrada.tipo);
     }
 
 

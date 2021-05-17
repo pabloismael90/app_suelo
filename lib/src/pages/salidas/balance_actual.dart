@@ -23,10 +23,12 @@ class _BalanceActualState extends State<BalanceActual> {
     Size size;
 
     Future _getdataFinca( TestSuelo suelo, int tipo ) async{
+            
+
             Finca finca = await DBProvider.db.getFincaId(suelo.idFinca);
             Parcela parcela = await DBProvider.db.getParcelaId(suelo.idLote);
             SalidaNutriente salidaNutriente = await DBProvider.db.getSalidaNutrientes(suelo.id);
-            List<EntradaNutriente> entradas = await DBProvider.db.getEntradas(suelo.id);
+            List<EntradaNutriente> entradas = await DBProvider.db.getEntradas(suelo.id, tipo);
             SueloNutriente sueloNutriente = await DBProvider.db.getSueloNutrientes(suelo.id);
             
             return [finca, parcela, salidaNutriente, entradas, sueloNutriente];
@@ -39,6 +41,8 @@ class _BalanceActualState extends State<BalanceActual> {
         TestSuelo suelo = dataRoute[0];
         String titulo = dataRoute[1];
         int tipo = dataRoute[2];
+        print(tipo);
+
         size = MediaQuery.of(context).size;
 
         return Scaffold(

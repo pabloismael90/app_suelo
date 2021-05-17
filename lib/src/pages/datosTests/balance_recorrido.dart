@@ -1,83 +1,40 @@
-import 'package:app_suelo/src/bloc/fincas_bloc.dart';
-import 'package:app_suelo/src/models/finca_model.dart';
-import 'package:app_suelo/src/models/parcela_model.dart';
 import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
-import 'package:app_suelo/src/providers/db_provider.dart';
-import 'package:app_suelo/src/utils/constants.dart';
+import 'package:app_suelo/src/pages/finca/finca_page.dart';
 import 'package:flutter/material.dart';
 
-class TodaDatos extends StatefulWidget {
-    const TodaDatos({Key key}) : super(key: key);
 
-  @override
-  _TodaDatosState createState() => _TodaDatosState();
-}
+class BalanceRecorrido extends StatelessWidget {
+    const BalanceRecorrido({Key key}) : super(key: key);
 
-
-
-class _TodaDatosState extends State<TodaDatos> {
-
-    final fincasBloc = new FincasBloc();
-
-    Future _getdataFinca(TestSuelo textPlaga) async{
-        Finca finca = await DBProvider.db.getFincaId(textPlaga.idFinca);
-        Parcela parcela = await DBProvider.db.getParcelaId(textPlaga.idLote);
-        
-        return [finca, parcela];
-    }
-
-
-    @override
-    void initState() {
-        super.initState();
-    }
     @override
     Widget build(BuildContext context) {
-        
+
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
         fincasBloc.obtenerPuntos(suelo.id);
         fincasBloc.obtenerSalida(suelo.id);
         fincasBloc.obtenerSuelo(suelo.id);
-        fincasBloc.obtenerEntradas(suelo.id,1);
-        fincasBloc.obtenerNewAbono(suelo.id);
+        fincasBloc.obtenerEntradas(suelo.id, 1);
 
-       return Scaffold(
-            appBar: AppBar(),
-            body: Column(
+        return Container(
+            child: ListView(
                 children: [
-                    escabezadoEstacion( context, suelo ),
-                    Expanded(
-                        
-                    child: ListView(
-                            children: [
-                                _cardRecorrido(suelo),
-                                _botonResultado( suelo, 'Resultado recorrido', 'recorridoResultado', fincasBloc.puntoStream, 5 ),
-                                Divider(),
-                                _tituloDivider('Balance nutrientes actual'),
-                                Divider(),
-                                _cardNutriente(suelo, 'Cosecha anual', 'cosechaAnual', fincasBloc.salidaStream),
-                                _cardNutriente(suelo, 'Análisis de suelo', 'analisisSuelo', fincasBloc.sueloStream),
-                                _cardEntrada(suelo, fincasBloc.entradaStream, 'Uso de abono anual', 'abonosPage' ),
-                                _botonTemporal(suelo, 'Balance nutrientes actual', 1),
-                                Divider(),
-                                _tituloDivider('Balance nutrientes actual'),
-                                Divider(),
-                                _cardEntrada(suelo,fincasBloc.newAbono, 'Uso de abono anual2', 'NewAbonosPage'),
-                                //_botonTemporal(suelo, 'Propuesta balance nutrientes', 2),
-                            ],
-                        ),
-                    ),
-                    
+                    _cardRecorrido(suelo),
+                    _botonResultado( suelo, 'Resultado recorrido', 'recorridoResultado', fincasBloc.puntoStream, 5 ),
+                    Divider(),
+                    _tituloDivider(context,'Balance nutrientes actual'),
+                    Divider(),
+                    _cardNutriente(suelo, 'Cosecha anual', 'cosechaAnual', fincasBloc.salidaStream),
+                    _cardNutriente(suelo, 'Análisis de suelo', 'analisisSuelo', fincasBloc.sueloStream),
+                    _cardEntrada(suelo, fincasBloc.entradaStream, 'Uso de abono anual', 'abonosPage', 1 ),
+                    _botonTemporal(context, suelo, 'Balance nutrientes actual', 1),
                 ],
             ),
-            bottomNavigationBar: BottomAppBar(
-                child: _tomarDecisiones(suelo)
-            ),
+            
         );
     }
 
-    Widget _tituloDivider(String titulo){
+    Widget _tituloDivider(BuildContext context, String titulo){
         return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -90,69 +47,6 @@ class _TodaDatosState extends State<TodaDatos> {
         );
     }
 
-
-    Widget escabezadoEstacion( BuildContext context, TestSuelo suelo ){
-
-        return FutureBuilder(
-            future: _getdataFinca(suelo),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                }
-                Finca finca = snapshot.data[0];
-                Parcela parcela = snapshot.data[1];
-
-                return Container(
-                    
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                            BoxShadow(
-                                    color: Color(0xFF3A5160)
-                                        .withOpacity(0.05),
-                                    offset: const Offset(1.1, 1.1),
-                                    blurRadius: 17.0),
-                            ],
-                    ),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                            
-                            Flexible(
-                                child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                    
-                                        Padding(
-                                            padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                            child: Text(
-                                                "${finca.nombreFinca}",
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                                style: Theme.of(context).textTheme.headline6,
-                                            ),
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only( bottom: 10.0),
-                                            child: Text(
-                                                "${parcela.nombreLote}",
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(color: kLightBlackColor),
-                                            ),
-                                        ),
-                                        
-                                    ],  
-                                ),
-                            ),
-                        ],
-                    ),
-                );
-            },
-        );        
-    }
 
     Widget _cardRecorrido(TestSuelo suelo){
 
@@ -170,7 +64,7 @@ class _TodaDatosState extends State<TodaDatos> {
                     child: Container(
                         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                         width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                             
                         decoration: BoxDecoration(
                             color: Colors.white,
@@ -233,7 +127,7 @@ class _TodaDatosState extends State<TodaDatos> {
                     child: Container(
                         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                         width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                             
                         decoration: BoxDecoration(
                             color: Colors.white,
@@ -278,7 +172,7 @@ class _TodaDatosState extends State<TodaDatos> {
     }
     
 
-    Widget _cardEntrada(TestSuelo suelo, Stream streamData, String titulo, String url){
+    Widget _cardEntrada(TestSuelo suelo, Stream streamData, String titulo, String url, int tipo){
 
         return StreamBuilder(
             stream: streamData,
@@ -331,7 +225,7 @@ class _TodaDatosState extends State<TodaDatos> {
                             ],
                         ),
                     ),
-                    onTap: () => Navigator.pushNamed(context, url, arguments: suelo),
+                    onTap: () => Navigator.pushNamed(context, url, arguments: [suelo, tipo]),
                 );
             },
         );
@@ -367,7 +261,7 @@ class _TodaDatosState extends State<TodaDatos> {
         
     }
 
-    Widget  _botonTemporal(TestSuelo suelo, String titulo, int tipo){
+    Widget  _botonTemporal(BuildContext context, TestSuelo suelo, String titulo, int tipo){
         
         return Padding(
             padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
@@ -384,27 +278,4 @@ class _TodaDatosState extends State<TodaDatos> {
 
     }
     
-    
-
-    Widget  _tomarDecisiones(TestSuelo suelo){
-        
-        return Container(
-            color: kBackgroundColor,
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
-                child: RaisedButton.icon(
-                    icon:Icon(Icons.add_circle_outline_outlined),
-                    
-                    label: Text('Toma de decisiones',
-                        style: Theme.of(context).textTheme
-                            .headline6
-                            .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                    ),
-                    padding:EdgeInsets.all(13),
-                    onPressed: () => Navigator.pushNamed(context, 'decisiones', arguments: suelo),
-                )
-            ),
-        );
-        
-    }
 }

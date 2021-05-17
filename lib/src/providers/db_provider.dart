@@ -331,9 +331,9 @@ class DBProvider {
         return res.isNotEmpty ? SueloNutriente.fromJson(res.first) : suelo;          
     }
 
-    Future<List<EntradaNutriente>> getEntradas(String idTest) async{
+    Future<List<EntradaNutriente>> getEntradas(String idTest, int tipo) async{
         final db = await database;
-        final res = await db.query('entradaNutriente', where: 'idTest = ?', whereArgs: [idTest]);
+        final res = await db.query('entradaNutriente', where: 'idTest = ? AND tipo = ?', whereArgs: [idTest, tipo]);
         List<EntradaNutriente> list = res.isNotEmpty 
                     ? res.map( (c) => EntradaNutriente.fromJson(c) ).toList() 
                     : [];

@@ -118,7 +118,7 @@ class _TestPageState extends State<TestPage> {
                                 return _cardTest(size, textSuelos[index], finca, parcela);
                             },
                         ),
-                        onTap: () => Navigator.pushNamed(context, 'tomaDatos', arguments: textSuelos[index]),
+                        onTap: () => Navigator.pushNamed(context, 'salidaPage', arguments: textSuelos[index]),
                     ),
                     confirmDismiss: (direction) => confirmacionUser(direction, context),
                     direction: DismissDirection.endToStart,

@@ -18,10 +18,13 @@ class _AbonosPageState extends State<AbonosPage> {
     @override
     Widget build(BuildContext context) {
 
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        List dataRoute = ModalRoute.of(context).settings.arguments;
+
+        TestSuelo suelo = dataRoute[0];
+        int tipo = dataRoute[1];
         
-        
-        fincasBloc.obtenerEntradas(suelo.id);
+
+        fincasBloc.obtenerEntradas(suelo.id, tipo);
         
         
         
@@ -70,7 +73,7 @@ class _AbonosPageState extends State<AbonosPage> {
                     color: kBackgroundColor,
                     child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 10),
-                        child: _addAbono(suelo)
+                        child: _addAbono(suelo, tipo)
                     ),
                 ),
             ),
@@ -137,7 +140,7 @@ class _AbonosPageState extends State<AbonosPage> {
     }
 
 
-    Widget _addAbono(TestSuelo suelo){
+    Widget _addAbono(TestSuelo suelo, int tipo){
         return Container(
             color: kBackgroundColor,
             child: Padding(
@@ -151,7 +154,7 @@ class _AbonosPageState extends State<AbonosPage> {
                             .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                     ),
                     padding:EdgeInsets.all(13),
-                    onPressed: () => Navigator.pushNamed(context, 'AddAbono', arguments: suelo),
+                    onPressed: () => Navigator.pushNamed(context, 'AddAbono', arguments: [suelo, tipo]),
                 )
             ),
         );
