@@ -38,7 +38,6 @@ class NuevoBalance extends StatelessWidget {
         );
     }
 
-  
 
     Widget _cardEntrada(TestSuelo suelo, Stream streamData, String titulo, String url, int tipo){
 
