@@ -172,10 +172,10 @@ class _RecorridoPageState extends State<RecorridoPage> {
                                 label: Text('Finalizar',
                                     style: Theme.of(context).textTheme
                                         .headline6
-                                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16)
+                                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                                 ),
                                 padding:EdgeInsets.all(13),
-                                onPressed:() => Navigator.pop(context, 'tomaDatos'),
+                                onPressed:() => Navigator.pop(context, 'salidaPage'),
                             )
                         ],
                     );
@@ -198,7 +198,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
             label: Text('Agregar punto',
                 style: Theme.of(context).textTheme
                     .headline6
-                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16)
+                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
             ),
             padding:EdgeInsets.all(13),
             onPressed:() => Navigator.pushNamed(context, 'agregarPunto', arguments: [suelo.id, indicePunto]),

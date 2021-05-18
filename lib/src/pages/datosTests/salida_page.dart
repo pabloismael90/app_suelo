@@ -17,9 +17,11 @@ class SalidaPageState extends State<SalidaPage> with SingleTickerProviderStateMi
     TabController controller;
     final fincasBloc = new FincasBloc();
 
-    Future _getdataFinca(TestSuelo textPlaga) async{
-        Finca finca = await DBProvider.db.getFincaId(textPlaga.idFinca);
-        Parcela parcela = await DBProvider.db.getParcelaId(textPlaga.idLote);
+    Future _getdataFinca(TestSuelo textSuelo) async{
+        Finca finca = await DBProvider.db.getFincaId(textSuelo.idFinca);
+        Parcela parcela = await DBProvider.db.getParcelaId(textSuelo.idLote);
+
+        DBProvider.db.monitoreo(textSuelo.id);
         
         return [finca, parcela];
     }
@@ -27,7 +29,7 @@ class SalidaPageState extends State<SalidaPage> with SingleTickerProviderStateMi
     @override
     void initState(){
         super.initState();
-        controller = new TabController(vsync: this, length: 2);
+        controller = TabController(vsync: this, length: 2);
     }
 
     @override
@@ -41,19 +43,20 @@ class SalidaPageState extends State<SalidaPage> with SingleTickerProviderStateMi
         
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
 
-        return new Scaffold(
-            appBar: new AppBar(),
-            bottomNavigationBar: new Material(
+        return Scaffold(
+            appBar: AppBar(),
+            bottomNavigationBar: Material(
                 //color: Colors.deepOrange,
                 child: TabBar(
-                isScrollable: false,
-                controller: controller,
-                tabs: <Tab>[
+                    isScrollable: false,
+                    controller: controller,
+                    
+                    tabs: <Tab>[
                         Tab(
-                            text: 'Balance de Nutrientes',
+                            text: 'Balance de\nNutrientes',
                         ),
                         Tab(
-                            text: 'Propuesta fertilización',
+                            text: 'Propuesta\nfertilización',
                         ),
                     ]
                 )
@@ -64,6 +67,7 @@ class SalidaPageState extends State<SalidaPage> with SingleTickerProviderStateMi
                     Expanded(
                         
                         child:TabBarView(
+                            physics: NeverScrollableScrollPhysics(),
                             controller: controller,
                             children: <Widget>[
                                 balancePage.BalanceRecorrido(),

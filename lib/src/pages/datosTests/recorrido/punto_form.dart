@@ -181,21 +181,21 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                         Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
-                                        .copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                         Container(
                             width: 60,
                             child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
+                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
                             child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
+                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
                             child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
                         ),
                     ],
                 ),
@@ -230,7 +230,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -340,7 +340,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -450,7 +450,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -560,7 +560,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -670,7 +670,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -842,8 +842,6 @@ class _AgregarPuntoState extends State<AgregarPunto> {
             mostrarSnackbar(variableVacia);
             return null;
         }
-
-        print(listaPuntos.length);
 
         listaPuntos.forEach((punto) {
             DBProvider.db.nuevoPunto(punto);

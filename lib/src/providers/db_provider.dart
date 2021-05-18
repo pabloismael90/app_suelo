@@ -2,7 +2,6 @@ import 'dart:io';
 
 
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
-import 'package:app_suelo/src/models/new_abono.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
@@ -230,11 +229,7 @@ class DBProvider {
         return res;
     }
 
-    nuevoAbono( NewAbono nuevoAbono ) async {
-        final db  = await database;
-        final res = await db.insert('newAbono',  nuevoAbono.toJson() );
-        return res;
-    }
+
 
 
 
@@ -341,15 +336,7 @@ class DBProvider {
         return list;         
     }
 
-    Future<List<NewAbono>> getNewAbono(String idTest) async{
-        final db = await database;
-        final res = await db.query('newAbono', where: 'idTest = ?', whereArgs: [idTest]);
-        List<NewAbono> list = res.isNotEmpty 
-                    ? res.map( (c) => NewAbono.fromJson(c) ).toList() 
-                    : [];
-        
-        return list;         
-    }
+
 
     
 
@@ -430,7 +417,6 @@ class DBProvider {
         String query =  "SELECT COUNT(*) FROM Punto WHERE idTest = '$idTest' AND idPregunta = '$idPregunta' AND idItem = '$idItem' AND repuesta = '$repuesta'";
         double res = Sqflite.firstIntValue(await db.rawQuery(query)) * 1.0;
         
-        
         return res;
 
     }
@@ -473,12 +459,39 @@ class DBProvider {
         return res;
     }
 
-    Future<int> deleteNewAbono( String id) async {
 
+    Future<int> monitoreo( String idTest ) async {
+        int validacion = 0;
         final db  = await database;
-        final res = await db.delete('newAbono', where: 'id = ?', whereArgs: [id]);
-        return res;
+        final salidaNutriente = await db.query('salidaNutriente', where: 'idTest = ?', whereArgs: [idTest]);
+        final sueloNutriente = await db.query('sueloNutriente', where: 'idTest = ?', whereArgs: [idTest]);
+        final entradaNutriente = await db.query('entradaNutriente', where: 'idTest = ? AND tipo = ?', whereArgs: [idTest, 1]);
+
+        if (salidaNutriente.length > 0 && sueloNutriente.length > 0 && entradaNutriente.length > 0) {
+            validacion = 1;
+        }
+
+        //print(validacion);
+        return validacion;
     }
+
+    Future<int> activateFerti( String idTest ) async {
+        int validacion = 0;
+        final db  = await database;
+        final salidaNutriente = await db.query('salidaNutriente', where: 'idTest = ?', whereArgs: [idTest]);
+        final sueloNutriente = await db.query('sueloNutriente', where: 'idTest = ?', whereArgs: [idTest]);
+        final entradaNutriente = await db.query('entradaNutriente', where: 'idTest = ? AND tipo = ?', whereArgs: [idTest, 1]);
+        final puntos = await db.rawQuery("SELECT * FROM Punto WHERE idTest = '$idTest' group by nPunto");
+
+        if (salidaNutriente.length > 0 && sueloNutriente.length > 0 && entradaNutriente.length > 0 && puntos.length > 4  ) {
+            validacion = 1;
+        }
+
+        return validacion;
+    }
+
+
+
 
 
 

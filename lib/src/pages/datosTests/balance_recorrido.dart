@@ -15,6 +15,7 @@ class BalanceRecorrido extends StatelessWidget {
         fincasBloc.obtenerSalida(suelo.id);
         fincasBloc.obtenerSuelo(suelo.id);
         fincasBloc.obtenerEntradas(suelo.id, 1);
+        
 
         return Container(
             child: ListView(
@@ -24,8 +25,8 @@ class BalanceRecorrido extends StatelessWidget {
                     Divider(),
                     _tituloDivider(context,'Balance nutrientes actual'),
                     Divider(),
-                    _cardNutriente(suelo, 'Cosecha anual', 'cosechaAnual', fincasBloc.salidaStream),
-                    _cardNutriente(suelo, 'Análisis de suelo', 'analisisSuelo', fincasBloc.sueloStream),
+                    _cardItem(suelo, 'Cosecha anual', 'cosechaAnual', fincasBloc.salidaStream),
+                    _cardItem(suelo, 'Análisis de suelo', 'analisisSuelo', fincasBloc.sueloStream),
                     _cardEntrada(suelo, fincasBloc.entradaStream, 'Uso de abono anual', 'abonosPage', 1 ),
                     _botonTemporal(context, suelo, 'Balance nutrientes actual', 1),
                 ],
@@ -111,7 +112,7 @@ class BalanceRecorrido extends StatelessWidget {
 
     }
     
-    Widget _cardNutriente(TestSuelo suelo, String titulo, String url, Stream streamData){
+    Widget _cardItem(TestSuelo suelo, String titulo, String url, Stream streamData){
 
         return StreamBuilder(
             stream: streamData,
@@ -262,19 +263,31 @@ class BalanceRecorrido extends StatelessWidget {
     }
 
     Widget  _botonTemporal(BuildContext context, TestSuelo suelo, String titulo, int tipo){
-        
-        return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
-            child: RaisedButton(
-                child: Text(titulo,
-                    style: Theme.of(context).textTheme
-                        .headline6
-                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                ),
-                padding:EdgeInsets.all(13),
-                onPressed: () => Navigator.pushNamed(context, 'ResultadoNutrientes', arguments: [suelo, titulo, tipo]),
-            ),
+        fincasBloc.monitoreoBalance(suelo.id);
+        return StreamBuilder(
+            stream: fincasBloc.monitoreoStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+
+                return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+                    child: RaisedButton(
+                        child: Text(titulo,
+                            style: Theme.of(context).textTheme
+                                .headline6
+                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                        ),
+                        padding:EdgeInsets.all(13),
+                        onPressed: snapshot.data == 1 ? () => Navigator.pushNamed(context, 'ResultadoNutrientes', arguments: [suelo, titulo, tipo]) : null,
+                    ),
+                );
+                
+            },
         );
+        
+         
 
     }
     

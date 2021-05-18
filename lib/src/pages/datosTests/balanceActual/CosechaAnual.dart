@@ -109,7 +109,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
     Widget _titulosForm(String titulo){
         return Container(
             child: Text(titulo, textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
-            .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
         );
     }
 
@@ -411,7 +411,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
 
 
-        Navigator.pop(context, 'tomaDatos');
+        Navigator.pop(context, 'salidaPage');
        
         
     }

@@ -49,11 +49,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
 
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
         size = MediaQuery.of(context).size;
-        fincasBloc.obtenerNewAbono(suelo.id);
-        
-
-        
-        
+                
 
         return Scaffold(
             appBar: AppBar(),
@@ -148,7 +144,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
             child: Container(
                 width: ancho,
                 child: Text(titulo, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
             ),
         );
     }
@@ -626,21 +622,21 @@ class _DecisionesPageState extends State<DecisionesPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                         Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
-                                        .copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                         Container(
                             width: 60,
                             child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
+                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
                             child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600,) ),
+                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
                             child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
                         ),
                     ],
                 ),
@@ -662,7 +658,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                         Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6
-                                        .copyWith(fontSize: 16, fontWeight: FontWeight.w600))),
+                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                         Container(
                             width: 60,
                             child: FutureBuilder(

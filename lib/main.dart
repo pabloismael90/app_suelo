@@ -10,11 +10,8 @@ import 'package:app_suelo/src/pages/parcelas/parcelas_page.dart';
 import 'package:app_suelo/src/pages/datosTests/balanceActual/abono_form.dart';
 import 'package:app_suelo/src/pages/datosTests/balanceActual/abonos_page.dart';
 import 'package:app_suelo/src/pages/datosTests/balanceActual/analisisSuelo.dart';
-import 'package:app_suelo/src/pages/datosTests/nuevoBalance/newAbono_form.dart';
-import 'package:app_suelo/src/pages/datosTests/nuevoBalance/newAbono_page.dart';
 import 'package:app_suelo/src/pages/datosTests/recorrido/punto_form.dart';
 import 'package:app_suelo/src/pages/datosTests/recorrido/puntos_page.dart';
-import 'package:app_suelo/src/pages/recorrido/tomaDatos_page.dart';
 import 'package:app_suelo/src/pages/salidas/balance_actual.dart';
 import 'package:app_suelo/src/pages/datosTests/fertilizacion.dart';
 import 'package:app_suelo/src/pages/salidas/recorrido_salida.dart';
@@ -56,31 +53,34 @@ class MyApp extends StatelessWidget {
             initialRoute: 'home',
             routes: {
                 'home': (BuildContext context) => HomePage(),
+                
                 //Finca
                 'fincas': (BuildContext context) => FincasPage(),
                 'addFinca': (BuildContext context) => AgregarFinca(),
+                
                 //Parcelas
                 'parcelas': (BuildContext context) => ParcelaPage(),
                 'addParcela': (BuildContext context) => AgregarParcela(),
+                
                 //test
                 'tests': (BuildContext context) => TestPage(),
                 'addTest': (BuildContext context) => AgregarTest(),
 
-                //Salidas
-                'salidaPage': (BuildContext context) => SalidaPage(),
-                'nuevoBalance': (BuildContext context) => NuevoBalance(),
 
-                //toma de datos
-                'tomaDatos': (BuildContext context) => TodaDatos(),
+                //Recorrido
                 'recorridoPage': (BuildContext context) => RecorridoPage(),
                 'agregarPunto': (BuildContext context) => AgregarPunto(),
+                
+                //Balance
                 'cosechaAnual': (BuildContext context) => CosechaAnual(),
                 'analisisSuelo': (BuildContext context) => AnalisiSuelo(),
                 'abonosPage': (BuildContext context) => AbonosPage(),
                 'AddAbono': (BuildContext context) => AddAbono(),
-                'NewAbonosPage': (BuildContext context) => NewAbonoPage(),
-                'AddNewAbono': (BuildContext context) => AddNewAbono(),
 
+                //Salidas
+                'salidaPage': (BuildContext context) => SalidaPage(),
+                'nuevoBalance': (BuildContext context) => NuevoBalance(),
+                
                 //Resultados
                 'recorridoResultado': (BuildContext context) => RecorridoResultado(),
                 'ResultadoNutrientes': (BuildContext context) => BalanceActual(),

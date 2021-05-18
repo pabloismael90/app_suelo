@@ -88,7 +88,7 @@ class _AgregarTestState extends State<AgregarTest> {
                                                         'Recorrido de parcela',
                                                         style: Theme.of(context).textTheme
                                                             .headline6
-                                                            .copyWith(fontSize: 16)
+                                                            .copyWith(fontSize: 14)
                                                     ),
                                                 ),
                                                 Padding(
@@ -97,7 +97,7 @@ class _AgregarTestState extends State<AgregarTest> {
                                                         '5 puntos',
                                                         style: Theme.of(context).textTheme
                                                             .headline6
-                                                            .copyWith(fontSize: 16)
+                                                            .copyWith(fontSize: 14)
                                                     ),
                                                 ),
                                             ],

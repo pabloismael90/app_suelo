@@ -134,7 +134,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
     Widget _titulosForm(String titulo){
         return Container(
             child: Text(titulo, textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
-            .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
         );
     }
 
