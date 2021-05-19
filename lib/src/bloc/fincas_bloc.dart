@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'package:app_suelo/src/models/acciones_model.dart';
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
@@ -29,7 +30,7 @@ class FincasBloc {
     final _sueloControl = StreamController<SueloNutriente>.broadcast();
     final _entradaControl = StreamController<List<EntradaNutriente>>.broadcast();
     final _monitoreoControl = StreamController<int>.broadcast();
-    //final _decisionesControl = StreamController<List<Decisiones>>.broadcast();
+    final _accionesControl = StreamController<List<Acciones>>.broadcast();
     
 
     final _fincasSelectControl = StreamController<List<Map<String, dynamic>>>.broadcast();
@@ -43,8 +44,7 @@ class FincasBloc {
     Stream<SueloNutriente> get sueloStream => _sueloControl.stream;
     Stream<List<EntradaNutriente>> get entradaStream => _entradaControl.stream;
     Stream<int> get monitoreoStream => _monitoreoControl.stream;
-
-    //Stream<List<Decisiones>> get decisionesStream => _decisionesControl.stream;
+    Stream<List<Acciones>> get decisionesStream => _accionesControl.stream;
 
 
     Stream<List<Map<String, dynamic>>> get fincaSelect => _fincasSelectControl.stream;
@@ -184,6 +184,15 @@ class FincasBloc {
        _monitoreoControl.sink.add( await DBProvider.db.monitoreo(idTest));
     }
 
+    monitoreoNuevoBalance( String idTest )async{
+       _monitoreoControl.sink.add( await DBProvider.db.activateFerti(idTest));
+    }
+
+    //deciones
+    obtenerAcciones(String idTest) async {
+        _accionesControl.sink.add( await DBProvider.db.getAccionesIdTest(idTest) );
+    }
+
 
 
 
@@ -201,12 +210,12 @@ class FincasBloc {
         _fincasSelectControl?.close();
         _parcelaSelectControl?.close();
         _plagaController?.close();
-        //_decisionesControl?.close();
         _puntosControl?.close();
         _salidaControl?.close();
         _sueloControl?.close();
         _entradaControl?.close();
         _monitoreoControl?.close();
+        _accionesControl?.close();
     }
 
     

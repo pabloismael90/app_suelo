@@ -1,19 +1,12 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
-import 'package:app_suelo/src/models/entradaNutriente_model.dart';
-import 'package:app_suelo/src/models/finca_model.dart';
-import 'package:app_suelo/src/models/parcela_model.dart';
-import 'package:app_suelo/src/models/punto_model.dart';
-import 'package:app_suelo/src/models/salidaNutriente_model.dart';
-import 'package:app_suelo/src/models/sueloNutriente_model.dart';
+import 'package:app_suelo/src/models/acciones_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
-import 'package:app_suelo/src/utils/constants.dart';
 import 'package:app_suelo/src/utils/widget/titulos.dart';
-import 'package:app_suelo/src/utils/calculos.dart' as calculos;
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
+import 'package:uuid/uuid.dart';
 
 class DecisionesPage extends StatefulWidget {
   DecisionesPage({Key key}) : super(key: key);
@@ -22,774 +15,206 @@ class DecisionesPage extends StatefulWidget {
   _DecisionesPageState createState() => _DecisionesPageState();
 }
 
-Future<double> _count(String idTest,int idPregunta, int idItem, int repuesta) async{
-    double countPalga = await DBProvider.db.countPunto(idTest,idPregunta, idItem, repuesta);
 
-    return (countPalga/5)*100;
-}
 
 class _DecisionesPageState extends State<DecisionesPage> {
 
     Size size;
+    var uuid = Uuid();
+    bool _guardando = false;
     final fincasBloc = new FincasBloc();
+    TestSuelo suelo ;
+    List<Acciones> listaAcciones = [];
 
-    Future _getdataFinca( TestSuelo suelo, int tipo) async{
-            Finca finca = await DBProvider.db.getFincaId(suelo.idFinca);
-            Parcela parcela = await DBProvider.db.getParcelaId(suelo.idLote);
-            List<Punto> puntos = await DBProvider.db.getPuntosIdTest(suelo.id);
-            SalidaNutriente salidaNutriente = await DBProvider.db.getSalidaNutrientes(suelo.id);
-            List<EntradaNutriente> entradas = await DBProvider.db.getEntradas(suelo.id, tipo);
-            SueloNutriente sueloNutriente = await DBProvider.db.getSueloNutrientes(suelo.id);
-            
-            return [finca, parcela, salidaNutriente, entradas, sueloNutriente, puntos];
+    final List<Map<String, dynamic>>  _meses = selectMap.listMeses();
+    final List<Map<String, dynamic>>  listSoluciones = selectMap.solucionesXmes();
+
+    final Map itemActividad = {};
+    final Map itemResultado = {};
+
+    void checkKeys(){
+
+        for(int i = 0 ; i < listSoluciones.length ; i ++){
+            itemActividad[i] = [];
+            itemResultado[i] = '';
         }
+    }
+
+    @override
+    void initState() {
+        super.initState();
+        checkKeys();
+    }
 
     @override
     Widget build(BuildContext context) {
 
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        suelo = ModalRoute.of(context).settings.arguments;
         size = MediaQuery.of(context).size;
                 
 
         return Scaffold(
             appBar: AppBar(),
-            body: FutureBuilder(
-            future:  _getdataFinca(suelo, 1),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
-                        return CircularProgressIndicator();
-                    }
-
-                    
-
-                    List<Widget> pageItem = List<Widget>();
-                    Finca finca = snapshot.data[0];
-                    Parcela parcela = snapshot.data[1];
-                    SalidaNutriente salidaNutriente = snapshot.data[2];
-                    List<EntradaNutriente> entradas = snapshot.data[3];
-                    SueloNutriente sueloNutriente  = snapshot.data[4];
-                    List<Punto> puntos = snapshot.data[5];
-                    List<EntradaNutriente> fertilizacion = snapshot.data[6];
-
-                    pageItem.add(_balanceNeto(finca, parcela, salidaNutriente, entradas, sueloNutriente));
-                    pageItem.add(_disponibilidad('Disponibilidad de nutriente', finca, parcela, salidaNutriente, entradas, sueloNutriente));
-                    pageItem.add(_disponibilidad('Nueva Disponibilidad de nutriente', finca, parcela, salidaNutriente, fertilizacion, sueloNutriente));
-                    pageItem.add(_recorrido(suelo, puntos));
-
-                    return Column(
-                        children: [
-                            Container(
-                                child: Column(
-                                    children: [
-                                        TitulosPages(titulo: 'Toma de Decisiones'),
-                                        Divider(),
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: Row(
-                                          
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                children: [
-                                                    Container(
-                                                        width: 200,
-                                                        child: Text(
-                                                                "Deslice hacia la derecha para continuar con el formulario",
-                                                                textAlign: TextAlign.center,
-                                                                style: Theme.of(context).textTheme
-                                                                    .headline5
-                                                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 14)
-                                                            )
-                                                    
-                                                    ),
-                                                    
-                                                    
-                                                    Transform.rotate(
-                                                        angle: 90 * math.pi / 180,
-                                                        child: Icon(
-                                                            Icons.arrow_circle_up_rounded,
-                                                            size: 25,
-                                                        ),
-                                                        
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                    ],
-                                )
-                            ),
-                            Expanded(
-                                
-                                child: Swiper(
-                                    itemBuilder: (BuildContext context, int index) {
-                                        return pageItem[index];
-                                    },
-                                    itemCount: pageItem.length,
-                                    viewportFraction: 1,
-                                    loop: false,
-                                    scale: 1,
-                                ),
-                            ),
-                        ],
-                    );
-                },
-            ),
-            
-        );
-    }
-    
-
-
-    //Balance neto SAF
-    Widget _titulosForm(String titulo, double ancho){
-        return Flexible(
-            child: Container(
-                width: ancho,
-                child: Text(titulo, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-            ),
-        );
-    }
-
-    Widget _dataFincas( BuildContext context, Finca finca, Parcela parcela ){
-        String labelMedidaFinca;
-        String labelvariedad;
-
-        final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
-        labelMedidaFinca  = item['label'];
-
-        final itemvariedad = selectMap.variedadCacao().firstWhere((e) => e['value'] == '${parcela.variedadCacao}');
-        labelvariedad  = itemvariedad['label'];
-
-        return Container(
-                    
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                    BoxShadow(
-                            color: Color(0xFF3A5160)
-                                .withOpacity(0.05),
-                            offset: const Offset(1.1, 1.1),
-                            blurRadius: 17.0),
-                    ],
-            ),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+            body: Column(
                 children: [
-                    
-                    Flexible(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                            
-                                Padding(
-                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                    child: Text(
-                                        "${finca.nombreFinca}",
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline6,
-                                    ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only( bottom: 10.0),
-                                    child: Text(
-                                        "${parcela.nombreLote}",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                    ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only( bottom: 10.0),
-                                    child: Text(
-                                        "Productor ${finca.nombreProductor}",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                    ),
-                                ),
-
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                        Flexible(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0),
-                                                        child: Text(
-                                                            "Área Finca: ${finca.areaFinca} ($labelMedidaFinca)",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0),
-                                                        child: Text(
-                                                            "N de Plantas: ${parcela.numeroPlanta}",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                        Flexible(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0, left: 20),
-                                                        child: Text(
-                                                            "Área Parcela: ${parcela.areaLote} ($labelMedidaFinca)",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0, left: 20),
-                                                        child: Text(
-                                                            "Variedad: $labelvariedad ",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                ],
-                                            ),
-                                        )
-                                    ],
-                                )
-
-                                
-                            ],  
-                        ),
-                    ),
-                ],
-            ),
-        );
-
-    } 
-
-    Widget _balanceNeto(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente sueloNutriente){
-    
-        return Container(
-            decoration: BoxDecoration(
-                
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-                children: [
-                    _dataFincas( context, finca, parcela),
-
+                    TitulosPages(titulo: 'Toma de Decisión'),
                     Expanded(
-                        child: SingleChildScrollView(
-                            child: Container(
-                                color: Colors.white,
-                                child: Column(
-                                    children: [
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: InkWell(
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                        Container(                                                                    
-                                                            child: Text(
-                                                                "Balance neto del Sistema SAF",
-                                                                textAlign: TextAlign.center,
-                                                                style: Theme.of(context).textTheme
-                                                                    .headline5
-                                                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
-                                                            ),
-                                                        ),
-                                                        Padding(
-                                                            padding: EdgeInsets.only(left: 10),
-                                                            child: Icon(
-                                                                Icons.info_outline_rounded,
-                                                                color: Colors.green,
-                                                                size: 22.0,
-                                                            ),
-                                                        ),
-                                                    ],
-                                                ),
-                                                onTap: () => _dialogText(context),
-                                            ),
-                                        ),
-                                        
-                                        Container(
-                                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                            width: double.infinity,
-                                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.circular(10),
-                                                boxShadow: [
-                                                    BoxShadow(
-                                                            color: Color(0xFF3A5160)
-                                                                .withOpacity(0.05),
-                                                            offset: const Offset(1.1, 1.1),
-                                                            blurRadius: 17.0),
-                                                    ],
-                                            ),
-                                            child: Column(
-                                                children: [
-                                                    Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        children: [
-                                                            _titulosForm('Kg/año', size.width * 0.4),
-                                                            _titulosForm('Salida', size.width * 0.4),
-                                                            _titulosForm('Entrada', size.width * 0.4),
-                                                            _titulosForm('Balance', size.width * 0.4),
-                                                        ],
-                                                    ),
-                                                    Divider(),
-                                                    _rowData(
-                                                        'Nitrogeno', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowData(
-                                                        'Fósforo', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'P'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowData(
-                                                        'Potasio',
-                                                        calculos.salidaElemeto(salidaNutriente, 'K'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowData(
-                                                        'Calcio', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'Ca'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowData(
-                                                        'Magnesio', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'Mg'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowData(
-                                                        'Azufre', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'S'), 
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    
-                                                ],
-                                            ),
-                                        ),
-                                    ],
-                                ),
-                            ),
-                        ),
-                    )
-                    
+                        child: _accionesMeses(),
+                    ),
                 ],
-            ),
-        );
+            )
             
-    }
-
-    Widget _rowData( String tituloRow, double salida, double entrada ){
-        return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-                _titulosForm(tituloRow, size.width * 0.4),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.4,
-                        child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center)
-                    ),
-                ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.4,
-                        child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center)
-                    ),
-                ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.4,
-                        child: Text((entrada - salida).toStringAsFixed(1) == '-0.0' ? '0.0' : (entrada - salida).toStringAsFixed(1) , textAlign: TextAlign.center)
-                    ),
-                ),
-                
-            ],
         );
     }
-
-
-    //Disponibilidada de nutrientes
-    Widget _disponibilidad(String titulo, Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente sueloNutriente){
     
-        return Container(
-            decoration: BoxDecoration(
-                
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-                children: [
-                    Expanded(
-                        child: SingleChildScrollView(
-                            child: Container(
-                                color: Colors.white,
-                                child: Column(
-                                    children: [
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: InkWell(
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                        Container(                                                                    
-                                                            child: Text(
-                                                                titulo,
-                                                                textAlign: TextAlign.center,
-                                                                style: Theme.of(context).textTheme
-                                                                    .headline5
-                                                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
-                                                            ),
-                                                        ),
-                                                        Padding(
-                                                            padding: EdgeInsets.only(left: 10),
-                                                            child: Icon(
-                                                                Icons.info_outline_rounded,
-                                                                color: Colors.green,
-                                                                size: 22.0,
-                                                            ),
-                                                        ),
-                                                    ],
-                                                ),
-                                                onTap: () => _dialogText(context),
-                                            ),
-                                        ),
-                                        
-                                        Container(
-                                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                            width: double.infinity,
-                                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.circular(10),
-                                                boxShadow: [
-                                                    BoxShadow(
-                                                            color: Color(0xFF3A5160)
-                                                                .withOpacity(0.05),
-                                                            offset: const Offset(1.1, 1.1),
-                                                            blurRadius: 17.0),
-                                                    ],
-                                            ),
-                                            child: Column(
-                                                children: [
-                                                    Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        children: [
-                                                            _titulosForm('Kg/año', size.width * 0.2),
-                                                            _titulosForm('Salida', size.width * 0.2),
-                                                            _titulosForm('Entrada', size.width * 0.2),
-                                                            _titulosForm('Suelo', size.width * 0.2),
-                                                            _titulosForm('Balance', size.width * 0.2),
-                                                        ],
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'N', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'N'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'P', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'P'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'P'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'K',
-                                                        calculos.salidaElemeto(salidaNutriente, 'K'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'K'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'Ca', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'Ca'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'Ca'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'Mg', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'Mg'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'Mg'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'S', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'S'), 
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'S'),
-                                                    ),
-                                                    Divider(),
-                                                    
-                                                ],
-                                            ),
-                                        ),
-                                    ],
-                                ),
-                            ),
-                        ),
-                    )
-                    
-                ],
-            ),
-        );
+
+    Widget _accionesMeses(){
+
+        List<Widget> listaAcciones = List<Widget>();
+        listaAcciones.add(
             
-    }
-
-    Widget _rowDisponibilidad( String tituloRow, double salida, double entrada, double suelo){
-
-        double balance = (entrada + suelo) - salida;
-
-        return Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-                _titulosForm(tituloRow, size.width * 0.2),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.2,
-                        child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center)
+            Column(
+                children: [
+                    Container(
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                                "Nueva propuesta de manejo de suelo",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 16)
+                            ),
+                        )
                     ),
-                ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.2,
-                        child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center)
-                    ),
-                ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.2,
-                        child: Text(suelo.toStringAsFixed(1) == '-0.0' ? '0.0' : suelo.toStringAsFixed(1) , textAlign: TextAlign.center)
-                    ),
-                ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.2,
-                        child: Text(balance.toStringAsFixed(1) == '-0.0' ? '0.0' : balance.toStringAsFixed(1) , textAlign: TextAlign.center)
-                    ),
-                ),
-                
-            ],
+                    Divider(),
+                ],
+            )
+            
         );
-    }
-
-
-    //Pagina de Conteo de puntos
-    Widget _tituloPregunta(String titulo){
-        
-        return  Column(
-            children: [
+        for (var i = 0; i < listSoluciones.length; i++) {
+            String labelSoluciones = listSoluciones.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            
+            listaAcciones.add(
                 Container(
-                    child: Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Text(
-                            titulo,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme
-                                .headline5
-                                .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                    padding: EdgeInsets.all(16),
+                    child: MultiSelectFormField(
+                        autovalidate: false,
+                        chipBackGroundColor: Colors.deepPurple,
+                        chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+                        dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                        checkBoxActiveColor: Colors.deepPurple,
+                        checkBoxCheckColor: Colors.white,
+                        dialogShapeBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12.0))
                         ),
-                    )
-                ),
-                Divider(),
-                
-            ],
-        );
-    }
-
-    Widget _labelTipo(int tipo){
-        
-        return  Column(
-            children: [
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
-                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
-                        Container(
-                            width: 60,
-                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
+                        title: Text(
+                            "$labelSoluciones",
+                            style: TextStyle(fontSize: 16),
                         ),
-                        Container(
-                            width: 60,
-                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
-                        ),
-                        Container(
-                            width: 60,
-                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-                        ),
-                    ],
-                ),
-                Divider(),
-            ],
-        );
-    }
-
-    Widget _rowRecorrido(String idTest,int tipo, String titulo, int pregunta, List<Map<String, dynamic>> preguntaItem){
-        List<Widget> prueba = [];
-
-        prueba.add(_tituloPregunta(titulo));
-        prueba.add(_labelTipo(tipo));
-
-        for (var item in preguntaItem) {
-            
-            prueba.add(
-                 Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6
-                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
-                        Container(
-                            width: 60,
-                            child: FutureBuilder(
-                                future: _count(idTest,pregunta,int.parse(item['value']),1),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return Text('0.0', textAlign: TextAlign.center);
-                                    }
-                                    
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 60,
-                            child: FutureBuilder(
-                                future: _count(idTest,pregunta,int.parse(item['value']), 2),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return Text('0.0', textAlign: TextAlign.center);
-                                    }
-                                    
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                        Container(
-                            width: 60,
-                            child: FutureBuilder(
-                                future: _count(idTest,pregunta,int.parse(item['value']),3),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (!snapshot.hasData) {
-                                        return Text('0.0', textAlign: TextAlign.center);
-                                    }
-                                    
-                                    return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
-                                },
-                            ),
-                        ),
-                    ],
-                ),
-            );
-            prueba.add(Divider());
-        }
-        return  Column(
-            children:prueba,
-        );
- 
-    }
-
-    Widget _recorrido(TestSuelo suelo,List<Punto> puntos){
-    
-        return Container(
-            decoration: BoxDecoration(
-                
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-                children: [
-                    Expanded(
-                        child: SingleChildScrollView(
-                            child: Container(
-                                color: Colors.white,
-                                child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                            BoxShadow(
-                                                    color: Color(0xFF3A5160)
-                                                        .withOpacity(0.05),
-                                                    offset: const Offset(1.1, 1.1),
-                                                    blurRadius: 17.0),
-                                            ],
-                                    ),
-                                    child: Column(
-                                        children: [
-                                            
-                                            _rowRecorrido(suelo.id,1, 'Observaciones de erosión', 1, selectMap.erosion()),
-                                            _rowRecorrido(suelo.id, 2, 'Obras de conservación de suelo', 2, selectMap.conservacion()),
-                                            _rowRecorrido(suelo.id, 1, 'Observaciones de drenaje', 3, selectMap.drenaje()),
-                                            _rowRecorrido(suelo.id, 2, 'Obras de drenaje', 4, selectMap.obrasDrenaje()),
-                                            _rowRecorrido(suelo.id, 1, 'Enfermedades de raíz', 5, selectMap.raiz()),
-                                            
-                                        ],
-                                    ),
-                                ),
-                            ),
-                        ),
-                    )
-                    
-                ],
-            ),
-        );
-            
-    }
-    
-
-    //Propuesta de abonos
-
-
-
-}
-
-
-Future<void> _dialogText(BuildContext context) async {
-    return showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-            return AlertDialog(
-                title: Text('Titulo'),
-                content: SingleChildScrollView(
-                    child: ListBody(
-                        children: <Widget>[
-                        Text('Texto para breve explicacion'),
-                        ],
-                    ),
-                ),
-                actions: <Widget>[
-                    TextButton(
-                        child: Text('Cerrar'),
-                        onPressed: () {
-                        Navigator.of(context).pop();
+                        validator: (value) {
+                            if (value == null || value.length == 0) {
+                            return 'Seleccione una o mas opciones';
+                            }
+                            return null;
+                        },
+                        dataSource: _meses,
+                        textField: 'label',
+                        valueField: 'value',
+                        okButtonLabel: 'Aceptar',
+                        cancelButtonLabel: 'Cancelar',
+                        hintWidget: Text('Seleccione una o mas meses'),
+                        initialValue: itemActividad[i],
+                        onSaved: (value) {
+                            if (value == null) return;
+                                setState(() {
+                                itemActividad[i] = value;
+                            });
                         },
                     ),
-                ],
+                )
             );
-        },
-    );
+        }
+
+        listaAcciones.add(_botonsubmit());
+
+        return SingleChildScrollView(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                        BoxShadow(
+                                color: Color(0xFF3A5160)
+                                    .withOpacity(0.05),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 17.0),
+                        ],
+                ),
+                child: Column(children:listaAcciones,)
+            ),
+        );
+    }
+
+    Widget  _botonsubmit(){
+
+        return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 30),
+            child: RaisedButton.icon(
+                icon:Icon(Icons.save),
+                label: Text('Guardar',
+                    style: Theme.of(context).textTheme
+                        .headline6
+                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
+                ),
+                padding:EdgeInsets.all(13),
+                onPressed:(_guardando) ? null : _submit,
+                
+            ),
+        );
+    }
+
+
+
+    _listaAcciones(){
+
+        //print(itemActividad);
+        itemActividad.forEach((key, value) {
+            final Acciones itemAcciones = Acciones();
+            itemAcciones.id = uuid.v1();
+            itemAcciones.idItem = key;
+            itemAcciones.repuesta = value.toString();
+            itemAcciones.idTest = suelo.id ;
+            
+            listaAcciones.add(itemAcciones);
+        });
+    }
+
+    void _submit(){
+        setState(() {_guardando = true;});
+ 
+
+        _listaAcciones();
+        
+        listaAcciones.forEach((accion) {
+            // print("Id item: ${accion.idItem}");
+            // print("Id Respues: ${accion.repuesta}");
+            // print("Id prueba: ${accion.idTest}");
+            DBProvider.db.nuevaAccion(accion);
+        });
+
+        fincasBloc.obtenerAcciones(suelo.id);
+        setState(() {_guardando = false;});
+
+        Navigator.pop(context, 'salidaPage');
+    }
+
+
+
+
+
 }
+

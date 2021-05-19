@@ -292,9 +292,6 @@ List<Map<String, dynamic>> texturasSuelo(){
     return texturaTipo;
 }
 
-
-
-
 // Abonos
 List<Map<String, dynamic>> listAbonos(){
     final List<Map<String, dynamic>>  abonos = [
@@ -566,10 +563,6 @@ List<Map<String, dynamic>> unidadAbono(){
     return unidad;
 }
 
-
-
-
-
 //Salidas Nutrientes
 List<Map<String, dynamic>> valoresSalida(){
     final List<Map<String, dynamic>>  salida = [
@@ -620,6 +613,51 @@ List<Map<String, dynamic>> valoresSalida(){
 }
 
 
+//Decisiones
+
+List<Map<String, dynamic>> solucionesXmes(){
+    final List<Map<String, dynamic>>  solucionesXmes = [
+        {
+            'value': '0',
+            'label': 'Barrera Viva'
+        },
+        {
+            'value': '1',
+            'label': 'Barrera muerta'
+        },
+        {
+            'value': '2',
+            'label': 'Aumento de cobertura de suelo'
+        },
+        {
+            'value': '3',
+            'label': 'Siembra a curva de nivel'
+        },
+        {
+            'value': '4',
+            'label': 'Terrazas'
+        },
+        {
+            'value': '5',
+            'label': 'Acequías'
+        },
+        {
+            'value': '6',
+            'label': 'Canales de drenaje'
+        },
+        {
+            'value': '7',
+            'label': 'Aplicar abono orgánico'
+        },
+        {
+            'value': '8',
+            'label': 'Aplicar abono mineral'
+        }
+
+    ];
+
+    return solucionesXmes;
+}
 
 
 

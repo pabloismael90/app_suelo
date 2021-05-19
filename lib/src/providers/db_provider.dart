@@ -1,6 +1,7 @@
 import 'dart:io';
 
 
+import 'package:app_suelo/src/models/acciones_model.dart';
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
@@ -42,7 +43,7 @@ class DBProvider {
 
         return await openDatabase(
             path,
-            version: 1,
+            version: 2,
             onOpen: (db) {},
             onConfigure: _onConfigure,
             onCreate: ( Database db, int version ) async {
@@ -110,20 +111,6 @@ class DBProvider {
 
                 await db.execute(
                     'CREATE TABLE entradaNutriente ('
-                    'id TEXT PRIMARY KEY,'
-                    ' idTest TEXT,'
-                    ' idAbono INTEGER,'
-                    ' humedad REAL,'
-                    ' cantidad REAL,'
-                    ' frecuencia INTEGER,'
-                    ' unidad INTEGER,'
-                    ' tipo INTEGER,'
-                    ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
-                    ')'
-                );
-
-                await db.execute(
-                    'CREATE TABLE newAbono ('
                     'id TEXT PRIMARY KEY,'
                     ' idTest TEXT,'
                     ' idAbono INTEGER,'
@@ -229,6 +216,13 @@ class DBProvider {
         return res;
     }
 
+    nuevaAccion( Acciones acciones ) async {
+        final db  = await database;
+        final res = await db.insert('Acciones',  acciones.toJson() );
+        return res;
+    }
+
+
 
 
 
@@ -269,6 +263,19 @@ class DBProvider {
         return list;
     }
 
+    Future<List<Acciones>> getTodasAcciones() async {
+
+        final db  = await database;
+        final res = await db.rawQuery('SELECT DISTINCT idTest FROM Acciones');
+
+        List<Acciones> list = res.isNotEmpty 
+                                ? res.map( (c) => Acciones.fromJson(c) ).toList()
+                                : [];
+
+        
+        
+        return list;
+    }
     
     
     
@@ -336,6 +343,14 @@ class DBProvider {
         return list;         
     }
 
+    Future<List<Acciones>> getAccionesIdTest(String idTest) async{
+        final db = await database;
+        final res = await db.query('Acciones', where: 'idTest = ?', whereArgs: [idTest]);
+        List<Acciones> list = res.isNotEmpty 
+                                ? res.map( (c) => Acciones.fromJson(c) ).toList()
+                                : [];
+        return list;
+    }
 
 
     

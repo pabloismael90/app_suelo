@@ -1,34 +1,49 @@
+import 'package:app_suelo/src/bloc/fincas_bloc.dart';
+import 'package:app_suelo/src/models/acciones_model.dart';
+import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/pages/finca/finca_page.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:flutter/material.dart';
 
 
-class NuevoBalance extends StatelessWidget {
+class NuevoBalance extends StatefulWidget {
     const NuevoBalance({Key key}) : super(key: key);
 
+  @override
+  _NuevoBalanceState createState() => _NuevoBalanceState();
+}
+
+class _NuevoBalanceState extends State<NuevoBalance> {
     Future _getdataFoms(TestSuelo suelo) async{
 
         int value = await DBProvider.db.activateFerti(suelo.id);
+        List<Acciones> acciones= await DBProvider.db.getAccionesIdTest(suelo.id);
         
-        return value;
+        return [value, acciones];
     }
-
+    FincasBloc _fincasBloc = FincasBloc();
 
     @override
     Widget build(BuildContext context) {
 
         TestSuelo suelo = ModalRoute.of(context).settings.arguments;
-        fincasBloc.obtenerEntradas(suelo.id, 2);
-
-
+        
+        
         return FutureBuilder(
             future: _getdataFoms(suelo),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                 }
-                if (snapshot.data == 1) {
+                _fincasBloc.obtenerEntradas(suelo.id, 2);
+                _fincasBloc.obtenerAcciones(suelo.id);
+                
+                int validacion = snapshot.data[0];
+                List<Acciones> acciones = snapshot.data[1];
+                
+                if (validacion == 1) {
+                    
                     return Container(
                         child: ListView(
                             children: [
@@ -36,12 +51,19 @@ class NuevoBalance extends StatelessWidget {
                                 Divider(),
                                 _cardEntrada(suelo,fincasBloc.entradaStream, 'Propuesta de abonos', 'abonosPage', 2),
                                 _botonBalance(context, suelo, 'Propuesta balance nutrientes', 2),
+                                Divider(),
+                                SizedBox(height: 50,),
+                                _botonDecisiones(context, suelo, acciones )
+                                
+                                
+                                
+
                             ],
                         ),
                         
                     );
                 } else {
-                    return Center(child: Text('Finalizar los formularios anteriores'),);
+                    return Center(child: _tituloDivider(context,'Finalizar los formularios de recorrido de puntos y balance de nutriente actual '),);
                 }
                 
             },
@@ -61,7 +83,6 @@ class NuevoBalance extends StatelessWidget {
             ),
         );
     }
-
 
     Widget _cardEntrada(TestSuelo suelo, Stream streamData, String titulo, String url, int tipo){
 
@@ -122,7 +143,6 @@ class NuevoBalance extends StatelessWidget {
         );
 
     }
-    
 
     Widget  _botonBalance(BuildContext context, TestSuelo suelo, String titulo, int tipo){
         
@@ -133,7 +153,7 @@ class NuevoBalance extends StatelessWidget {
                     return CircularProgressIndicator();
                 }
                 
-                List entradas = snapshot.data;
+                List<EntradaNutriente> entradas = snapshot.data;
                 
                 
                 return Padding(
@@ -154,5 +174,48 @@ class NuevoBalance extends StatelessWidget {
         
 
     }
-    
+
+    Widget  _botonDecisiones(BuildContext context, TestSuelo suelo, List<Acciones> acciones ){
+        
+        return StreamBuilder(
+            stream: fincasBloc.entradaStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+                if (acciones.length == 0) {
+                    return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+                        child: RaisedButton(
+                            child: Text('Tomar desiciones',
+                                style: Theme.of(context).textTheme
+                                    .headline6
+                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                            ),
+                            padding:EdgeInsets.all(13),
+                            onPressed: snapshot.data.length > 0 ? () => Navigator.pushNamed(context, 'decisiones', arguments: suelo) : null,
+                        ),
+                    );
+                }
+
+                return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+                    child: RaisedButton(
+                        child: Text('Ver Reporte',
+                            style: Theme.of(context).textTheme
+                                .headline6
+                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                        ),
+                        padding:EdgeInsets.all(13),
+                        onPressed:  () => Navigator.pushNamed(context, 'reportDetalle', arguments: suelo.id),
+                    ),
+                );
+                
+            },
+        );
+
+        
+
+    }
+
 }

@@ -49,8 +49,8 @@ android {
         applicationId "org.rikolto.latinoamerica.app_suelo.app_suelo"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 2
+        versionName '0.1.1'
     }
 
     signingConfigs {

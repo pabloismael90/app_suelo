@@ -1,6 +1,8 @@
 import 'package:app_suelo/src/pages/PDFView.dart';
 import 'package:app_suelo/src/pages/datosTests/balanceActual/CosechaAnual.dart';
+import 'package:app_suelo/src/pages/decisiones/decisiones_page.dart';
 import 'package:app_suelo/src/pages/decisiones/desiones_form.dart';
+import 'package:app_suelo/src/pages/decisiones/reporte_detalle.dart';
 import 'package:app_suelo/src/pages/finca/finca_form.dart';
 import 'package:app_suelo/src/pages/finca/finca_page.dart';
 import 'package:app_suelo/src/pages/galeria/image.dart';
@@ -85,6 +87,11 @@ class MyApp extends StatelessWidget {
                 'recorridoResultado': (BuildContext context) => RecorridoResultado(),
                 'ResultadoNutrientes': (BuildContext context) => BalanceActual(),
                 'decisiones': (BuildContext context) => DecisionesPage(),
+
+                //Reporte
+                'registros': (BuildContext context) => ReportPage(),
+                'reportDetalle': (BuildContext context) => ReportDetalle(),
+
                 
 
                 //Galeria de imagenes

@@ -41,7 +41,6 @@ class _BalanceActualState extends State<BalanceActual> {
         TestSuelo suelo = dataRoute[0];
         String titulo = dataRoute[1];
         int tipo = dataRoute[2];
-        print(tipo);
 
         size = MediaQuery.of(context).size;
 
