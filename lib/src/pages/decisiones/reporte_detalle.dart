@@ -51,8 +51,11 @@ class _ReportDetalleState extends State<ReportDetalle> {
             SueloNutriente sueloNutriente = await DBProvider.db.getSueloNutrientes(suelo.id);
             List<EntradaNutriente> fertilizacion = await DBProvider.db.getEntradas(suelo.id, 2);
             List<Acciones> listAcciones = await DBProvider.db.getAccionesIdTest(suelo.id);
+            List<EntradaNutriente> listAbonosActual = await DBProvider.db.getEntradas(suelo.id, 1);
+            List<EntradaNutriente> listAbonoNuevo = await DBProvider.db.getEntradas(suelo.id, 2);
             
-            return [finca, parcela, salidaNutriente, entradas, sueloNutriente, puntos, fertilizacion, suelo, listAcciones];
+            return [finca, parcela, salidaNutriente, entradas, sueloNutriente,
+                    puntos, fertilizacion, suelo, listAcciones, listAbonosActual, listAbonoNuevo];
     }
 
     @override
@@ -83,11 +86,14 @@ class _ReportDetalleState extends State<ReportDetalle> {
                     List<EntradaNutriente> fertilizacion = snapshot.data[6];
                     TestSuelo suelo = snapshot.data[7];
                     List<Acciones> listAcciones = snapshot.data[8];
+                    List<EntradaNutriente> listAbonosActual = snapshot.data[9];
+                    List<EntradaNutriente> listAbonoNuevo = snapshot.data[10];
 
                     pageItem.add(_dataFincas( context, finca, parcela),);
                     pageItem.add(_disponibilidad('Balance neto del Sistema SAF actual', 'Disponibilidad de nutriente actual', finca, parcela, salidaNutriente, entradas, sueloNutriente));
                     pageItem.add(_disponibilidad('Propuesta Balance neto del Sistema SAF', 'Propuesta disponibilidad de nutriente', finca, parcela, salidaNutriente, fertilizacion, sueloNutriente));
                     pageItem.add(_recorrido(suelo, puntos));
+                    pageItem.add(_pageAbonos(listAbonosActual, listAbonoNuevo));
                     pageItem.add(_accionesMeses(listAcciones));
 
                     return Column(
@@ -672,6 +678,93 @@ class _ReportDetalleState extends State<ReportDetalle> {
             ),
         );
             
+    }
+
+
+    Widget _abonosList(List<EntradaNutriente> listAbonos){
+        
+        return ListView.builder(
+            itemBuilder: (context, index) {
+                
+                String labelAbono = selectMap.listAbonos().firstWhere((e) => e['value'] == '${listAbonos[index].idAbono}', orElse: () => {"value": "1","label": "No data"})['label'];
+                String unidad = selectMap.unidadAbono().firstWhere((e) => e['value'] == '${listAbonos[index].unidad}', orElse: () => {"value": "1","label": "No data"})['label'];
+
+                return Container(
+                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                        
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.5),
+                            boxShadow: [
+                                BoxShadow(
+                                    color: Color(0xFF3A5160)
+                                        .withOpacity(0.05),
+                                    offset: const Offset(1.1, 1.1),
+                                    blurRadius: 17.0),
+                                ],
+                        ),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                                
+                                Padding(
+                                    padding: EdgeInsets.only(top: 5, bottom: 5.0),
+                                    child: Text(
+                                        labelAbono,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.headline5
+                                                .copyWith(fontWeight: FontWeight.w600, fontSize: 16),
+                                    ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(bottom: 5.0),
+                                    child: Text(
+                                        'Cantidad: ${listAbonos[index].cantidad} $unidad',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.headline5
+                                                .copyWith(fontSize: 16),
+                                    ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(bottom: 5.0),
+                                    child: Text(
+                                        'Frecuencia: ${listAbonos[index].frecuencia}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.headline5
+                                                .copyWith(fontSize: 16),
+                                    ),
+                                ),
+                               
+                            ],
+                        ),
+                );
+                
+            },
+            shrinkWrap: true,
+            itemCount: listAbonos.length,
+            padding: EdgeInsets.only(bottom: 30.0),
+            controller: ScrollController(keepScrollOffset: false),
+        );
+
+    }
+    Widget _pageAbonos(List<EntradaNutriente> listAbonosActual, List<EntradaNutriente> listAbonosNuevo){
+        return SingleChildScrollView(
+            child: Column(
+                children: [
+                    _tituloPregunta('Uso de abono actual'),
+                    _abonosList(listAbonosActual),
+                    Divider(),
+                    _tituloPregunta('Propuesta de abonos'),
+                    _abonosList(listAbonosNuevo),
+                ],
+            ),
+        );
     }
 
     //Acciones
