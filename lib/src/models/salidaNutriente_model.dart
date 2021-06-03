@@ -2,12 +2,12 @@ class SalidaNutriente {
     SalidaNutriente({
         this.id,
         this.idTest,
-        this.cacao = 0.0,
-        this.lena = 0.0,
-        this.fruta = 0.0,
-        this.musacea = 0.0,
-        this.madera = 0.0,
-        this.cascaraCacao = 0.0,
+        this.cacao,
+        this.lena,
+        this.fruta,
+        this.musacea,
+        this.madera,
+        this.cascaraCacao,
     });
 
     String id;

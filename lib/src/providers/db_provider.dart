@@ -50,7 +50,6 @@ class DBProvider {
                 await db.execute(
                     'CREATE TABLE Finca ('
                     ' id TEXT PRIMARY KEY,'
-                    ' userid INTEGER,'
                     ' nombreFinca TEXT,'
                     ' nombreProductor TEXT,'
                     ' areaFinca REAL,'

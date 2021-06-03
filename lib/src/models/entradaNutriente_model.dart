@@ -3,9 +3,9 @@ class EntradaNutriente {
         this.id,
         this.idTest,
         this.idAbono = 0,
-        this.humedad = 0.0,
-        this.cantidad = 0.0,
-        this.frecuencia = 0,
+        this.humedad,
+        this.cantidad,
+        this.frecuencia,
         this.unidad = 0,
         this.tipo = 0,
     });

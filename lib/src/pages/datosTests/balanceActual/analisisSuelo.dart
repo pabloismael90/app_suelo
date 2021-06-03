@@ -152,7 +152,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
         
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.ph.toString(),
+                        initialValue: sueloNutriente.ph == null ? '' : sueloNutriente.ph.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -194,7 +194,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 ),                
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.densidadAparente.toString(),
+                        initialValue: sueloNutriente.densidadAparente == null ? '' : sueloNutriente.densidadAparente.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -236,7 +236,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.materiaOrganica.toString(),
+                        initialValue: sueloNutriente.materiaOrganica == null ? '' : sueloNutriente.materiaOrganica.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -278,7 +278,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.nitrogeno.toString(),
+                        initialValue: sueloNutriente.nitrogeno == null ? '' : sueloNutriente.nitrogeno.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -319,7 +319,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.fosforo.toString(),
+                        initialValue: sueloNutriente.fosforo == null ? '' : sueloNutriente.fosforo.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -361,7 +361,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.potasio.toString(),
+                        initialValue: sueloNutriente.potasio == null ? '' : sueloNutriente.potasio.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -403,7 +403,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.azufre.toString(),
+                        initialValue: sueloNutriente.azufre == null ? '' : sueloNutriente.azufre.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -445,7 +445,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.calcio.toString(),
+                        initialValue: sueloNutriente.calcio == null ? '' : sueloNutriente.calcio.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -487,7 +487,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.magnesio.toString(),
+                        initialValue: sueloNutriente.magnesio == null ? '' : sueloNutriente.magnesio.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -529,7 +529,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.hierro.toString(),
+                        initialValue: sueloNutriente.hierro == null ? '' : sueloNutriente.hierro.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -571,7 +571,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.manganeso.toString(),
+                        initialValue: sueloNutriente.manganeso == null ? '' : sueloNutriente.manganeso.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -613,7 +613,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.cadmio.toString(),
+                        initialValue: sueloNutriente.cadmio == null ? '' : sueloNutriente.cadmio.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -655,7 +655,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.zinc.toString(),
+                        initialValue: sueloNutriente.zinc == null ? '' : sueloNutriente.zinc.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -697,7 +697,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.boro.toString(),
+                        initialValue: sueloNutriente.boro == null ? '' : sueloNutriente.boro.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -739,7 +739,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: sueloNutriente.acidez.toString(),
+                        initialValue: sueloNutriente.acidez == null ? '' : sueloNutriente.acidez.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),

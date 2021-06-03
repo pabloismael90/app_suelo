@@ -72,11 +72,24 @@ class _AbonosPageState extends State<AbonosPage> {
                 child: Container(
                     color: kBackgroundColor,
                     child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: _addAbono(suelo, tipo)
+                        padding: EdgeInsets.symmetric( vertical: 10),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                                Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 5),
+                                    child: _addAbono(suelo, tipo),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 5),
+                                    child: _finalizar(),
+                                ),
+                            ],
+                        ),
                     ),
                 ),
             ),
+           
         );
     }
 
@@ -144,7 +157,7 @@ class _AbonosPageState extends State<AbonosPage> {
         return Container(
             color: kBackgroundColor,
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 10),
                 child: RaisedButton.icon(
                     icon:Icon(Icons.add_circle_outline_outlined),
                     
@@ -159,4 +172,36 @@ class _AbonosPageState extends State<AbonosPage> {
             ),
         );
     }
+
+    Widget _finalizar(){
+       return StreamBuilder(
+            stream: fincasBloc.entradaStream,
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+                if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                }
+
+                List<EntradaNutriente> entradas = snapshot.data;
+                return Container(
+                    color: kBackgroundColor,
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: RaisedButton.icon(
+                            icon:Icon(Icons.check_box_outlined),  
+                            label: Text('Finalizar',
+                                style: Theme.of(context).textTheme
+                                    .headline6
+                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                            ),
+                            padding:EdgeInsets.all(13),
+                            onPressed: entradas.length == 0 ? null : () => Navigator.pop(context),
+                        )
+                    ),
+                );
+            },
+        );
+         
+    }
+
+    
 }

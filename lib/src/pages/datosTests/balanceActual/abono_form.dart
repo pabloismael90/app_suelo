@@ -113,10 +113,11 @@ class _AddAbonoState extends State<AddAbono> {
     Widget _humedadAbono(){
 
         return TextFormField(
-            initialValue: entradaNutriente.humedad.toString(),
+            initialValue: entradaNutriente.humedad == null ? '' : entradaNutriente.humedad.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-                labelText: 'Humedad (%)'
+                labelText: 'Humedad (%)',
+                hintText: '10'
             ),
             validator: (value) {
                 
@@ -133,7 +134,7 @@ class _AddAbonoState extends State<AddAbono> {
     Widget _cantidadAbono(){
 
         return TextFormField(
-            initialValue: entradaNutriente.cantidad.toString(),
+            initialValue: entradaNutriente.cantidad == null ? '' : entradaNutriente.cantidad.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Cantidad'
@@ -153,7 +154,7 @@ class _AddAbonoState extends State<AddAbono> {
     Widget _frecuenciaAbono(){
 
         return TextFormField(
-            initialValue: entradaNutriente.frecuencia.toString(),
+            initialValue: entradaNutriente.frecuencia == null ? '' : entradaNutriente.frecuencia.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Frecuencia'

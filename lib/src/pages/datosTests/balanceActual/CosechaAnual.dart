@@ -127,7 +127,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
                 Expanded(
                     child: TextFormField(
-                        initialValue: salidaNutriente.cacao.toString(),
+                        initialValue: salidaNutriente.cacao == null ? '' : salidaNutriente.cacao.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -171,7 +171,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: salidaNutriente.cascaraCacao.toString(),
+                        initialValue: salidaNutriente.cascaraCacao == null ? '' : salidaNutriente.cascaraCacao.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -212,7 +212,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 ),                
                 Expanded(
                     child: TextFormField(
-                        initialValue: salidaNutriente.lena.toString(),
+                        initialValue: salidaNutriente.lena == null ? '' : salidaNutriente.lena.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -254,7 +254,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: salidaNutriente.musacea.toString(),
+                        initialValue: salidaNutriente.musacea == null ? '' : salidaNutriente.musacea.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -295,7 +295,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: salidaNutriente.fruta.toString(),
+                        initialValue: salidaNutriente.fruta == null ? '' : salidaNutriente.fruta.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -337,7 +337,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Expanded(
                     child: TextFormField(
-                        initialValue: salidaNutriente.madera.toString(),
+                        initialValue: salidaNutriente.madera == null ? '' : salidaNutriente.madera.toString(),
                         keyboardType: TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
