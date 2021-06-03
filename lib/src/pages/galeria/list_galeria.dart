@@ -23,7 +23,7 @@ Future _initImages(BuildContext context) async {
     
     List imagePaths = manifestMap.keys
         .where((String key) => key.contains('assets/galeria/'))
-        .where((String key) => key.contains('.jpeg'))
+        .where((String key) => key.contains('.jpg'))
         .toList();
 
     for (var i = 0; i < imagePaths.length; i++) {
