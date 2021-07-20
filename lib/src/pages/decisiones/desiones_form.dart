@@ -9,7 +9,7 @@ import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:uuid/uuid.dart';
 
 class DecisionesPage extends StatefulWidget {
-  DecisionesPage({Key key}) : super(key: key);
+  DecisionesPage({Key? key}) : super(key: key);
 
   @override
   _DecisionesPageState createState() => _DecisionesPageState();
@@ -19,11 +19,11 @@ class DecisionesPage extends StatefulWidget {
 
 class _DecisionesPageState extends State<DecisionesPage> {
 
-    Size size;
+    Size? size;
     var uuid = Uuid();
     bool _guardando = false;
     final fincasBloc = new FincasBloc();
-    TestSuelo suelo ;
+    TestSuelo? suelo ;
     List<Acciones> listaAcciones = [];
 
     final List<Map<String, dynamic>>  _meses = selectMap.listMeses();
@@ -49,7 +49,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
     @override
     Widget build(BuildContext context) {
 
-        suelo = ModalRoute.of(context).settings.arguments;
+        suelo = ModalRoute.of(context)!.settings.arguments as TestSuelo?;
         size = MediaQuery.of(context).size;
                 
 
@@ -70,7 +70,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
 
     Widget _accionesMeses(){
 
-        List<Widget> listaAcciones = List<Widget>();
+        List<Widget> listaAcciones =  [];
         listaAcciones.add(
             
             Column(
@@ -82,7 +82,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
                                 "Nueva propuesta de manejo de suelo",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
@@ -93,13 +93,12 @@ class _DecisionesPageState extends State<DecisionesPage> {
             
         );
         for (var i = 0; i < listSoluciones.length; i++) {
-            String labelSoluciones = listSoluciones.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
+            String? labelSoluciones = listSoluciones.firstWhere((e) => e['value'] == '$i', orElse: () => {"value": "1","label": "No data"})['label'];
             
             listaAcciones.add(
                 Container(
                     padding: EdgeInsets.all(16),
                     child: MultiSelectFormField(
-                        autovalidate: false,
                         chipBackGroundColor: Colors.deepPurple,
                         chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
                         dialogTextStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -167,7 +166,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
                 icon:Icon(Icons.save),
                 label: Text('Guardar',
                     style: Theme.of(context).textTheme
-                        .headline6
+                        .headline6!
                         .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
                 ),
                 padding:EdgeInsets.all(13),
@@ -187,7 +186,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
             itemAcciones.id = uuid.v1();
             itemAcciones.idItem = key;
             itemAcciones.repuesta = value.toString();
-            itemAcciones.idTest = suelo.id ;
+            itemAcciones.idTest = suelo!.id ;
             
             listaAcciones.add(itemAcciones);
         });
@@ -206,7 +205,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
             DBProvider.db.nuevaAccion(accion);
         });
 
-        fincasBloc.obtenerAcciones(suelo.id);
+        fincasBloc.obtenerAcciones(suelo!.id);
         setState(() {_guardando = false;});
 
         Navigator.pop(context, 'salidaPage');

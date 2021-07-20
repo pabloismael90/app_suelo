@@ -1,7 +1,8 @@
 //import 'dart:html';
 
 import 'package:app_suelo/src/models/testSuelo_model.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
@@ -35,10 +36,10 @@ class _AgregarTestState extends State<AgregarTest> {
     String _fecha = '';
     TextEditingController _inputfecha = new TextEditingController();
 
-    List<TestSuelo> mainlistplagas ;
+    List<TestSuelo>? mainlistplagas ;
 
-    List mainparcela;
-    TextEditingController _control;
+    List? mainparcela;
+    TextEditingController? _control;
 
     @mustCallSuper
     // ignore: must_call_super
@@ -71,33 +72,30 @@ class _AgregarTestState extends State<AgregarTest> {
                     List<Map<String, dynamic>> _listitem = snapshot.data;
                     return Scaffold(
                         key: scaffoldKey,
-                        appBar: AppBar(),
+                        appBar: AppBar(title: Text('Toma de datos'),),
                         body: SingleChildScrollView(
                             child: Column(
                                 children: [
-                                    TitulosPages(titulo: 'Toma de datos'),
-                                    Divider(),
                                     Container(
                                         child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                                             children: [
-
-                                                Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                                    child:Text(
-                                                        'Recorrido de parcela',
-                                                        style: Theme.of(context).textTheme
-                                                            .headline6
-                                                            .copyWith(fontSize: 14)
+                                                Flexible(
+                                                    child: Container(
+                                                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                                        child:Text(
+                                                            'Recorrido de parcela',
+                                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                                        ),
                                                     ),
                                                 ),
-                                                Padding(
-                                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                                                    child:Text(
-                                                        '5 puntos',
-                                                        style: Theme.of(context).textTheme
-                                                            .headline6
-                                                            .copyWith(fontSize: 14)
+                                                Flexible(
+                                                    child: Padding(
+                                                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                                        child:Text(
+                                                            '5 puntos',
+                                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                                        ),
                                                     ),
                                                 ),
                                             ],
@@ -141,7 +139,7 @@ class _AgregarTestState extends State<AgregarTest> {
             items: _listitem,
             enabled: _enableFinca,
             validator: (value){
-                if(value.length < 1){
+                if(value!.length < 1){
                     return 'No se selecciono una finca';
                 }else{
                     return null;
@@ -175,9 +173,9 @@ class _AgregarTestState extends State<AgregarTest> {
                     controller: _control,
                     initialValue: '',
                     labelText: 'Seleccione la parcela',
-                    items: mainparcela,
+                    items: mainparcela as List<Map<String, dynamic>>,
                     validator: (value){
-                        if(value.length < 1){
+                        if(value!.length < 1){
                             return 'Selecione un elemento';
                         }else{
                             return null;
@@ -215,7 +213,7 @@ class _AgregarTestState extends State<AgregarTest> {
     }
 
     _selectDate(BuildContext context) async{
-        DateTime picked = await showDatePicker(
+        DateTime? picked = await showDatePicker(
             context: context,
 
             initialDate: new DateTime.now(),
@@ -225,7 +223,6 @@ class _AgregarTestState extends State<AgregarTest> {
         );
         if (picked != null){
             setState(() {
-                //_fecha = picked.toString();
                 _fecha = formatter.format(picked);
                 _inputfecha.text = _fecha;
             });
@@ -233,32 +230,29 @@ class _AgregarTestState extends State<AgregarTest> {
 
     }
 
-  
-
 
     Widget  _botonsubmit(){
-        fincasBloc.obtenerPlagas();
-        return StreamBuilder(
-            stream: fincasBloc.plagaStream ,
-            builder: (BuildContext context, AsyncSnapshot snapshot){
-                if (!snapshot.hasData) {
-                    return Container();
-                }
-                mainlistplagas = snapshot.data;
-
-                return RaisedButton.icon(
-                    icon:Icon(Icons.save, color: Colors.white,),
-
-                    label: Text('Guardar',
-                        style: Theme.of(context).textTheme
-                            .headline6
-                            .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-                    ),
-                    padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
-                    onPressed:(_guardando) ? null : _submit,
-                    //onPressed: clearTextInput,
-                );
-            },
+        fincasBloc.obtenerTest();
+        
+        return Row(
+            children: [
+                Spacer(),
+                StreamBuilder(
+                    stream: fincasBloc.testStream ,
+                    builder: (BuildContext context, AsyncSnapshot snapshot){
+                        if (!snapshot.hasData) {
+                            return Container();
+                        }
+                        mainlistplagas = snapshot.data;
+                        return ButtonMainStyle(
+                            title: 'Guardar',
+                            icon: Icons.save,
+                            press: (_guardando) ? null : _submit,
+                        );
+                    },
+                ),
+                Spacer()
+            ],
         );
 
 
@@ -273,15 +267,13 @@ class _AgregarTestState extends State<AgregarTest> {
 
         plaga.estaciones = 3;
 
-        if  ( !formKey.currentState.validate() ){
+        if  ( !formKey.currentState!.validate() ){
             //Cuendo el form no es valido
             return null;
         }
-        formKey.currentState.save();
+        formKey.currentState!.save();
 
-        mainlistplagas.forEach((e) {
-            //print(plaga.fechaTest);
-            //print(e.fechaTest);
+        mainlistplagas!.forEach((e) {
             if (plaga.idFinca == e.idFinca && plaga.idLote == e.idLote && plaga.fechaTest == e.fechaTest) {
                 checkRepetido = true;
             }
@@ -290,16 +282,16 @@ class _AgregarTestState extends State<AgregarTest> {
 
 
         if (checkRepetido == true) {
-            mostrarSnackbar('Ya existe un registros con los mismos valores');
+            mostrarSnackbar('Ya existe un registros con los mismos valores', context);
             return null;
         }
 
-        String checkParcela = mainparcela.firstWhere((e) => e['value'] == '${plaga.idLote}', orElse: () => {"value": "1","label": "No data"})['value'];
+        String? checkParcela = mainparcela!.firstWhere((e) => e['value'] == '${plaga.idLote}', orElse: () => {"value": "1","label": "No data"})['value'];
 
 
 
         if (checkParcela == '1') {
-            mostrarSnackbar('La parcela selecionada no pertenece a esa finca');
+            mostrarSnackbar('La parcela selecionada no pertenece a esa finca', context);
             return null;
         }
 
@@ -307,18 +299,13 @@ class _AgregarTestState extends State<AgregarTest> {
 
         setState(() {_guardando = true;});
 
-        // print(plaga.id);
-        // print(plaga.idFinca);
-        // print(plaga.idLote);
-        // print(plaga.estaciones);
-        // print(plaga.fechaTest);
         if(plaga.id == null){
             plaga.id =  uuid.v1();
-            fincasBloc.addPlaga(plaga);
+            fincasBloc.addTest(plaga);
         }
 
         setState(() {_guardando = false;});
-        mostrarSnackbar('Registro Guardado');
+        mostrarSnackbar('Registro Guardado', context);
 
 
         Navigator.pop(context, 'fincas');
@@ -327,12 +314,5 @@ class _AgregarTestState extends State<AgregarTest> {
     }
 
 
-    void mostrarSnackbar(String mensaje){
-        final snackbar = SnackBar(
-            content: Text(mensaje),
-            duration: Duration(seconds: 2),
-        );
-
-        scaffoldKey.currentState.showSnackBar(snackbar);
-    }
+   
 }

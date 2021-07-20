@@ -8,7 +8,7 @@ import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 
 class AbonosPage extends StatefulWidget {
-  AbonosPage({Key key}) : super(key: key);
+  AbonosPage({Key? key}) : super(key: key);
 
   @override
   _AbonosPageState createState() => _AbonosPageState();
@@ -18,7 +18,7 @@ class _AbonosPageState extends State<AbonosPage> {
     @override
     Widget build(BuildContext context) {
 
-        List dataRoute = ModalRoute.of(context).settings.arguments;
+        List dataRoute = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
 
         TestSuelo suelo = dataRoute[0];
         int tipo = dataRoute[1];
@@ -163,7 +163,7 @@ class _AbonosPageState extends State<AbonosPage> {
                     
                     label: Text('Agregar Abono',
                         style: Theme.of(context).textTheme
-                            .headline6
+                            .headline6!
                             .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                     ),
                     padding:EdgeInsets.all(13),
@@ -190,7 +190,7 @@ class _AbonosPageState extends State<AbonosPage> {
                             icon:Icon(Icons.check_box_outlined),  
                             label: Text('Finalizar',
                                 style: Theme.of(context).textTheme
-                                    .headline6
+                                    .headline6!
                                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                             ),
                             padding:EdgeInsets.all(13),

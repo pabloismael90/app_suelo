@@ -11,7 +11,7 @@ import 'package:select_form_field/select_form_field.dart';
 import 'package:uuid/uuid.dart';
 
 class AnalisiSuelo extends StatefulWidget {
-  AnalisiSuelo({Key key}) : super(key: key);
+  AnalisiSuelo({Key? key}) : super(key: key);
 
   @override
   _AnalisiSueloState createState() => _AnalisiSueloState();
@@ -24,16 +24,16 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
     SueloNutriente sueloNutriente = SueloNutriente();
     bool _guardando = false;
     var uuid = Uuid();
-    TestSuelo suelo;
+    late TestSuelo suelo;
 
-    String tituloBtn;
+    late String tituloBtn;
 
 
     @override
     Widget build(BuildContext context) {
 
         Size size = MediaQuery.of(context).size;
-        List data = ModalRoute.of(context).settings.arguments;
+        List data = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
         
         suelo = data[0];
         sueloNutriente = data[1];
@@ -133,7 +133,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
 
     Widget _titulosForm(String titulo){
         return Container(
-            child: Text(titulo, textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
+            child: Text(titulo, textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6!
             .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
         );
     }
@@ -159,13 +159,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.ph = double.parse(value),
+                        onSaved: (value) => sueloNutriente.ph = double.parse(value!),
                     ),
                 ),
                 
@@ -201,13 +201,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.densidadAparente = double.parse(value),
+                        onSaved: (value) => sueloNutriente.densidadAparente = double.parse(value!),
                     ),
                 ),
                 
@@ -243,13 +243,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.materiaOrganica = double.parse(value),
+                        onSaved: (value) => sueloNutriente.materiaOrganica = double.parse(value!),
                     ),
                 ),
                 
@@ -285,13 +285,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.nitrogeno = double.parse(value),
+                        onSaved: (value) => sueloNutriente.nitrogeno = double.parse(value!),
                     ),
                 ),
                 Flexible(child: Container(
@@ -326,13 +326,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.fosforo = double.parse(value),
+                        onSaved: (value) => sueloNutriente.fosforo = double.parse(value!),
                     ),
                 ),
                 
@@ -368,13 +368,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.potasio = double.parse(value),
+                        onSaved: (value) => sueloNutriente.potasio = double.parse(value!),
                     ),
                 ),
                 
@@ -410,13 +410,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.azufre = double.parse(value),
+                        onSaved: (value) => sueloNutriente.azufre = double.parse(value!),
                     ),
                 ),
                 
@@ -452,13 +452,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.calcio = double.parse(value),
+                        onSaved: (value) => sueloNutriente.calcio = double.parse(value!),
                     ),
                 ),
                 
@@ -494,13 +494,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.magnesio = double.parse(value),
+                        onSaved: (value) => sueloNutriente.magnesio = double.parse(value!),
                     ),
                 ),
                 
@@ -536,13 +536,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.hierro = double.parse(value),
+                        onSaved: (value) => sueloNutriente.hierro = double.parse(value!),
                     ),
                 ),
                 
@@ -578,13 +578,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.manganeso = double.parse(value),
+                        onSaved: (value) => sueloNutriente.manganeso = double.parse(value!),
                     ),
                 ),
                 
@@ -620,13 +620,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.cadmio = double.parse(value),
+                        onSaved: (value) => sueloNutriente.cadmio = double.parse(value!),
                     ),
                 ),
                 
@@ -662,13 +662,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.zinc = double.parse(value),
+                        onSaved: (value) => sueloNutriente.zinc = double.parse(value!),
                     ),
                 ),
                 
@@ -704,13 +704,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.boro = double.parse(value),
+                        onSaved: (value) => sueloNutriente.boro = double.parse(value!),
                     ),
                 ),
                 
@@ -746,13 +746,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => sueloNutriente.acidez = double.parse(value),
+                        onSaved: (value) => sueloNutriente.acidez = double.parse(value!),
                     ),
                 ),
                 
@@ -784,7 +784,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                         initialValue: sueloNutriente.textura.toString(),
                         items: selectMap.texturasSuelo(),
                         validator: (value){
-                            if(value.length < 1){
+                            if(value!.length < 1){
                                 return 'Selecione un elemento';
                             }else{
                                 return null;
@@ -792,7 +792,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                         },
 
                         //onChanged: (val) => print(val),
-                        onSaved: (value) => sueloNutriente.textura = int.parse(value),
+                        onSaved: (value) => sueloNutriente.textura = int.parse(value!),
                     ),
                 ),
                 
@@ -818,7 +818,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                         initialValue: sueloNutriente.tipoSuelo.toString(),
                         items: selectMap.tiposSuelo(),
                         validator: (value){
-                            if(value.length < 1){
+                            if(value!.length < 1){
                                 return 'Selecione un elemento';
                             }else{
                                 return null;
@@ -826,7 +826,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                         },
 
                         //onChanged: (val) => print(val),
-                        onSaved: (value) => sueloNutriente.tipoSuelo = int.parse(value),
+                        onSaved: (value) => sueloNutriente.tipoSuelo = int.parse(value!),
                     ),
                 ),
                 
@@ -849,7 +849,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             
             label: Text(tituloBtn,
                 style: Theme.of(context).textTheme
-                    .headline6
+                    .headline6!
                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
             ),
             padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
@@ -861,13 +861,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
 
         
 
-        if  ( !formKey.currentState.validate() ){
+        if  ( !formKey.currentState!.validate() ){
             //Cuendo el form no es valido
             return null;
         }
         
 
-        formKey.currentState.save();
+        formKey.currentState!.save();
 
         setState(() {_guardando = true;});
 

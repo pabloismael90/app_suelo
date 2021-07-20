@@ -12,20 +12,20 @@ import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:app_suelo/src/utils/constants.dart';
 import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:app_suelo/src/utils/calculos.dart' as calculos;
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 
 class ReportDetalle extends StatefulWidget {
-  ReportDetalle({Key key}) : super(key: key);
+  ReportDetalle({Key? key}) : super(key: key);
 
   @override
   _ReportDetalleState createState() => _ReportDetalleState();
 }
 
-Future<double> _count(String idTest,int idPregunta, int idItem, int repuesta) async{
+Future<double> _count(String? idTest,int idPregunta, int idItem, int repuesta) async{
     double countPalga = await DBProvider.db.countPunto(idTest,idPregunta, idItem, repuesta);
 
     return (countPalga/5)*100;
@@ -33,18 +33,18 @@ Future<double> _count(String idTest,int idPregunta, int idItem, int repuesta) as
 
 class _ReportDetalleState extends State<ReportDetalle> {
 
-    Size size;
+    late Size size;
     final fincasBloc = new FincasBloc();
-    String idTest;
+    String? idTest;
 
     final List<Map<String, dynamic>>  _meses = selectMap.listMeses();
     final List<Map<String, dynamic>>  listSoluciones = selectMap.solucionesXmes();
 
-    Future _getdataFinca( String idTest) async{
+    Future _getdataFinca( String? idTest) async{
 
-            TestSuelo suelo = await DBProvider.db.getTestId(idTest);
-            Finca finca = await DBProvider.db.getFincaId(suelo.idFinca);
-            Parcela parcela = await DBProvider.db.getParcelaId(suelo.idLote);
+            TestSuelo? suelo = await (DBProvider.db.getTestId(idTest));
+            Finca? finca = await DBProvider.db.getFincaId(suelo!.idFinca);
+            Parcela? parcela = await DBProvider.db.getParcelaId(suelo.idLote);
             List<Punto> puntos = await DBProvider.db.getPuntosIdTest(suelo.id);
             SalidaNutriente salidaNutriente = await DBProvider.db.getSalidaNutrientes(suelo.id);
             List<EntradaNutriente> entradas = await DBProvider.db.getEntradas(suelo.id, 1);
@@ -61,7 +61,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
     @override
     Widget build(BuildContext context) {
 
-        idTest = ModalRoute.of(context).settings.arguments;
+        idTest = ModalRoute.of(context)!.settings.arguments as String?;
         size = MediaQuery.of(context).size;
                 
 
@@ -76,13 +76,13 @@ class _ReportDetalleState extends State<ReportDetalle> {
 
                     
 
-                    List<Widget> pageItem = List<Widget>();
+                    List<Widget> pageItem =  [];
                     Finca finca = snapshot.data[0];
                     Parcela parcela = snapshot.data[1];
                     SalidaNutriente salidaNutriente = snapshot.data[2];
                     List<EntradaNutriente> entradas = snapshot.data[3];
-                    SueloNutriente sueloNutriente  = snapshot.data[4];
-                    List<Punto> puntos = snapshot.data[5];
+                    SueloNutriente? sueloNutriente  = snapshot.data[4];
+                    List<Punto>? puntos = snapshot.data[5];
                     List<EntradaNutriente> fertilizacion = snapshot.data[6];
                     TestSuelo suelo = snapshot.data[7];
                     List<Acciones> listAcciones = snapshot.data[8];
@@ -115,7 +115,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                                                 "Deslice hacia la derecha para continuar con el reporte",
                                                                 textAlign: TextAlign.center,
                                                                 style: Theme.of(context).textTheme
-                                                                    .headline5
+                                                                    .headline5!
                                                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 14)
                                                             )
                                                     
@@ -163,15 +163,15 @@ class _ReportDetalleState extends State<ReportDetalle> {
         return Flexible(
             child: Container(
                 width: ancho,
-                child: Text(titulo, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                child: Text(titulo, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                 .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
             ),
         );
     }
     
     Widget _dataFincas( BuildContext context, Finca finca, Parcela parcela ){
-        String labelMedidaFinca;
-        String labelvariedad;
+        String? labelMedidaFinca;
+        String? labelvariedad;
 
         final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
         labelMedidaFinca  = item['label'];
@@ -356,7 +356,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
         );
     }
 
-    Widget _disponibilidad(String tituloBalance, String tituloDisponibilidad, Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente sueloNutriente){
+    Widget _disponibilidad(String tituloBalance, String tituloDisponibilidad, Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente? sueloNutriente){
     
         return Container(
             decoration: BoxDecoration(
@@ -390,7 +390,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                                 Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     children: [
-                                                        _titulosForm('Kg/año', size.width * 0.4),
+                                                        _titulosForm('lb/año', size.width * 0.4),
                                                         _titulosForm('Salida', size.width * 0.4),
                                                         _titulosForm('Entrada', size.width * 0.4),
                                                         _titulosForm('Balance', size.width * 0.4),
@@ -443,7 +443,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                                 Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     children: [
-                                                        _titulosForm('Kg/año', size.width * 0.2),
+                                                        _titulosForm('lb/año', size.width * 0.2),
                                                         _titulosForm('Salida', size.width * 0.2),
                                                         _titulosForm('Entrada', size.width * 0.2),
                                                         _titulosForm('Suelo', size.width * 0.2),
@@ -524,7 +524,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                             titulo,
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(fontWeight: FontWeight.w600, fontSize: 17)
                         ),
                     )
@@ -542,21 +542,21 @@ class _ReportDetalleState extends State<ReportDetalle> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
+                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6!
                                         .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                         Container(
                             width: 60,
-                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
                         ),
                     ],
@@ -566,7 +566,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
         );
     }
 
-    Widget _rowRecorrido(String idTest,int tipo, String titulo, int pregunta, List<Map<String, dynamic>> preguntaItem){
+    Widget _rowRecorrido(String? idTest,int tipo, String titulo, int pregunta, List<Map<String, dynamic>> preguntaItem){
         List<Widget> prueba = [];
 
         prueba.add(_tituloPregunta(titulo));
@@ -578,7 +578,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                  Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6
+                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6!
                                         .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                         Container(
                             width: 60,
@@ -630,7 +630,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
  
     }
 
-    Widget _recorrido(TestSuelo suelo,List<Punto> puntos){
+    Widget _recorrido(TestSuelo suelo,List<Punto>? puntos){
     
         return Container(
             decoration: BoxDecoration(
@@ -687,7 +687,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
             itemBuilder: (context, index) {
                 
                 String labelAbono = selectMap.listAbonos().firstWhere((e) => e['value'] == '${listAbonos[index].idAbono}', orElse: () => {"value": "1","label": "No data"})['label'];
-                String unidad = selectMap.unidadAbono().firstWhere((e) => e['value'] == '${listAbonos[index].unidad}', orElse: () => {"value": "1","label": "No data"})['label'];
+                String? unidad = selectMap.unidadAbono().firstWhere((e) => e['value'] == '${listAbonos[index].unidad}', orElse: () => {"value": "1","label": "No data"})['label'];
 
                 return Container(
                     margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -716,7 +716,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                         labelAbono,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline5
+                                        style: Theme.of(context).textTheme.headline5!
                                                 .copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                                     ),
                                 ),
@@ -726,7 +726,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                         'Cantidad: ${listAbonos[index].cantidad} $unidad',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline5
+                                        style: Theme.of(context).textTheme.headline5!
                                                 .copyWith(fontSize: 16),
                                     ),
                                 ),
@@ -736,7 +736,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                         'Frecuencia: ${listAbonos[index].frecuencia}',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline5
+                                        style: Theme.of(context).textTheme.headline5!
                                                 .copyWith(fontSize: 16),
                                     ),
                                 ),
@@ -769,21 +769,21 @@ class _ReportDetalleState extends State<ReportDetalle> {
 
     //Acciones
     Widget _accionesMeses(List<Acciones> listAcciones){
-        List<Widget> listPrincipales = List<Widget>();
+        List<Widget> listPrincipales =  [];
 
         listPrincipales.add( _tituloPregunta('Nueva propuesta de manejo de suelo'));
         
         
         for (var item in listAcciones) {
 
-                List<String> meses = [];
-                String label= listSoluciones.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
-                List listaMeses = jsonDecode(item.repuesta);
+                List<String?> meses = [];
+                String? label= listSoluciones.firstWhere((e) => e['value'] == '${item.idItem}', orElse: () => {"value": "1","label": "No data"})['label'];
+                List listaMeses = jsonDecode(item.repuesta!);
                 if (listaMeses.length==0) {
                     meses.add('Sin aplicar');
                 }
                 for (var item in listaMeses) {
-                    String mes = _meses.firstWhere((e) => e['value'] == '$item', orElse: () => {"value": "1","label": "No data"})['label'];
+                    String? mes = _meses.firstWhere((e) => e['value'] == '$item', orElse: () => {"value": "1","label": "No data"})['label'];
                     
                     meses.add(mes);
                 }
@@ -794,7 +794,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                     ListTile(
                         title: Text('$label',
                             style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.bold, fontSize: 16)
                         ),
                         subtitle: Text(meses.join(","+" ")),

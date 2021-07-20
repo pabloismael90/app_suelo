@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 
 class NuevoBalance extends StatefulWidget {
-    const NuevoBalance({Key key}) : super(key: key);
+    const NuevoBalance({Key? key}) : super(key: key);
 
   @override
   _NuevoBalanceState createState() => _NuevoBalanceState();
@@ -27,7 +27,7 @@ class _NuevoBalanceState extends State<NuevoBalance> {
     @override
     Widget build(BuildContext context) {
 
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        TestSuelo suelo = ModalRoute.of(context)!.settings.arguments as TestSuelo;
         
         
         return FutureBuilder(
@@ -39,8 +39,8 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                 _fincasBloc.obtenerEntradas(suelo.id, 2);
                 _fincasBloc.obtenerAcciones(suelo.id);
                 
-                int validacion = snapshot.data[0];
-                List<Acciones> acciones = snapshot.data[1];
+                int? validacion = snapshot.data[0];
+                List<Acciones>? acciones = snapshot.data[1];
                 
                 if (validacion == 1) {
                     
@@ -78,7 +78,7 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                 titulo,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme
-                    .headline5
+                    .headline5!
                     .copyWith(fontWeight: FontWeight.w900, fontSize: 20 )
             ),
         );
@@ -161,7 +161,7 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                     child: RaisedButton(
                         child: Text(titulo,
                             style: Theme.of(context).textTheme
-                                .headline6
+                                .headline6!
                                 .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                         ),
                         padding:EdgeInsets.all(13),
@@ -175,7 +175,7 @@ class _NuevoBalanceState extends State<NuevoBalance> {
 
     }
 
-    Widget  _botonDecisiones(BuildContext context, TestSuelo suelo, List<Acciones> acciones ){
+    Widget  _botonDecisiones(BuildContext context, TestSuelo suelo, List<Acciones>? acciones ){
         
         return StreamBuilder(
             stream: fincasBloc.entradaStream,
@@ -183,13 +183,13 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                 if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                 }
-                if (acciones.length == 0) {
+                if (acciones!.length == 0) {
                     return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
                         child: RaisedButton(
                             child: Text('Tomar desiciones',
                                 style: Theme.of(context).textTheme
-                                    .headline6
+                                    .headline6!
                                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                             ),
                             padding:EdgeInsets.all(13),
@@ -203,7 +203,7 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                     child: RaisedButton(
                         child: Text('Ver Reporte',
                             style: Theme.of(context).textTheme
-                                .headline6
+                                .headline6!
                                 .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                         ),
                         padding:EdgeInsets.all(13),

@@ -10,14 +10,14 @@ class EntradaNutriente {
         this.tipo = 0,
     });
 
-    String id;
-    String idTest;
-    int idAbono;
-    double humedad;
-    double cantidad;
-    int frecuencia;
-    int unidad;
-    int tipo;
+    String? id;
+    String? idTest;
+    int? idAbono;
+    double? humedad;
+    double? cantidad;
+    int? frecuencia;
+    int? unidad;
+    int? tipo;
 
     factory EntradaNutriente.fromJson(Map<String, dynamic> json) => EntradaNutriente(
         id: json["id"],

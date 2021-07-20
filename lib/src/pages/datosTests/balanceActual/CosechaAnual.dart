@@ -9,7 +9,7 @@ import 'package:app_suelo/src/utils/validaciones.dart' as utils;
 import 'package:uuid/uuid.dart';
 
 class CosechaAnual extends StatefulWidget {
-  CosechaAnual({Key key}) : super(key: key);
+  CosechaAnual({Key? key}) : super(key: key);
 
   @override
   _CosechaAnualState createState() => _CosechaAnualState();
@@ -22,16 +22,16 @@ class _CosechaAnualState extends State<CosechaAnual> {
     SalidaNutriente salidaNutriente = SalidaNutriente();
     bool _guardando = false;
     var uuid = Uuid();
-    TestSuelo suelo;
+    late TestSuelo suelo;
 
-    String tituloBtn;
+    late String tituloBtn;
 
 
     @override
     Widget build(BuildContext context) {
 
         Size size = MediaQuery.of(context).size;
-        List data = ModalRoute.of(context).settings.arguments;
+        List data = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
 
         suelo = data[0];
         salidaNutriente = data[1];
@@ -108,7 +108,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
 
     Widget _titulosForm(String titulo){
         return Container(
-            child: Text(titulo, textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6
+            child: Text(titulo, textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6!
             .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
         );
     }
@@ -134,14 +134,14 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                             
                         },
-                        onSaved: (value) => salidaNutriente.cacao = double.parse(value),
+                        onSaved: (value) => salidaNutriente.cacao = double.parse(value!),
                     ),
                 ),
                 
@@ -178,13 +178,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value),
+                        onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value!),
                     ),
                 ),
                 
@@ -219,13 +219,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => salidaNutriente.lena = double.parse(value),
+                        onSaved: (value) => salidaNutriente.lena = double.parse(value!),
                     ),
                 ),
                 
@@ -261,13 +261,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => salidaNutriente.musacea = double.parse(value),
+                        onSaved: (value) => salidaNutriente.musacea = double.parse(value!),
                     ),
                 ),
                 Flexible(child: Container(
@@ -302,13 +302,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => salidaNutriente.fruta = double.parse(value),
+                        onSaved: (value) => salidaNutriente.fruta = double.parse(value!),
                     ),
                 ),
                 
@@ -344,13 +344,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
                         validator: (value){
-                            if (utils.isNumeric(value)){
+                            if (utils.isNumeric(value!)){
                                 return null;
                             }else{
                                 return 'Solo números';
                             }
                         },
-                        onSaved: (value) => salidaNutriente.madera = double.parse(value),
+                        onSaved: (value) => salidaNutriente.madera = double.parse(value!),
                     ),
                 ),
                 
@@ -374,7 +374,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
             
             label: Text(tituloBtn,
                 style: Theme.of(context).textTheme
-                    .headline6
+                    .headline6!
                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
             ),
             padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
@@ -386,13 +386,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
 
         
 
-        if  ( !formKey.currentState.validate() ){
+        if  ( !formKey.currentState!.validate() ){
             //Cuendo el form no es valido
             return null;
         }
         
 
-        formKey.currentState.save();
+        formKey.currentState!.save();
 
         setState(() {_guardando = true;});
 

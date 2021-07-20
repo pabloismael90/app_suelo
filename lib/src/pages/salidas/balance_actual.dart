@@ -9,10 +9,10 @@ import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:app_suelo/src/utils/calculos.dart' as calculos;
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
 class BalanceActual extends StatefulWidget {
-  BalanceActual({Key key}) : super(key: key);
+  BalanceActual({Key? key}) : super(key: key);
 
   @override
   _BalanceActualState createState() => _BalanceActualState();
@@ -20,13 +20,13 @@ class BalanceActual extends StatefulWidget {
 
 class _BalanceActualState extends State<BalanceActual> {
 
-    Size size;
+    late Size size;
 
     Future _getdataFinca( TestSuelo suelo, int tipo ) async{
             
 
-            Finca finca = await DBProvider.db.getFincaId(suelo.idFinca);
-            Parcela parcela = await DBProvider.db.getParcelaId(suelo.idLote);
+            Finca? finca = await DBProvider.db.getFincaId(suelo.idFinca);
+            Parcela? parcela = await DBProvider.db.getParcelaId(suelo.idLote);
             SalidaNutriente salidaNutriente = await DBProvider.db.getSalidaNutrientes(suelo.id);
             List<EntradaNutriente> entradas = await DBProvider.db.getEntradas(suelo.id, tipo);
             SueloNutriente sueloNutriente = await DBProvider.db.getSueloNutrientes(suelo.id);
@@ -37,7 +37,7 @@ class _BalanceActualState extends State<BalanceActual> {
     @override
     Widget build(BuildContext context) {
 
-        List dataRoute = ModalRoute.of(context).settings.arguments;
+        List dataRoute = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
         TestSuelo suelo = dataRoute[0];
         String titulo = dataRoute[1];
         int tipo = dataRoute[2];
@@ -54,12 +54,12 @@ class _BalanceActualState extends State<BalanceActual> {
                     }
 
 
-                    List<Widget> pageItem = List<Widget>();
+                    List<Widget> pageItem =  [];
                     Finca finca = snapshot.data[0];
                     Parcela parcela = snapshot.data[1];
                     SalidaNutriente salidaNutriente = snapshot.data[2];
                     List<EntradaNutriente> entradas = snapshot.data[3];
-                    SueloNutriente sueloNutriente  = snapshot.data[4];
+                    SueloNutriente? sueloNutriente  = snapshot.data[4];
 
                     pageItem.add(_balanceNeto(finca, parcela, salidaNutriente, entradas, sueloNutriente));
                     pageItem.add(_disponibilidad('Disponibilidad de nutriente', finca, parcela, salidaNutriente, entradas, sueloNutriente));
@@ -95,15 +95,15 @@ class _BalanceActualState extends State<BalanceActual> {
         return Flexible(
             child: Container(
                 width: ancho,
-                child: Text(titulo, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                child: Text(titulo, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                 .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
             ),
         );
     }
 
     Widget _dataFincas( BuildContext context, Finca finca, Parcela parcela ){
-        String labelMedidaFinca;
-        String labelvariedad;
+        String? labelMedidaFinca;
+        String? labelvariedad;
 
         final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
         labelMedidaFinca  = item['label'];
@@ -220,7 +220,7 @@ class _BalanceActualState extends State<BalanceActual> {
 
     } 
 
-    Widget _balanceNeto(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente sueloNutriente){
+    Widget _balanceNeto(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente? sueloNutriente){
     
         return Container(
             decoration: BoxDecoration(
@@ -248,7 +248,7 @@ class _BalanceActualState extends State<BalanceActual> {
                                                                 "Balance neto del Sistema SAF",
                                                                 textAlign: TextAlign.center,
                                                                 style: Theme.of(context).textTheme
-                                                                    .headline5
+                                                                    .headline5!
                                                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                                                             ),
                                                         ),
@@ -286,7 +286,7 @@ class _BalanceActualState extends State<BalanceActual> {
                                                     Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         children: [
-                                                            _titulosForm('Kg/año', size.width * 0.4),
+                                                            _titulosForm('lb/año', size.width * 0.4),
                                                             _titulosForm('Salida', size.width * 0.4),
                                                             _titulosForm('Entrada', size.width * 0.4),
                                                             _titulosForm('Balance', size.width * 0.4),
@@ -375,7 +375,7 @@ class _BalanceActualState extends State<BalanceActual> {
 
 
     //Disponibilidada de nutrientes
-    Widget _disponibilidad(String titulo, Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente sueloNutriente){
+    Widget _disponibilidad(String titulo, Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente? sueloNutriente){
     
         return Container(
             decoration: BoxDecoration(
@@ -401,7 +401,7 @@ class _BalanceActualState extends State<BalanceActual> {
                                                                 titulo,
                                                                 textAlign: TextAlign.center,
                                                                 style: Theme.of(context).textTheme
-                                                                    .headline5
+                                                                    .headline5!
                                                                     .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                                                             ),
                                                         ),
@@ -439,7 +439,7 @@ class _BalanceActualState extends State<BalanceActual> {
                                                     Row(
                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                         children: [
-                                                            _titulosForm('Kg/año', size.width * 0.2),
+                                                            _titulosForm('lb/año', size.width * 0.2),
                                                             _titulosForm('Salida', size.width * 0.2),
                                                             _titulosForm('Entrada', size.width * 0.2),
                                                             _titulosForm('Suelo', size.width * 0.2),

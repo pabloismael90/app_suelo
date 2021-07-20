@@ -13,11 +13,11 @@ class TestSuelo {
         this.fechaTest,
     });
 
-    String id;
-    String idFinca;
-    String idLote;
-    int estaciones;
-    String fechaTest;
+    String? id;
+    String? idFinca;
+    String? idLote;
+    int? estaciones;
+    String? fechaTest;
 
     factory TestSuelo.fromJson(Map<String, dynamic> json) => TestSuelo(
         id: json["id"],

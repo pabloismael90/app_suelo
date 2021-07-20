@@ -8,12 +8,12 @@ class Punto {
         this.repuesta,
     });
 
-    String id;
-    String idTest;
-    int nPunto;
-    int idPregunta;
-    int idItem;
-    int repuesta;
+    String? id;
+    String? idTest;
+    int? nPunto;
+    int? idPregunta;
+    int? idItem;
+    int? repuesta;
 
     factory Punto.fromJson(Map<String, dynamic> json) => Punto(
         id: json["id"],

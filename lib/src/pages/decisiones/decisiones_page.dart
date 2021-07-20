@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ReportPage extends StatelessWidget {
-    const ReportPage({Key key}) : super(key: key);
+    const ReportPage({Key? key}) : super(key: key);
 
     
     Future getRegistros() async{
@@ -17,12 +17,12 @@ class ReportPage extends StatelessWidget {
         return listAcciones;
     }
 
-    Future getDatos(String id) async{
+    Future getDatos(String? id) async{
         
-        TestSuelo suelo= await DBProvider.db.getTestId(id);
+        TestSuelo? suelo = await (DBProvider.db.getTestId(id));
 
-        Finca finca = await DBProvider.db.getFincaId(suelo.idFinca);
-        Parcela parcela = await DBProvider.db.getParcelaId(suelo.idLote);
+        Finca? finca = await DBProvider.db.getFincaId(suelo!.idFinca);
+        Parcela? parcela = await DBProvider.db.getParcelaId(suelo.idLote);
 
         return [suelo, finca, parcela];
     }

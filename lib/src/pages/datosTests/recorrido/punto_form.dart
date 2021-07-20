@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
+import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'dart:math' as math;
 import 'package:uuid/uuid.dart';
 
@@ -62,9 +62,9 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     var uuid = Uuid();
     Punto punto = Punto();
     List<Punto> listaPuntos = [];
-    String idTestSuelo;
-    int numeroPunto;   
-    int variableVacia;
+    String? idTestSuelo;
+    int? numeroPunto;   
+    int? variableVacia;
     
     @override
     void initState() {
@@ -75,11 +75,11 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     @override
     Widget build(BuildContext context) {
 
-        List dataPuntos = ModalRoute.of(context).settings.arguments;
+        List dataPuntos = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
         idTestSuelo = dataPuntos[0];
         numeroPunto = dataPuntos[1]+1;
         
-        List<Widget> pageItem = List<Widget>();
+        List<Widget> pageItem =  [];
         
         pageItem.add(_pageErosion());
         pageItem.add(_pageConservacion());
@@ -111,7 +111,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                                         "Deslice hacia la derecha para continuar con el formulario",
                                                         textAlign: TextAlign.center,
                                                         style: Theme.of(context).textTheme
-                                                            .headline5
+                                                            .headline5!
                                                             .copyWith(fontWeight: FontWeight.w600, fontSize: 14)
                                                     )
                                             
@@ -161,7 +161,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             titulo,
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                         ),
                     )
@@ -180,21 +180,21 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
+                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6!
                                         .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                         Container(
                             width: 60,
-                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
                         ),
                     ],
@@ -206,7 +206,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
 
 
     Widget _pageErosion(){
-        List<Widget> _pageQuestion = List<Widget>();
+        List<Widget> _pageQuestion =  [];
 
         _pageQuestion.add(
             _tituloPregunta('Observaciones de erosión')
@@ -223,14 +223,14 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                 
                 itemBuilder: (BuildContext context, int index) {
                     
-                    String labelPlaga = itemErosion.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    String? labelPlaga = itemErosion.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
                     
                     return Column(
                         children: [
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -238,7 +238,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value: '1',
                                                 groupValue: checkErosion[itemErosion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkErosion[itemErosion[index]['value']] = value;
                                                     });
@@ -254,7 +254,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'2',
                                                 groupValue: checkErosion[itemErosion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkErosion[itemErosion[index]['value']] = value;
                                                     });
@@ -270,7 +270,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'3',
                                                 groupValue: checkErosion[itemErosion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkErosion[itemErosion[index]['value']] = value;
                                                     });
@@ -316,7 +316,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     }
 
     Widget _pageConservacion(){
-        List<Widget> _pageQuestion = List<Widget>();
+        List<Widget> _pageQuestion =  [];
 
         _pageQuestion.add(
             _tituloPregunta('Obras de conservación de suelo')
@@ -333,14 +333,14 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                 
                 itemBuilder: (BuildContext context, int index) {
                     
-                    String labelPlaga = itemConservacion.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    String? labelPlaga = itemConservacion.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
                     
                     return Column(
                         children: [
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -348,7 +348,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value: '1',
                                                 groupValue: checkConservacion[itemConservacion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkConservacion[itemConservacion[index]['value']] = value;
                                                     });
@@ -364,7 +364,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'2',
                                                 groupValue: checkConservacion[itemConservacion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkConservacion[itemConservacion[index]['value']] = value;
                                                     });
@@ -380,7 +380,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'3',
                                                 groupValue: checkConservacion[itemConservacion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkConservacion[itemConservacion[index]['value']] = value;
                                                     });
@@ -426,7 +426,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     }
 
     Widget _pageObservacion(){
-        List<Widget> _pageQuestion = List<Widget>();
+        List<Widget> _pageQuestion =  [];
 
         _pageQuestion.add(
             _tituloPregunta('Observaciones de drenaje')
@@ -443,14 +443,14 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                 
                 itemBuilder: (BuildContext context, int index) {
                     
-                    String labelPlaga = itemObservacion.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    String? labelPlaga = itemObservacion.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
                     
                     return Column(
                         children: [
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -458,7 +458,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value: '1',
                                                 groupValue: checkObservacion[itemObservacion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkObservacion[itemObservacion[index]['value']] = value;
                                                     });
@@ -474,7 +474,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'2',
                                                 groupValue: checkObservacion[itemObservacion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkObservacion[itemObservacion[index]['value']] = value;
                                                     });
@@ -490,7 +490,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'3',
                                                 groupValue: checkObservacion[itemObservacion[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkObservacion[itemObservacion[index]['value']] = value;
                                                     });
@@ -536,7 +536,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     }
 
     Widget _pageObras(){
-        List<Widget> _pageQuestion = List<Widget>();
+        List<Widget> _pageQuestion =  [];
 
         _pageQuestion.add(
             _tituloPregunta('Obras de drenaje')
@@ -553,14 +553,14 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                 
                 itemBuilder: (BuildContext context, int index) {
                     
-                    String labelPlaga = itemObras.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    String? labelPlaga = itemObras.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
                     
                     return Column(
                         children: [
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -568,7 +568,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value: '1',
                                                 groupValue: checkObras[itemObras[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkObras[itemObras[index]['value']] = value;
                                                     });
@@ -584,7 +584,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'2',
                                                 groupValue: checkObras[itemObras[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkObras[itemObras[index]['value']] = value;
                                                     });
@@ -600,7 +600,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'3',
                                                 groupValue: checkObras[itemObras[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkObras[itemObras[index]['value']] = value;
                                                     });
@@ -646,7 +646,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     }
 
     Widget _pageRaiz(){
-        List<Widget> _pageQuestion = List<Widget>();
+        List<Widget> _pageQuestion =  [];
 
         _pageQuestion.add(
             _tituloPregunta('Enfermedades de raíz')
@@ -663,14 +663,14 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                 
                 itemBuilder: (BuildContext context, int index) {
                     
-                    String labelPlaga = itemRaiz.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
+                    String? labelPlaga = itemRaiz.firstWhere((e) => e['value'] == '$index', orElse: () => {"value": "1","label": "No data"})['label'];
                     
                     return Column(
                         children: [
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -678,7 +678,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value: '1',
                                                 groupValue: checkRaiz[itemRaiz[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkRaiz[itemRaiz[index]['value']] = value;
                                                     });
@@ -694,7 +694,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'2',
                                                 groupValue: checkRaiz[itemRaiz[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkRaiz[itemRaiz[index]['value']] = value;
                                                     });
@@ -710,7 +710,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                             child: Radio(
                                                 value:'3',
                                                 groupValue: checkRaiz[itemRaiz[index]['value']],
-                                                onChanged: (value){
+                                                onChanged: (dynamic value){
                                                     setState(() {
                                                         checkRaiz[itemRaiz[index]['value']] = value;
                                                     });
@@ -756,7 +756,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
     }
 
 
-    Widget  _botonsubmit(String idpoda){
+    Widget  _botonsubmit(String? idpoda){
 
         return SingleChildScrollView(
             child: Container(
@@ -782,7 +782,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                 "¿Ha Terminado todos los formularios de toma de desición?",
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme
-                                    .headline5
+                                    .headline5!
                                     .copyWith(fontWeight: FontWeight.w600)
                             ),
                         ),
@@ -792,7 +792,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                                 icon:Icon(Icons.save),
                                 label: Text('Guardar',
                                     style: Theme.of(context).textTheme
-                                        .headline6
+                                        .headline6!
                                         .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
                                 ),
                                 padding:EdgeInsets.all(13),
@@ -818,7 +818,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
             itemPunto.idItem = int.parse(key);
             itemPunto.repuesta = int.parse(value);
             if (itemPunto.repuesta == -1) {
-                variableVacia ++;
+                variableVacia = variableVacia!+1;
             }
             listaPuntos.add(itemPunto);
         });
@@ -853,78 +853,17 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         Navigator.pop(context, 'estaciones');
     }
 
-    void mostrarSnackbar(int variableVacias){
+    void mostrarSnackbar(int? variableVacias){
         final snackbar = SnackBar(
             content: Text('Hay $variableVacias Campos Vacios, Favor llene todo los campos',
-                style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.white),
+                style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),
             ),
             duration: Duration(seconds: 2),
         );
         setState(() {_guardando = false;});
-        scaffoldKey.currentState.showSnackBar(snackbar);
+        scaffoldKey.currentState!.showSnackBar(snackbar);
     }
 
    
-    // Widget  _botonsubmit(tituloBtn){
-    //     return RaisedButton.icon(
-            
-    //         icon:Icon(Icons.save, color: Colors.white,),
-            
-    //         label: Text(tituloBtn,
-    //             style: Theme.of(context).textTheme
-    //                 .headline6
-    //                 .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-    //         ),
-    //         padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
-    //         onPressed:(_guardando) ? null : _submit,
-    //     );
-    // }
 
-    
-    
-
-
-    // void _submit(){
-
-    //     if  ( !formKey.currentState.validate() ){
-    //         //Cuendo el form no es valido
-    //         return null;
-    //     }
-
-    //     formKey.currentState.save();
-
-    //     setState(() {_guardando = true;});
-
-    //     // print(finca.id);
-    //     // print(finca.userid);
-    //     // print(finca.nombreFinca);
-    //     // print(finca.areaFinca);
-    //     // print(finca.tipoMedida);
-    //     if(finca.id == null){
-    //         finca.id = uuid.v1();
-    //         //print(finca.id);
-    //         fincasBloc.addFinca(finca);
-    //     }else{
-    //         //print(finca.id);
-    //         fincasBloc.actualizarFinca(finca);
-    //     }
-
-    //     setState(() {_guardando = false;});
-    //     mostrarSnackbar('Registro Guardado');
-
-
-    //     Navigator.pop(context, 'fincas');
-       
-        
-    // }
-
-    
-    // void mostrarSnackbar(String mensaje){
-    //     final snackbar = SnackBar(
-    //         content: Text(mensaje),
-    //         duration: Duration(microseconds: 1500),
-    //     );
-
-    //     scaffoldKey.currentState.showSnackBar(snackbar);
-    // }
 }

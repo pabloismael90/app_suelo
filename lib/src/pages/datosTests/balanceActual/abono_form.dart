@@ -9,7 +9,7 @@ import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 
 class AddAbono extends StatefulWidget {
-  AddAbono({Key key}) : super(key: key);
+  AddAbono({Key? key}) : super(key: key);
 
   @override
   _AddAbonoState createState() => _AddAbonoState();
@@ -25,12 +25,12 @@ class _AddAbonoState extends State<AddAbono> {
 
     bool _guardando = false;
     var uuid = Uuid();
-    TestSuelo suelo;
+    late TestSuelo suelo;
 
     @override
     Widget build(BuildContext context) {
 
-        List dataRoute = ModalRoute.of(context).settings.arguments;
+        List dataRoute = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
         suelo = dataRoute[0];
         String tituloBtn = 'Guardar';
 
@@ -94,7 +94,7 @@ class _AddAbonoState extends State<AddAbono> {
             dialogSearchHint: 'Buscar abono',
             items: selectMap.listAbonos(),
             validator: (value){
-                final isDigitsOnly = int.tryParse(value);
+                final isDigitsOnly = int.tryParse(value!);
                 if (isDigitsOnly == null) {
                     return 'Solo números enteros';
                 }
@@ -104,7 +104,7 @@ class _AddAbonoState extends State<AddAbono> {
                     return null;
                 }
             },
-            onSaved: (value) => entradaNutriente.idAbono = int.parse(value),
+            onSaved: (value) => entradaNutriente.idAbono = int.parse(value!),
         );
     }
 
@@ -121,13 +121,13 @@ class _AddAbonoState extends State<AddAbono> {
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
+                if (utils.isNumeric(value!)){
                     return null;
                 }else{
                     return 'Solo números';
                 }
             },
-            onSaved: (value) => entradaNutriente.humedad = double.parse(value),
+            onSaved: (value) => entradaNutriente.humedad = double.parse(value!),
         );
     }
 
@@ -141,13 +141,13 @@ class _AddAbonoState extends State<AddAbono> {
             ),
             validator: (value) {
                 
-                if (utils.isNumeric(value)){
+                if (utils.isNumeric(value!)){
                     return null;
                 }else{
                     return 'Solo números';
                 }
             },
-            onSaved: (value) => entradaNutriente.cantidad = double.parse(value),
+            onSaved: (value) => entradaNutriente.cantidad = double.parse(value!),
         );
     }
 
@@ -161,7 +161,7 @@ class _AddAbonoState extends State<AddAbono> {
             ),
             validator: (value) {
                 
-                final isDigitsOnly = int.tryParse(value);
+                final isDigitsOnly = int.tryParse(value!);
                 if (isDigitsOnly == null) {
                     return 'Solo números enteros';
                 }
@@ -171,7 +171,7 @@ class _AddAbonoState extends State<AddAbono> {
                     return null;
                 }
             },
-            onSaved: (value) => entradaNutriente.frecuencia = int.parse(value),
+            onSaved: (value) => entradaNutriente.frecuencia = int.parse(value!),
         );
     }
 
@@ -181,14 +181,14 @@ class _AddAbonoState extends State<AddAbono> {
             labelText: 'Selecione Unidad',
             items: selectMap.unidadAbono(),
             validator: (value){
-                if(value.length < 1){
+                if(value!.length < 1){
                     return 'Selecione un elemento';
                 }else{
                     return null;
                 } 
             },
 
-            onSaved: (value) => entradaNutriente.unidad = int.parse(value),
+            onSaved: (value) => entradaNutriente.unidad = int.parse(value!),
         );
     }
 
@@ -202,7 +202,7 @@ class _AddAbonoState extends State<AddAbono> {
             
             label: Text(tituloBtn,
                 style: Theme.of(context).textTheme
-                    .headline6
+                    .headline6!
                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
             ),
             padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
@@ -214,13 +214,13 @@ class _AddAbonoState extends State<AddAbono> {
 
         
 
-        if  ( !formKey.currentState.validate() ){
+        if  ( !formKey.currentState!.validate() ){
             //Cuendo el form no es valido
             return null;
         }
         
 
-        formKey.currentState.save();
+        formKey.currentState!.save();
 
         setState(() {_guardando = true;});
 

@@ -9,7 +9,7 @@ import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 
 class RecorridoResultado extends StatefulWidget {
-  RecorridoResultado({Key key}) : super(key: key);
+  RecorridoResultado({Key? key}) : super(key: key);
 
   @override
   _RecorridoResultadoState createState() => _RecorridoResultadoState();
@@ -17,17 +17,17 @@ class RecorridoResultado extends StatefulWidget {
 
 class _RecorridoResultadoState extends State<RecorridoResultado> {
     
-    Size size;
+    Size? size;
 
     Future _getdataFinca( TestSuelo suelo ) async{
-        Finca finca = await DBProvider.db.getFincaId(suelo.idFinca);
-        Parcela parcela = await DBProvider.db.getParcelaId(suelo.idLote);
+        Finca? finca = await DBProvider.db.getFincaId(suelo.idFinca);
+        Parcela? parcela = await DBProvider.db.getParcelaId(suelo.idLote);
         List<Punto> puntos = await DBProvider.db.getPuntosIdTest(suelo.id);
         
         return [finca, parcela, puntos,];
     }
 
-    Future<double> _count(String idTest,int idPregunta, int idItem, int repuesta) async{
+    Future<double> _count(String? idTest,int idPregunta, int idItem, int repuesta) async{
         double countPalga = await DBProvider.db.countPunto(idTest,idPregunta, idItem, repuesta);
 
         return (countPalga/5)*100;
@@ -36,7 +36,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
     @override
     Widget build(BuildContext context) {
         
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        TestSuelo suelo = ModalRoute.of(context)!.settings.arguments as TestSuelo;
         size = MediaQuery.of(context).size;
 
         return Scaffold(
@@ -50,7 +50,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
 
                     Finca finca = snapshot.data[0];
                     Parcela parcela = snapshot.data[1];
-                    List<Punto> puntos = snapshot.data[2];
+                    List<Punto>? puntos = snapshot.data[2];
 
 
                     
@@ -79,8 +79,8 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
 
     //Datos de Finca
     Widget _dataFincas( BuildContext context, Finca finca, Parcela parcela ){
-        String labelMedidaFinca;
-        String labelvariedad;
+        String? labelMedidaFinca;
+        String? labelvariedad;
 
         final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
         labelMedidaFinca  = item['label'];
@@ -209,7 +209,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
                             titulo,
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme
-                                .headline5
+                                .headline5!
                                 .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
                         ),
                     )
@@ -227,21 +227,21 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6
+                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6!
                                         .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                         Container(
                             width: 60,
-                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6
+                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
                                             .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
                         ),
                     ],
@@ -251,7 +251,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
         );
     }
 
-    Widget _rowRecorrido(String idTest,int tipo, String titulo, int pregunta, List<Map<String, dynamic>> preguntaItem){
+    Widget _rowRecorrido(String? idTest,int tipo, String titulo, int pregunta, List<Map<String, dynamic>> preguntaItem){
         List<Widget> prueba = [];
 
         prueba.add(_tituloPregunta(titulo));
@@ -263,7 +263,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
                  Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6
+                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6!
                                         .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
                         Container(
                             width: 60,
@@ -315,7 +315,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
  
     }
 
-    Widget _recorrido(TestSuelo suelo,List<Punto> puntos){
+    Widget _recorrido(TestSuelo suelo,List<Punto>? puntos){
     
         return Container(
             decoration: BoxDecoration(

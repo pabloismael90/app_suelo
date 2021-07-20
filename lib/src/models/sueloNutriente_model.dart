@@ -21,25 +21,25 @@ class SueloNutriente {
         this.tipoSuelo = 0,
     });
 
-    String id;
-    String idTest;
-    double ph;
-    double densidadAparente;
-    double materiaOrganica;
-    double nitrogeno;
-    double fosforo;
-    double potasio;
-    double azufre;
-    double calcio;
-    double magnesio;
-    double hierro;
-    double manganeso;
-    double cadmio;
-    double zinc;
-    double boro;
-    double acidez;
-    int textura;
-    int tipoSuelo;
+    String? id;
+    String? idTest;
+    double? ph;
+    double? densidadAparente;
+    double? materiaOrganica;
+    double? nitrogeno;
+    double? fosforo;
+    double? potasio;
+    double? azufre;
+    double? calcio;
+    double? magnesio;
+    double? hierro;
+    double? manganeso;
+    double? cadmio;
+    double? zinc;
+    double? boro;
+    double? acidez;
+    int? textura;
+    int? tipoSuelo;
 
     factory SueloNutriente.fromJson(Map<String, dynamic> json) => SueloNutriente(
         id: json["id"],

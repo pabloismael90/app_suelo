@@ -24,7 +24,7 @@ class FincasBloc {
 
     final _fincasController = StreamController<List<Finca>>.broadcast();
     final _parcelasController = StreamController<List<Parcela>>.broadcast();
-    final _plagaController = StreamController<List<TestSuelo>>.broadcast();
+    final _testController = StreamController<List<TestSuelo>>.broadcast();
     final _puntosControl = StreamController<List<Punto>>.broadcast();
     final _salidaControl = StreamController<SalidaNutriente>.broadcast();
     final _sueloControl = StreamController<SueloNutriente>.broadcast();
@@ -38,7 +38,7 @@ class FincasBloc {
 
     Stream<List<Finca>> get fincaStream => _fincasController.stream;
     Stream<List<Parcela>> get parcelaStream => _parcelasController.stream;
-    Stream<List<TestSuelo>> get plagaStream => _plagaController.stream;
+    Stream<List<TestSuelo>> get testStream => _testController.stream;
     Stream<List<Punto>> get puntoStream => _puntosControl.stream;
     Stream<SalidaNutriente> get salidaStream => _salidaControl.stream;
     Stream<SueloNutriente> get sueloStream => _sueloControl.stream;
@@ -66,7 +66,7 @@ class FincasBloc {
         obtenerFincas();
     }
 
-    borrarFinca( String id ) async {
+    borrarFinca( String? id ) async {
         await DBProvider.db.deleteFinca(id);
         obtenerFincas();
     }
@@ -81,21 +81,21 @@ class FincasBloc {
         _parcelasController.sink.add( await DBProvider.db.getTodasParcelas() );
     }
     
-    obtenerParcelasIdFinca(String idFinca) async {
+    obtenerParcelasIdFinca(String? idFinca) async {
         _parcelasController.sink.add( await DBProvider.db.getTodasParcelasIdFinca(idFinca) );
     }
 
-    addParcela( Parcela parcela, String idFinca ) async{
+    addParcela( Parcela parcela, String? idFinca ) async{
         await DBProvider.db.nuevoParcela(parcela);
         obtenerParcelasIdFinca(idFinca);
     }
 
-    actualizarParcela( Parcela parcela, String idFinca ) async{
+    actualizarParcela( Parcela parcela, String? idFinca ) async{
         await DBProvider.db.updateParcela(parcela);
         obtenerParcelasIdFinca(idFinca);
     }
     
-    borrarParcela( String id ) async {
+    borrarParcela( String? id ) async {
         await DBProvider.db.deleteParcela(id);
         obtenerParcelas();
     }
@@ -104,25 +104,25 @@ class FincasBloc {
         _parcelaSelectControl.sink.add( await DBProvider.db.getSelectParcelasIdFinca(idFinca));
     }
 
-    //Plagas
-    obtenerPlagas() async {
-        _plagaController.sink.add( await DBProvider.db.getTodasTestSuelo() );
+    //Test
+    obtenerTest() async {
+        _testController.sink.add( await DBProvider.db.getTodasTestSuelo() );
     }
     
-    addPlaga( TestSuelo nuevaTest) async{
+    addTest( TestSuelo nuevaTest) async{
         await DBProvider.db.nuevoTestSuelo(nuevaTest);
-        obtenerPlagas();
+        obtenerTest();
         //obtenerParcelasIdFinca(idFinca);
     }
 
-    borrarTestSuelo( String idTest) async{
+    borrarTestSuelo( String? idTest) async{
         await DBProvider.db.deleteTestSuelo(idTest);
-        obtenerPlagas();
+        obtenerTest();
     }
 
 
     //Puntos
-    obtenerPuntos(String idTest) async {
+    obtenerPuntos(String? idTest) async {
         _puntosControl.sink.add( await DBProvider.db.getPuntosIdTest(idTest) );
     }
 
@@ -136,7 +136,7 @@ class FincasBloc {
     }
 
     //Balance de Nutrientes
-    obtenerSalida(String idTest) async {
+    obtenerSalida(String? idTest) async {
         _salidaControl.sink.add( await DBProvider.db.getSalidaNutrientes(idTest) );
     }
 
@@ -150,7 +150,7 @@ class FincasBloc {
         obtenerSalida(nuevaSalida.idTest);
     }
 
-    obtenerSuelo(String idTest) async {
+    obtenerSuelo(String? idTest) async {
         _sueloControl.sink.add( await DBProvider.db.getSueloNutrientes(idTest) );
     }
 
@@ -164,7 +164,7 @@ class FincasBloc {
         obtenerSuelo(nuevaSuelo.idTest);
     }
 
-    obtenerEntradas(String idTest, int tipo) async {
+    obtenerEntradas(String? idTest, int? tipo) async {
         _entradaControl.sink.add( await DBProvider.db.getEntradas(idTest, tipo) );
     }
 
@@ -180,7 +180,7 @@ class FincasBloc {
 
 
     //Monitoreo 
-    monitoreoBalance( String idTest )async{
+    monitoreoBalance( String? idTest )async{
        _monitoreoControl.sink.add( await DBProvider.db.monitoreo(idTest));
     }
 
@@ -189,7 +189,7 @@ class FincasBloc {
     }
 
     //deciones
-    obtenerAcciones(String idTest) async {
+    obtenerAcciones(String? idTest) async {
         _accionesControl.sink.add( await DBProvider.db.getAccionesIdTest(idTest) );
     }
 
@@ -205,17 +205,17 @@ class FincasBloc {
 
     //Cerrar stream
     dispose() {
-        _fincasController?.close();
-        _parcelasController?.close();
-        _fincasSelectControl?.close();
-        _parcelaSelectControl?.close();
-        _plagaController?.close();
-        _puntosControl?.close();
-        _salidaControl?.close();
-        _sueloControl?.close();
-        _entradaControl?.close();
-        _monitoreoControl?.close();
-        _accionesControl?.close();
+        _fincasController.close();
+        _parcelasController.close();
+        _fincasSelectControl.close();
+        _parcelaSelectControl.close();
+        _testController.close();
+        _puntosControl.close();
+        _salidaControl.close();
+        _sueloControl.close();
+        _entradaControl.close();
+        _monitoreoControl.close();
+        _accionesControl.close();
     }
 
     

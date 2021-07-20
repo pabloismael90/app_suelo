@@ -15,9 +15,9 @@ import 'package:app_suelo/src/pages/datosTests/balanceActual/analisisSuelo.dart'
 import 'package:app_suelo/src/pages/datosTests/recorrido/punto_form.dart';
 import 'package:app_suelo/src/pages/datosTests/recorrido/puntos_page.dart';
 import 'package:app_suelo/src/pages/salidas/balance_actual.dart';
-import 'package:app_suelo/src/pages/datosTests/fertilizacion.dart';
+import 'package:app_suelo/src/pages/datosTests/balancePropuesta.dart';
 import 'package:app_suelo/src/pages/salidas/recorrido_salida.dart';
-import 'package:app_suelo/src/pages/datosTests/salida_page.dart';
+import 'package:app_suelo/src/pages/datosTests/tabSalida_page.dart';
 import 'package:app_suelo/src/pages/suelo/testSuelo_form.dart';
 import 'package:app_suelo/src/pages/suelo/testSuelo_page.dart';
 import 'package:app_suelo/src/utils/constants.dart';
@@ -102,32 +102,61 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 fontFamily: "Museo",
                 scaffoldBackgroundColor: kBackgroundColor,
-                textTheme: Theme.of(context)
-                    .textTheme
-                    .apply(displayColor: kTextColor, fontFamily: 'Museo'),
-                appBarTheme: AppBarTheme(color: kbase, brightness: Brightness.dark),
-                primaryColor: kbase,
+                primaryTextTheme: TextTheme(
+                    headline6: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18
+                    )
+                ),
+                textTheme: Theme.of(context).textTheme.apply(bodyColor: kTextColor, fontFamily: 'Museo'),
+                appBarTheme: AppBarTheme(color: kbase,brightness: Brightness.dark, centerTitle: false),
+                primaryColor:kbase,
                 primaryIconTheme: IconThemeData(color: Colors.white),
                 inputDecorationTheme: InputDecorationTheme(
-                    labelStyle: Theme.of(context).textTheme.headline6.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: kTextColor,
-                        fontSize: 18,
-                        fontFamily: 'Museo'),
-                ),
-                buttonTheme: ButtonThemeData(
-                    shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+                    filled: true,
+                    fillColor: Color(0xFFF5F5F5),
+                    counterStyle: TextStyle(fontSize: 10),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: kmorado)
                     ),
-                    textTheme: ButtonTextTheme.primary,
-                    buttonColor: Color(0xFF3f2a56),
-                ),
-                textButtonTheme: TextButtonThemeData(
-                    style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        backgroundColor: Color(0xFF3f2a56)
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: kTextColor),
                     ),
+                    disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color:kTextColor),
+                    ),
+
+                    errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: Colors.redAccent),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: Colors.redAccent),
+                    ),
+                    labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold, 
+                        color: kTextColor, 
+                        fontSize: 14,
+                    )
+                ),
+            
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                    style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        primary: kmorado,
+                        textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        
+
+                    )
                 )
+                
             ),
         );
     }

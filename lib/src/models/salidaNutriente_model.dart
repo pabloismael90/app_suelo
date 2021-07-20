@@ -10,14 +10,14 @@ class SalidaNutriente {
         this.cascaraCacao,
     });
 
-    String id;
-    String idTest;
-    double cacao;
-    double lena;
-    double fruta;
-    double musacea;
-    double madera;
-    double cascaraCacao;
+    String? id;
+    String? idTest;
+    double? cacao;
+    double? lena;
+    double? fruta;
+    double? musacea;
+    double? madera;
+    double? cascaraCacao;
 
     factory SalidaNutriente.fromJson(Map<String, dynamic> json) => SalidaNutriente(
         id: json["id"],

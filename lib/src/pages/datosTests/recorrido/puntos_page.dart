@@ -7,7 +7,7 @@ import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 
 class RecorridoPage extends StatefulWidget {
-  RecorridoPage({Key key}) : super(key: key);
+  RecorridoPage({Key? key}) : super(key: key);
 
   @override
   _RecorridoPageState createState() => _RecorridoPageState();
@@ -21,7 +21,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
     @override
     Widget build(BuildContext context) {
         
-        TestSuelo suelo = ModalRoute.of(context).settings.arguments;
+        TestSuelo suelo = ModalRoute.of(context)!.settings.arguments as TestSuelo;
         fincasBloc.obtenerPuntos(suelo.id);
 
         return Scaffold(
@@ -149,7 +149,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
                         children: [
                             Text('Puntos: ${snapshot.data.length} / 5',
                                 style: Theme.of(context).textTheme
-                                        .headline6
+                                        .headline6!
                                         .copyWith(fontWeight: FontWeight.w600)
                             ),
                             _addPaso(suelo, snapshot.data.length ),
@@ -163,7 +163,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
                             Container(
                                 child: Text('Pasos: ${snapshot.data.length} / 5',
                                     style: Theme.of(context).textTheme
-                                            .headline6
+                                            .headline6!
                                             .copyWith(fontWeight: FontWeight.w600)
                                 ),
                             ),
@@ -171,7 +171,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
                                 icon:Icon(Icons.check_box_outlined),                               
                                 label: Text('Finalizar',
                                     style: Theme.of(context).textTheme
-                                        .headline6
+                                        .headline6!
                                         .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
                                 ),
                                 padding:EdgeInsets.all(13),
@@ -189,7 +189,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
             
     }
 
-    Widget  _addPaso(TestSuelo suelo, int indicePunto){
+    Widget  _addPaso(TestSuelo suelo, int? indicePunto){
         //print(indicePunto);
         return RaisedButton.icon(
             
@@ -197,7 +197,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
             
             label: Text('Agregar punto',
                 style: Theme.of(context).textTheme
-                    .headline6
+                    .headline6!
                     .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
             ),
             padding:EdgeInsets.all(13),

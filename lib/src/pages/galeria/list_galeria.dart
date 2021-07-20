@@ -5,25 +5,25 @@ import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 
 class GaleriaImagenes extends StatefulWidget {
-    GaleriaImagenes({Key key}) : super(key: key);
+    GaleriaImagenes({Key? key}) : super(key: key);
 
     @override
     _GaleriaImagenesState createState() => _GaleriaImagenesState();
 }
 
 
-List someImages;
-List nameImages;
+List? someImages;
+List? nameImages;
 Future _initImages(BuildContext context) async {
     // >> To get paths you need these 2 lines
     final manifestContent = await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
 
-    final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+    final Map<String?, dynamic> manifestMap = json.decode(manifestContent);
     // >> To get paths you need these 2 lines
     
     List imagePaths = manifestMap.keys
-        .where((String key) => key.contains('assets/galeria/'))
-        .where((String key) => key.contains('.jpg'))
+        .where((String? key) => key!.contains('assets/galeria/'))
+        .where((String? key) => key!.contains('.jpg'))
         .toList();
 
     for (var i = 0; i < imagePaths.length; i++) {
@@ -37,7 +37,7 @@ class _GaleriaImagenesState extends State<GaleriaImagenes> {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Galería de Imágenes'),),
             body: FutureBuilder(
                 future: _initImages(context),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -48,22 +48,25 @@ class _GaleriaImagenesState extends State<GaleriaImagenes> {
                     List<String> nameList = [];
 
                     someImages = snapshot.data;
-                    for (var item in someImages) {
+                    
+                    for (var item in someImages!) {
                         File file = new File(item);
                         name = file.path.split('/').last.split(".")[0];
+                        name = name.replaceAll("Preparacion", "Preparación");
+                        name = name.replaceAll("organica", "orgánica");
+                        name = name.replaceAll("fosforo", "fósforo");
+                       // Materia orgnánica es fuente de fosforo y azufre Fuente Cacaomovil LWR
+                        
                         nameList.add(name);
                     }
                     
-
-                    return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                    return Container(
+                        padding: EdgeInsets.all(10),
                         child: Column(
                             children: [
-                                TitulosPages(titulo: 'Galería de Imágenes'),
-                                Divider(),
                                 Expanded(
                                     child: GridView.builder(
-                                        itemCount: someImages.length,
+                                        itemCount: someImages!.length,
                                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 3,
                                             crossAxisSpacing: 5,
@@ -77,7 +80,7 @@ class _GaleriaImagenesState extends State<GaleriaImagenes> {
                                                         decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.circular(5),
                                                             image: DecorationImage(
-                                                                image: AssetImage(someImages[index]),
+                                                                image: AssetImage(someImages![index]),
                                                                 fit: BoxFit.cover
                                                             )
                                                         ),

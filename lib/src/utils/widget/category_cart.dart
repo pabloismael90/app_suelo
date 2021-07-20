@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CategoryCard extends StatelessWidget {
-    final String svgSrc;
-    final String title;
-    final Function press;
+    final String? svgSrc;
+    final String? title;
+    final Function? press;
     const CategoryCard({
-        Key key,
+        Key? key,
         this.svgSrc,
         this.title,
         this.press,
@@ -27,24 +27,23 @@ class CategoryCard extends StatelessWidget {
                           blurRadius: 17.0),
                 ],
             ),
-            child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                    onTap: press,
-                    child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                            children: <Widget>[
-                                Spacer(),
-                                SvgPicture.asset(svgSrc, height: 70,),
-                                Spacer(),
-                                Text(
-                                    title,
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(context).textTheme.headline6.copyWith(fontWeight: FontWeight.w600, fontSize: 14.0)
-                                )
-                            ],
-                        ),
+            child: InkWell(
+                onTap: press as void Function()?,
+                child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                        children: <Widget>[
+                            Spacer(),
+                            SvgPicture.asset(svgSrc!, height: 60,),
+                            Spacer(),
+                            Text(
+                                title!,
+                                textAlign: TextAlign.center,
+                                textScaleFactor: 1.0,
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)
+                            ),
+                            Spacer(),
+                        ],
                     ),
                 ),
             ),
