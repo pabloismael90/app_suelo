@@ -1,13 +1,13 @@
 
 import 'package:app_suelo/src/models/punto_model.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
-import 'dart:math' as math;
 import 'package:uuid/uuid.dart';
 
 class AgregarPunto extends StatefulWidget {
@@ -87,61 +87,28 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         pageItem.add(_pageObras());
         pageItem.add(_pageRaiz());
 
-        pageItem.add(_botonsubmit(idTestSuelo)); 
+        pageItem.add(_botonsubmit()); 
 
         return Scaffold(
             key: scaffoldKey,
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Toma de punto'),),
             body: Column(
                 children: [
-                    Container(
-                        child: Column(
-                            children: [
-                                TitulosPages(titulo: 'Punto'),
-                                Divider(),
-                                Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: Row(
-                                    
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                            Container(
-                                                width: 200,
-                                                child: Text(
-                                                        "Deslice hacia la derecha para continuar con el formulario",
-                                                        textAlign: TextAlign.center,
-                                                        style: Theme.of(context).textTheme
-                                                            .headline5!
-                                                            .copyWith(fontWeight: FontWeight.w600, fontSize: 14)
-                                                    )
-                                            
-                                            ),
-                                            
-                                            
-                                            Transform.rotate(
-                                                angle: 90 * math.pi / 180,
-                                                child: Icon(
-                                                    Icons.arrow_circle_up_rounded,
-                                                    size: 25,
-                                                ),
-                                                
-                                            ),
-                                        ],
-                                    ),
-                                ),
-                            ],
-                        )
-                    ),
+                    mensajeSwipe('Deslice hacia la izquierda para continuar con el formulario'),
                     Expanded(
                         
-                        child: Swiper(
-                            itemBuilder: (BuildContext context, int index) {
-                                return pageItem[index];
-                            },
-                            itemCount: pageItem.length,
-                            viewportFraction: 1,
-                            loop: false,
-                            scale: 1,
+                        child: Container(
+                            color: Colors.white,
+                            padding: EdgeInsets.all(15),
+                            child: Swiper(
+                                itemBuilder: (BuildContext context, int index) {
+                                    return pageItem[index];
+                                },
+                                itemCount: pageItem.length,
+                                viewportFraction: 1,
+                                loop: false,
+                                scale: 1,
+                            ),
                         ),
                     ),
                 ],
@@ -160,9 +127,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                         child: Text(
                             titulo,
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme
-                                .headline5!
-                                .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                         ),
                     )
                 ),
@@ -172,7 +137,6 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         );
     }
 
-
     Widget _labelTipo(int tipo){
         
         return  Column(
@@ -180,22 +144,18 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6!
-                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                        Expanded(child: textList('')),
                         Container(
                             width: 60,
-                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
+                            child: titleList('No'),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
+                            child: titleList(tipo == 1 ? 'Algo' : 'Mala'),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
+                            child: titleList(tipo == 1 ? 'Severo' : 'Buena'),
                         ),
                     ],
                 ),
@@ -203,7 +163,6 @@ class _AgregarPuntoState extends State<AgregarPunto> {
             ],
         );
     }
-
 
     Widget _pageErosion(){
         List<Widget> _pageQuestion =  [];
@@ -230,7 +189,9 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(
+                                        child: textList('$labelPlaga')
+                                    ),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -295,23 +256,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         );
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:_pageQuestion,)
-            ),
+            child: Column(children:_pageQuestion,),
         );
     }
 
@@ -340,7 +285,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: textList('$labelPlaga')),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -405,23 +350,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         );
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:_pageQuestion,)
-            ),
+            child: Column(children:_pageQuestion,),
         );
     }
 
@@ -450,7 +379,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: textList('$labelPlaga')),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -515,23 +444,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         );
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:_pageQuestion,)
-            ),
+            child: Column(children:_pageQuestion,),
         );
     }
 
@@ -560,7 +473,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: textList('$labelPlaga')),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -625,23 +538,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         );
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:_pageQuestion,)
-            ),
+            child: Column(children:_pageQuestion,),
         );
     }
 
@@ -670,7 +567,7 @@ class _AgregarPuntoState extends State<AgregarPunto> {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                    Expanded(child: Text('$labelPlaga', style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                                    Expanded(child: textList('$labelPlaga')),
                                     Container(
                                         width: 60,
                                         child: Transform.scale(
@@ -735,70 +632,30 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         );
         
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:_pageQuestion,)
-            ),
+            child: Column(children:_pageQuestion,),
         );
     }
 
-
-    Widget  _botonsubmit(String? idpoda){
-
+    Widget  _botonsubmit(){
         return SingleChildScrollView(
             child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
                 child: Column(
                     children: [
                         Padding(
                             padding: EdgeInsets.only(top: 20, bottom: 30),
                             child: Text(
-                                "¿Ha Terminado todos los formularios de toma de desición?",
+                                "¿Ha Terminado todos los formularios del punto?",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18)
                             ),
                         ),
                         Padding(
                             padding: EdgeInsets.symmetric(horizontal: 60),
-                            child: RaisedButton.icon(
-                                icon:Icon(Icons.save),
-                                label: Text('Guardar',
-                                    style: Theme.of(context).textTheme
-                                        .headline6!
-                                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-                                ),
-                                padding:EdgeInsets.all(13),
-                                onPressed:(_guardando) ? null : _submit,
-                                
-                            ),
+                            child: ButtonMainStyle(
+                                title: 'Guardar',
+                                icon: Icons.save,
+                                press: (_guardando) ? null : _submit,
+                            )
                         ),
                     ],
                 ),
@@ -839,7 +696,8 @@ class _AgregarPuntoState extends State<AgregarPunto> {
 
 
         if  ( variableVacia !=  0){
-            mostrarSnackbar(variableVacia);
+            mostrarSnackbar('Hay $variableVacia Campos Vacios, Favor llene todo los campos', context);
+            setState(() {_guardando = false;});
             return null;
         }
 
@@ -849,20 +707,10 @@ class _AgregarPuntoState extends State<AgregarPunto> {
         
         fincasBloc.obtenerPuntos(idTestSuelo);
         setState(() {_guardando = false;});
-
+        mostrarSnackbar('Registro punto guardado', context);
         Navigator.pop(context, 'estaciones');
     }
 
-    void mostrarSnackbar(int? variableVacias){
-        final snackbar = SnackBar(
-            content: Text('Hay $variableVacias Campos Vacios, Favor llene todo los campos',
-                style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),
-            ),
-            duration: Duration(seconds: 2),
-        );
-        setState(() {_guardando = false;});
-        scaffoldKey.currentState!.showSnackBar(snackbar);
-    }
 
    
 

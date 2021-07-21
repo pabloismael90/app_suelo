@@ -2,9 +2,10 @@ import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/pages/parcelas/parcelas_page.dart';
 import 'package:app_suelo/src/utils/constants.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
 import 'package:app_suelo/src/utils/widget/dialogDelete.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
 class AbonosPage extends StatefulWidget {
@@ -29,7 +30,7 @@ class _AbonosPageState extends State<AbonosPage> {
         
         
         return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Lista de abonos actual')),
             body: StreamBuilder(
                 stream: fincasBloc.entradaStream ,
                 builder: (BuildContext context, AsyncSnapshot snapshot){
@@ -39,30 +40,14 @@ class _AbonosPageState extends State<AbonosPage> {
                     
                     List<EntradaNutriente> entradas = snapshot.data;
 
-                    if (entradas.length == 0) {
-                        return Column(
-                            children: [
-                                TitulosPages(titulo: 'Lista de Abonos'),
-                                Divider(), 
-                                Expanded(child: Center(
-                                    child: Text('No hay datos: \nIngrese datos de abonos', 
-                                    textAlign: TextAlign.center,
-                                        style: Theme.of(context).textTheme.headline6,
-                                        )
-                                    )
-                                )
-                            ],
-                        );
-                    }
                     return Column(
-                        children: [
-                            TitulosPages(titulo: 'Lista de Abonos'),
-                            Divider(),                            
+                        children: [ 
                             Expanded(
-                                child: SingleChildScrollView(
-                                    child: _listaDePisos(entradas, context)
-                                    
-                                )
+                                child: entradas.length == 0
+                                ?
+                                textoListaVacio('Ingrese datos de abonos')
+                                :
+                                SingleChildScrollView(child: _listaDePisos(entradas, context)),
                             ),
                         ],
                     );
@@ -71,21 +56,12 @@ class _AbonosPageState extends State<AbonosPage> {
             bottomNavigationBar: BottomAppBar(
                 child: Container(
                     color: kBackgroundColor,
-                    child: Padding(
-                        padding: EdgeInsets.symmetric( vertical: 10),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                                Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 5),
-                                    child: _addAbono(suelo, tipo),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 5),
-                                    child: _finalizar(),
-                                ),
-                            ],
-                        ),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                            _addAbono(suelo, tipo),
+                            _finalizar(),
+                        ],
                     ),
                 ),
             ),
@@ -103,38 +79,7 @@ class _AbonosPageState extends State<AbonosPage> {
                 return Dismissible(
                     key: UniqueKey(),
                     child: GestureDetector(
-                        child:Container(
-                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                                
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.5),
-                                    boxShadow: [
-                                        BoxShadow(
-                                            color: Color(0xFF3A5160)
-                                                .withOpacity(0.05),
-                                            offset: const Offset(1.1, 1.1),
-                                            blurRadius: 17.0),
-                                        ],
-                                ),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                        
-                                        Padding(
-                                            padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                            child: Text(
-                                                labelAbono,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                                style: Theme.of(context).textTheme.headline6,
-                                            ),
-                                        ),
-                                    ],
-                                ),
-                        )
+                        child:cardDefault(tituloCard(labelAbono))
                     ),
                     confirmDismiss: (direction) => confirmacionUser(direction, context),
                     direction: DismissDirection.endToStart,
@@ -154,22 +99,10 @@ class _AbonosPageState extends State<AbonosPage> {
 
 
     Widget _addAbono(TestSuelo suelo, int tipo){
-        return Container(
-            color: kBackgroundColor,
-            child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: RaisedButton.icon(
-                    icon:Icon(Icons.add_circle_outline_outlined),
-                    
-                    label: Text('Agregar Abono',
-                        style: Theme.of(context).textTheme
-                            .headline6!
-                            .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                    ),
-                    padding:EdgeInsets.all(13),
-                    onPressed: () => Navigator.pushNamed(context, 'AddAbono', arguments: [suelo, tipo]),
-                )
-            ),
+        return ButtonMainStyle(
+            title: 'Agregar Abono',
+            icon: Icons.post_add,
+            press: () => Navigator.pushNamed(context, 'AddAbono', arguments: [suelo, tipo]),
         );
     }
 
@@ -182,21 +115,10 @@ class _AbonosPageState extends State<AbonosPage> {
                 }
 
                 List<EntradaNutriente> entradas = snapshot.data;
-                return Container(
-                    color: kBackgroundColor,
-                    child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: RaisedButton.icon(
-                            icon:Icon(Icons.check_box_outlined),  
-                            label: Text('Finalizar',
-                                style: Theme.of(context).textTheme
-                                    .headline6!
-                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                            ),
-                            padding:EdgeInsets.all(13),
-                            onPressed: entradas.length == 0 ? null : () => Navigator.pop(context),
-                        )
-                    ),
+                return ButtonMainStyle(
+                    title: 'Finalizar',
+                    icon: Icons.post_add,
+                    press: entradas.length == 0 ? null : () => Navigator.pop(context),
                 );
             },
         );

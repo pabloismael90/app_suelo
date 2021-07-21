@@ -1,8 +1,8 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
-
-import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app_suelo/src/utils/validaciones.dart' as utils;
@@ -47,12 +47,10 @@ class _CosechaAnualState extends State<CosechaAnual> {
 
         return Scaffold(
             key: scaffoldKey,
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Cosecha anual')),
             body: SingleChildScrollView(
                 child: Column(
                     children: [
-                        TitulosPages(titulo: 'Cosecha anual'),
-                        Divider(),
                         Container(
                             padding: EdgeInsets.all(15.0),
                             child: Form(
@@ -60,23 +58,24 @@ class _CosechaAnualState extends State<CosechaAnual> {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
+                                        SizedBox(height: 10),
                                         Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                                             children: [                                                
                                                 Flexible(
                                                     child: Container(
-                                                        width: size.width * 0.2,
-                                                        child: _titulosForm('Nombre'),
+                                                        width: size.width * 0.25,
+                                                        child: textList('Nombre'),
                                                     ),
                                                 ),
                                                 
                                                 Expanded(
-                                                    child: _titulosForm('Cantidad'),
+                                                    child: textList('Cantidad'),
                                                 ),
                                                 Flexible(
                                                     child: Container(
-                                                        width: size.width * 0.2,
-                                                        child: _titulosForm('Unidad'),
+                                                        width: size.width * 0.25,
+                                                        child: textList('Unidad'),
                                                     ),
                                                 ),
                                             ],
@@ -106,12 +105,6 @@ class _CosechaAnualState extends State<CosechaAnual> {
         );
     }
 
-    Widget _titulosForm(String titulo){
-        return Container(
-            child: Text(titulo, textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6!
-            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-        );
-    }
 
     Widget _cacao(Size size){
 
@@ -119,9 +112,10 @@ class _CosechaAnualState extends State<CosechaAnual> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-                Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Cacao'),
+                Flexible(
+                    child: Container(
+                        width: size.width * 0.25,
+                        child: textList('Cacao'),
                     ),
                 ),
         
@@ -133,21 +127,14 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                            
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => salidaNutriente.cacao = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('QQ seco'),
+                        width: size.width * 0.25,
+                        child: textList('QQ seco'),
                     ),
                 ),
                 
@@ -164,8 +151,8 @@ class _CosechaAnualState extends State<CosechaAnual> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Cascara de Cacao'),
+                        width: size.width * 0.25,
+                        child: textList('Cascara de Cacao'),
                     ),
                 ),
                 
@@ -177,20 +164,14 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('QQ seco'),
+                        width: size.width * 0.25,
+                        child: textList('QQ seco'),
                     ),
                 ),
                 
@@ -206,8 +187,8 @@ class _CosechaAnualState extends State<CosechaAnual> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Leña'),
+                        width: size.width * 0.25,
+                        child: textList('Leña'),
                     ),
                 ),                
                 Expanded(
@@ -218,20 +199,14 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => salidaNutriente.lena = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Carga'),
+                        width: size.width * 0.25,
+                        child: textList('Carga'),
                     ),
                 ),
                 
@@ -247,8 +222,8 @@ class _CosechaAnualState extends State<CosechaAnual> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Musaceas'),
+                        width: size.width * 0.25,
+                        child: textList('Musaceas'),
                     ),
                 ),
                 
@@ -260,19 +235,13 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => salidaNutriente.musacea = double.parse(value!),
                     ),
                 ),
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Cabezas'),
+                        width: size.width * 0.25,
+                        child: textList('Cabezas'),
                     ),
                 ),
                 
@@ -288,8 +257,8 @@ class _CosechaAnualState extends State<CosechaAnual> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Frutas'),
+                        width: size.width * 0.25,
+                        child: textList('Frutas'),
                     ),
                 ),
                 
@@ -301,20 +270,14 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => salidaNutriente.fruta = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Sacos'),
+                        width: size.width * 0.25,
+                        child: textList('Sacos'),
                     ),
                 ),
                 
@@ -330,8 +293,8 @@ class _CosechaAnualState extends State<CosechaAnual> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Madera'),
+                        width: size.width * 0.25,
+                        child: textList('Madera'),
                     ),
                 ),
                 
@@ -343,20 +306,14 @@ class _CosechaAnualState extends State<CosechaAnual> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => salidaNutriente.madera = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
-                        width: size.width * 0.2,
-                        child: _titulosForm('Pie tablar'),
+                        width: size.width * 0.25,
+                        child: textList('Pie tablar'),
                     ),
                 ),
                 
@@ -365,52 +322,36 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
     }
 
-    
-
     Widget  _botonsubmit(String tituloBtn){
-        return RaisedButton.icon(
-            
-            icon:Icon(Icons.save, color: Colors.white,),
-            
-            label: Text(tituloBtn,
-                style: Theme.of(context).textTheme
-                    .headline6!
-                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-            ),
-            padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
-            onPressed:(_guardando) ? null : _submit,
+        return ButtonMainStyle(
+            title: tituloBtn,
+            icon: Icons.save,
+            press:(_guardando) ? null : _submit,
         );
     }
 
     void _submit( ){
-
-        
-
         if  ( !formKey.currentState!.validate() ){
             //Cuendo el form no es valido
             return null;
         }
         
-
         formKey.currentState!.save();
 
         setState(() {_guardando = true;});
 
-
         if(salidaNutriente.id == null){
             salidaNutriente.id = uuid.v1();
             fincasBloc.addSalida(salidaNutriente);
+            mostrarSnackbar('Registro de cosecha guardado', context);
             
         }else{
             fincasBloc.actualizarSalida(salidaNutriente);
+            mostrarSnackbar('Registro de cosecha actualizado', context);
         }
-        
-        //DBProvider.db.nuevoParcela(parcela);
 
         setState(() {_guardando = false;});
         
-
-
         Navigator.pop(context, 'salidaPage');
        
         

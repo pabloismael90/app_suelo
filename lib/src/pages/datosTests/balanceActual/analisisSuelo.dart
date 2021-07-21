@@ -1,8 +1,8 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
-
-import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
@@ -50,12 +50,11 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
         
         return Scaffold(
             key: scaffoldKey,
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Análisis de suelo')),
             body: SingleChildScrollView(
                 child: Column(
                     children: [
-                        TitulosPages(titulo: 'Análisis de suelo'),
-                        Divider(),
+                        SizedBox(height: 10),
                         Container(
                             padding: EdgeInsets.all(15.0),
                             child: Form(
@@ -69,17 +68,17 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                                                 Flexible(
                                                     child: Container(
                                                         width: size.width * 0.25,
-                                                        child: _titulosForm('Nombre'),
+                                                        child: textList('Nombre'),
                                                     ),
                                                 ),
                                                 
                                                 Expanded(
-                                                    child: _titulosForm('Valor'),
+                                                    child: textList('Valor'),
                                                 ),
                                                 Flexible(
                                                     child: Container(
                                                         width: size.width * 0.25,
-                                                        child: _titulosForm('Unidad'),
+                                                        child: textList('Unidad'),
                                                     ),
                                                 ),
                                             ],
@@ -131,12 +130,6 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
         );
     }
 
-    Widget _titulosForm(String titulo){
-        return Container(
-            child: Text(titulo, textAlign: TextAlign.start, style: Theme.of(context).textTheme.headline6!
-            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-        );
-    }
 
     Widget _ph(Size size){
 
@@ -146,7 +139,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('pH'),
+                        child: textList('pH'),
                     ),
                 ),
         
@@ -158,20 +151,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.ph = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm(''),
+                        child: textList(''),
                     ),
                 ),
                 
@@ -189,7 +176,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Densidad Aparente'),
+                        child: textList('Densidad Aparente'),
                     ),
                 ),                
                 Expanded(
@@ -200,20 +187,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.densidadAparente = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('g/cm3'),
+                        child: textList('g/cm3'),
                     ),
                 ),
                 
@@ -230,7 +211,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Materia orgánica'),
+                        child: textList('Materia orgánica'),
                     ),
                 ),
                 
@@ -242,20 +223,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.materiaOrganica = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('%'),
+                        child: textList('%'),
                     ),
                 ),
                 
@@ -272,7 +247,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Nitrógeno total'),
+                        child: textList('Nitrógeno total'),
                     ),
                 ),
                 
@@ -284,19 +259,13 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.nitrogeno = double.parse(value!),
                     ),
                 ),
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('%'),
+                        child: textList('%'),
                     ),
                 ),
                 
@@ -313,7 +282,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Fósforo'),
+                        child: textList('Fósforo'),
                     ),
                 ),
                 
@@ -325,20 +294,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.fosforo = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('ppm'),
+                        child: textList('ppm'),
                     ),
                 ),
                 
@@ -355,7 +318,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Potasio'),
+                        child: textList('Potasio'),
                     ),
                 ),
                 
@@ -367,20 +330,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.potasio = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('meq/100g'),
+                        child: textList('meq/100g'),
                     ),
                 ),
                 
@@ -397,7 +354,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Azufre'),
+                        child: textList('Azufre'),
                     ),
                 ),
                 
@@ -409,20 +366,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.azufre = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('ppm'),
+                        child: textList('ppm'),
                     ),
                 ),
                 
@@ -439,7 +390,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Calcio'),
+                        child: textList('Calcio'),
                     ),
                 ),
                 
@@ -451,20 +402,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.calcio = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('meq/100g'),
+                        child: textList('meq/100g'),
                     ),
                 ),
                 
@@ -481,7 +426,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Magnesio'),
+                        child: textList('Magnesio'),
                     ),
                 ),
                 
@@ -493,20 +438,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.magnesio = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('meq/100g'),
+                        child: textList('meq/100g'),
                     ),
                 ),
                 
@@ -523,7 +462,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Hierro'),
+                        child: textList('Hierro'),
                     ),
                 ),
                 
@@ -535,20 +474,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.hierro = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('ppm'),
+                        child: textList('ppm'),
                     ),
                 ),
                 
@@ -565,7 +498,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Manganeso'),
+                        child: textList('Manganeso'),
                     ),
                 ),
                 
@@ -577,20 +510,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.manganeso = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('ppm'),
+                        child: textList('ppm'),
                     ),
                 ),
                 
@@ -607,7 +534,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Cadmio'),
+                        child: textList('Cadmio'),
                     ),
                 ),
                 
@@ -619,20 +546,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.cadmio = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('ppm'),
+                        child: textList('ppm'),
                     ),
                 ),
                 
@@ -649,7 +570,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Zinc'),
+                        child: textList('Zinc'),
                     ),
                 ),
                 
@@ -661,20 +582,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.zinc = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('ppm'),
+                        child: textList('ppm'),
                     ),
                 ),
                 
@@ -691,7 +606,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Boro'),
+                        child: textList('Boro'),
                     ),
                 ),
                 
@@ -703,20 +618,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.boro = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('ppm'),
+                        child: textList('ppm'),
                     ),
                 ),
                 
@@ -733,7 +642,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Acidez intercambiable'),
+                        child: textList('Acidez intercambiable'),
                     ),
                 ),
                 
@@ -745,20 +654,14 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         ),
-                        validator: (value){
-                            if (utils.isNumeric(value!)){
-                                return null;
-                            }else{
-                                return 'Solo números';
-                            }
-                        },
+                        validator: (value) => utils.floatSiCero(value),
                         onSaved: (value) => sueloNutriente.acidez = double.parse(value!),
                     ),
                 ),
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Cmol+/kg'),
+                        child: textList('Cmol+/kg'),
                     ),
                 ),
                 
@@ -775,7 +678,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Textura'),
+                        child: textList('Textura'),
                     ),
                 ),
                 
@@ -809,7 +712,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: _titulosForm('Tipo de suelo'),
+                        child: textList('Tipo de suelo'),
                     ),
                 ),
                 
@@ -836,24 +739,11 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
     }
 
 
-
-
-
-
-
-
     Widget  _botonsubmit(String tituloBtn){
-        return RaisedButton.icon(
-            
-            icon:Icon(Icons.save, color: Colors.white,),
-            
-            label: Text(tituloBtn,
-                style: Theme.of(context).textTheme
-                    .headline6!
-                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-            ),
-            padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
-            onPressed:(_guardando) ? null : _submit,
+        return ButtonMainStyle(
+            title: tituloBtn,
+            icon: Icons.save,
+            press:(_guardando) ? null : _submit,
         );
     }
 
@@ -874,9 +764,11 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
         if(sueloNutriente.id == null){
             sueloNutriente.id = uuid.v1();
             fincasBloc.addSuelo(sueloNutriente);
+            mostrarSnackbar('Análisis de suelo guardado', context);
             
         }else{
             fincasBloc.actualizarSuelo(sueloNutriente);
+            mostrarSnackbar('Análisis de suelo actualizado', context);
         }
 
         setState(() {_guardando = false;});

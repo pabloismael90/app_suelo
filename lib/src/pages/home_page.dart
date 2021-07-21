@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:app_suelo/src/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:app_suelo/src/utils/widget/category_cart.dart';
@@ -89,19 +91,10 @@ class HomePage extends StatelessWidget {
                     ),
                     Container(
                         color: Colors.white,
-                        child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                            child: Container(
-                                height: size.height * 0.1,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                        image: AssetImage("assets/images/logos.png"),
-                                        fit: BoxFit.fitWidth
-                                    )
-                                ),
-                                    
-                            ),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                        child: FittedBox(
+                            child: Image.asset("assets/images/logos.png"),
+                                
                         ),
                     ),
                 ],

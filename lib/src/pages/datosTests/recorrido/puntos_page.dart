@@ -2,8 +2,9 @@ import 'package:app_suelo/src/bloc/fincas_bloc.dart';
 import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/utils/constants.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
 import 'package:app_suelo/src/utils/widget/dialogDelete.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
 class RecorridoPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _RecorridoPageState extends State<RecorridoPage> {
         fincasBloc.obtenerPuntos(suelo.id);
 
         return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(title:Text('Recorrido de parcela')),
             body: StreamBuilder<List<Punto>>(
                 stream: fincasBloc.puntoStream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -35,31 +36,14 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     
                     List<Punto> puntos = snapshot.data;
 
-                    if (puntos.length == 0) {
-                        return Column(
-                            children: [
-                                TitulosPages(titulo: 'Recorrido de parcela'),
-                                Divider(), 
-                                Expanded(child: Center(
-                                    child: Text('No hay datos: \nIngrese datos de puntos', 
-                                    textAlign: TextAlign.center,
-                                        style: Theme.of(context).textTheme.headline6,
-                                        )
-                                    )
-                                )
-                            ],
-                        );
-                    }
-                    
                     return Column(
-                        children: [
-                            TitulosPages(titulo: 'Recorrido de parcela'),
-                            Divider(),                            
+                        children: [ 
                             Expanded(
-                                child: SingleChildScrollView(
-                                    child: _listaDePisos(puntos, context)
-                                    
-                                )
+                                child: puntos.length == 0
+                                ?
+                                textoListaVacio('Ingrese datos de los puntos')
+                                :
+                                SingleChildScrollView(child: _listaDePisos(puntos, context)),
                             ),
                         ],
                     );
@@ -85,37 +69,8 @@ class _RecorridoPageState extends State<RecorridoPage> {
                 return Dismissible(
                     key: UniqueKey(),
                     child: GestureDetector(
-                        child:Container(
-                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                                
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10.5),
-                                    boxShadow: [
-                                        BoxShadow(
-                                            color: Color(0xFF3A5160)
-                                                .withOpacity(0.05),
-                                            offset: const Offset(1.1, 1.1),
-                                            blurRadius: 17.0),
-                                        ],
-                                ),
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                        
-                                        Padding(
-                                            padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                            child: Text(
-                                                "Punto ${index+1}",
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                                style: Theme.of(context).textTheme.headline6,
-                                            ),
-                                        ),
-                                    ],
-                                ),
+                        child:cardDefault(
+                            tituloCard('Punto ${index+1}'),
                         )
                     ),
                     confirmDismiss: (direction) => confirmacionUser(direction, context),
@@ -147,12 +102,12 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                            Text('Puntos: ${snapshot.data.length} / 5',
-                                style: Theme.of(context).textTheme
-                                        .headline6!
-                                        .copyWith(fontWeight: FontWeight.w600)
-                            ),
-                            _addPaso(suelo, snapshot.data.length ),
+                            textoBottom('Pasos: ${snapshot.data.length} / 5',  kTextColor),
+                            ButtonMainStyle(
+                                title: 'Agregar punto',
+                                icon: Icons.post_add,
+                                press: () => Navigator.pushNamed(context, 'agregarPunto', arguments: [suelo.id, snapshot.data.length ]),
+                            )
                         ],
                     );
                 }else{
@@ -160,49 +115,19 @@ class _RecorridoPageState extends State<RecorridoPage> {
                     return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                            Container(
-                                child: Text('Pasos: ${snapshot.data.length} / 5',
-                                    style: Theme.of(context).textTheme
-                                            .headline6!
-                                            .copyWith(fontWeight: FontWeight.w600)
-                                ),
-                            ),
-                            RaisedButton.icon(
-                                icon:Icon(Icons.check_box_outlined),                               
-                                label: Text('Finalizar',
-                                    style: Theme.of(context).textTheme
-                                        .headline6!
-                                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                                ),
-                                padding:EdgeInsets.all(13),
-                                onPressed:() => Navigator.pop(context, 'salidaPage'),
+                            textoBottom('Pasos: ${snapshot.data.length} / 5',  kTextColor),
+                            ButtonMainStyle(
+                                title: 'Finalizar',
+                                icon: Icons.navigate_next_rounded,
+                                press: () => Navigator.pop(context, 'salidaPage'),
                             )
                         ],
                     );
                 }
 
             },
-        );
-                
-               
-
-            
+        );   
     }
 
-    Widget  _addPaso(TestSuelo suelo, int? indicePunto){
-        //print(indicePunto);
-        return RaisedButton.icon(
-            
-            icon:Icon(Icons.add_circle_outline_outlined),
-            
-            label: Text('Agregar punto',
-                style: Theme.of(context).textTheme
-                    .headline6!
-                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-            ),
-            padding:EdgeInsets.all(13),
-            onPressed:() => Navigator.pushNamed(context, 'agregarPunto', arguments: [suelo.id, indicePunto]),
-        );
-    }
     
 }

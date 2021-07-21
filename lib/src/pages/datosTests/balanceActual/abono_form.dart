@@ -1,7 +1,8 @@
 import 'package:app_suelo/src/bloc/fincas_bloc.dart';
 import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:select_form_field/select_form_field.dart';
 import 'package:uuid/uuid.dart';
 import 'package:app_suelo/src/utils/validaciones.dart' as utils;
@@ -42,12 +43,10 @@ class _AddAbonoState extends State<AddAbono> {
         
         return Scaffold(
             key: scaffoldKey,
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Agregar nuevo abono')),
             body: SingleChildScrollView(
                 child: Column(
                     children: [
-                        TitulosPages(titulo: 'Agregar nuevo abono'),
-                        Divider(),
                         Container(
                             padding: EdgeInsets.all(15.0),
                             child: Form(
@@ -93,17 +92,7 @@ class _AddAbonoState extends State<AddAbono> {
             enableSearch: true,
             dialogSearchHint: 'Buscar abono',
             items: selectMap.listAbonos(),
-            validator: (value){
-                final isDigitsOnly = int.tryParse(value!);
-                if (isDigitsOnly == null) {
-                    return 'Solo números enteros';
-                }
-                if (isDigitsOnly <= 0) {
-                    return 'Valor invalido';
-                }else{
-                    return null;
-                }
-            },
+            validator: (value) => utils.validateEntero(value),
             onSaved: (value) => entradaNutriente.idAbono = int.parse(value!),
         );
     }
@@ -117,16 +106,9 @@ class _AddAbonoState extends State<AddAbono> {
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
                 labelText: 'Humedad (%)',
-                hintText: '10'
+                hintText: 'ejem: 10'
             ),
-            validator: (value) {
-                
-                if (utils.isNumeric(value!)){
-                    return null;
-                }else{
-                    return 'Solo números';
-                }
-            },
+            validator: (value) => utils.floatSiCero(value),
             onSaved: (value) => entradaNutriente.humedad = double.parse(value!),
         );
     }
@@ -137,16 +119,10 @@ class _AddAbonoState extends State<AddAbono> {
             initialValue: entradaNutriente.cantidad == null ? '' : entradaNutriente.cantidad.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-                labelText: 'Cantidad'
+                labelText: 'Cantidad',
+                hintText: 'ejem: 2.5'
             ),
-            validator: (value) {
-                
-                if (utils.isNumeric(value!)){
-                    return null;
-                }else{
-                    return 'Solo números';
-                }
-            },
+            validator: (value) => utils.floatSiCero(value),
             onSaved: (value) => entradaNutriente.cantidad = double.parse(value!),
         );
     }
@@ -157,20 +133,10 @@ class _AddAbonoState extends State<AddAbono> {
             initialValue: entradaNutriente.frecuencia == null ? '' : entradaNutriente.frecuencia.toString(),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-                labelText: 'Frecuencia'
+                labelText: 'Frecuencia',
+                hintText: 'ejem: 1'
             ),
-            validator: (value) {
-                
-                final isDigitsOnly = int.tryParse(value!);
-                if (isDigitsOnly == null) {
-                    return 'Solo números enteros';
-                }
-                if (isDigitsOnly <= 0) {
-                    return 'Valor invalido';
-                }else{
-                    return null;
-                }
-            },
+            validator: (value) => utils.validateEntero(value),
             onSaved: (value) => entradaNutriente.frecuencia = int.parse(value!),
         );
     }
@@ -196,30 +162,19 @@ class _AddAbonoState extends State<AddAbono> {
 
 
     Widget  _botonsubmit(String tituloBtn){
-        return RaisedButton.icon(
-            
-            icon:Icon(Icons.save, color: Colors.white,),
-            
-            label: Text(tituloBtn,
-                style: Theme.of(context).textTheme
-                    .headline6!
-                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
-            ),
-            padding:EdgeInsets.symmetric(vertical: 13, horizontal: 50),
-            onPressed:(_guardando) ? null : _submit,
+        return ButtonMainStyle(
+            title: tituloBtn,
+            icon: Icons.save,
+            press:(_guardando) ? null : _submit,
         );
     }
 
     void _submit( ){
 
-        
-
         if  ( !formKey.currentState!.validate() ){
-            //Cuendo el form no es valido
             return null;
         }
         
-
         formKey.currentState!.save();
 
         setState(() {_guardando = true;});
@@ -227,12 +182,10 @@ class _AddAbonoState extends State<AddAbono> {
         
         entradaNutriente.id = uuid.v1();
         fincasBloc.addEntrada(entradaNutriente);
+        mostrarSnackbar('Registro de abono guardado', context);
         
 
         setState(() {_guardando = false;});
-        
-
-
         Navigator.pop(context, 'salidaPage');
        
         

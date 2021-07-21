@@ -4,10 +4,8 @@ import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
-import 'package:app_suelo/src/utils/constants.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:app_suelo/src/utils/calculos.dart' as calculos;
-import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
@@ -45,10 +43,10 @@ class _BalanceActualState extends State<BalanceActual> {
         size = MediaQuery.of(context).size;
 
         return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(title: Text(titulo)),
             body: FutureBuilder(
-            future:  _getdataFinca(suelo, tipo),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
+                future:  _getdataFinca(suelo, tipo),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
                         return CircularProgressIndicator();
                     }
@@ -66,9 +64,6 @@ class _BalanceActualState extends State<BalanceActual> {
 
                     return Column(
                         children: [
-                            Container(
-                                child: TitulosPages(titulo: titulo),
-                            ),
                             Expanded(
                                 
                                 child: Swiper(
@@ -91,134 +86,27 @@ class _BalanceActualState extends State<BalanceActual> {
 
 
     //Balance neto SAF
-    Widget _titulosForm(String titulo, double ancho){
-        return Flexible(
-            child: Container(
-                width: ancho,
-                child: Text(titulo, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
-                .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-            ),
-        );
-    }
 
-    Widget _dataFincas( BuildContext context, Finca finca, Parcela parcela ){
-        String? labelMedidaFinca;
-        String? labelvariedad;
-
-        final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
-        labelMedidaFinca  = item['label'];
-
-        final itemvariedad = selectMap.variedadCacao().firstWhere((e) => e['value'] == '${parcela.variedadCacao}');
-        labelvariedad  = itemvariedad['label'];
-
+    Widget _dataFincas( Finca finca, Parcela parcela  ){
         return Container(
-                    
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                    BoxShadow(
-                            color: Color(0xFF3A5160)
-                                .withOpacity(0.05),
-                            offset: const Offset(1.1, 1.1),
-                            blurRadius: 17.0),
-                    ],
-            ),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+            color: Colors.white,
+            padding: EdgeInsets.all(20),
+            margin: EdgeInsets.only(bottom: 10),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    
-                    Flexible(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                            
-                                Padding(
-                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                    child: Text(
-                                        "${finca.nombreFinca}",
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline6,
-                                    ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only( bottom: 10.0),
-                                    child: Text(
-                                        "${parcela.nombreLote}",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                    ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only( bottom: 10.0),
-                                    child: Text(
-                                        "Productor ${finca.nombreProductor}",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                    ),
-                                ),
-
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                        Flexible(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0),
-                                                        child: Text(
-                                                            "Área Finca: ${finca.areaFinca} ($labelMedidaFinca)",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0),
-                                                        child: Text(
-                                                            "N de Plantas: ${parcela.numeroPlanta}",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                        Flexible(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0, left: 20),
-                                                        child: Text(
-                                                            "Área Parcela: ${parcela.areaLote} ($labelMedidaFinca)",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0, left: 20),
-                                                        child: Text(
-                                                            "Variedad: $labelvariedad ",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                ],
-                                            ),
-                                        )
-                                    ],
-                                )
-
-                                
-                            ],  
-                        ),
-                    ),
+                    encabezadoCard('Área finca: ${finca.nombreFinca}','Productor: ${finca.nombreProductor}', 'assets/icons/finca.svg'),
+                    Wrap(
+                        spacing: 20,
+                        children: [
+                            textoCardBody('Área finca: ${finca.areaFinca}'),
+                            textoCardBody('Área parcela: ${parcela.areaLote} ${finca.tipoMedida == 1 ? 'Mz': 'Ha'}'), 
+                        ],
+                    )
                 ],
             ),
-        );
-
-    } 
+        );        
+    }
 
     Widget _balanceNeto(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente? sueloNutriente){
     
@@ -229,16 +117,17 @@ class _BalanceActualState extends State<BalanceActual> {
             width: MediaQuery.of(context).size.width,
             child: Column(
                 children: [
-                    _dataFincas( context, finca, parcela),
+                    _dataFincas(finca, parcela),
 
                     Expanded(
                         child: SingleChildScrollView(
                             child: Container(
                                 color: Colors.white,
+                                padding: EdgeInsets.all(15),
                                 child: Column(
                                     children: [
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 10),
+                                        Container(
+                                            padding: EdgeInsets.symmetric(vertical: 5),
                                             child: InkWell(
                                                 child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -247,17 +136,15 @@ class _BalanceActualState extends State<BalanceActual> {
                                                             child: Text(
                                                                 "Balance neto del Sistema SAF",
                                                                 textAlign: TextAlign.center,
-                                                                style: Theme.of(context).textTheme
-                                                                    .headline5!
-                                                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                                                             ),
                                                         ),
-                                                        Padding(
+                                                        Container(
                                                             padding: EdgeInsets.only(left: 10),
                                                             child: Icon(
                                                                 Icons.info_outline_rounded,
                                                                 color: Colors.green,
-                                                                size: 22.0,
+                                                                size: 20,
                                                             ),
                                                         ),
                                                     ],
@@ -265,73 +152,68 @@ class _BalanceActualState extends State<BalanceActual> {
                                                 onTap: () => _dialogText(context),
                                             ),
                                         ),
-                                        
-                                        Container(
-                                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                            width: double.infinity,
-                                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.circular(10),
-                                                boxShadow: [
-                                                    BoxShadow(
-                                                            color: Color(0xFF3A5160)
-                                                                .withOpacity(0.05),
-                                                            offset: const Offset(1.1, 1.1),
-                                                            blurRadius: 17.0),
+                                        Divider(),
+                                        Column(
+                                            children: [
+                                                Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                        Expanded(
+                                                            child: textList('lb/año'),
+                                                        ),
+                                                        Container(
+                                                            width: 70,
+                                                            child: titleList('Salida'),
+                                                        ),
+                                                        Container(
+                                                            width: 70,
+                                                            child: titleList('Entrada'),
+                                                        ),
+                                                        Container(
+                                                            width: 70,
+                                                            child: titleList('Balance'),
+                                                        ),
                                                     ],
-                                            ),
-                                            child: Column(
-                                                children: [
-                                                    Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        children: [
-                                                            _titulosForm('lb/año', size.width * 0.4),
-                                                            _titulosForm('Salida', size.width * 0.4),
-                                                            _titulosForm('Entrada', size.width * 0.4),
-                                                            _titulosForm('Balance', size.width * 0.4),
-                                                        ],
-                                                    ),
-                                                    Divider(),
-                                                    _rowBalance(
-                                                        'Nitrogeno', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowBalance(
-                                                        'Fósforo', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'P'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowBalance(
-                                                        'Potasio',
-                                                        calculos.salidaElemeto(salidaNutriente, 'K'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowBalance(
-                                                        'Calcio', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'Ca'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowBalance(
-                                                        'Magnesio', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'Mg'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    _rowBalance(
-                                                        'Azufre', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'S'), 
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela)
-                                                    ),
-                                                    Divider(),
-                                                    
-                                                ],
-                                            ),
+                                                ),
+                                                Divider(),
+                                                _rowBalance(
+                                                    'Nitrógeno', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela)
+                                                ),
+                                                Divider(),
+                                                _rowBalance(
+                                                    'Fósforo', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'P'),
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela)
+                                                ),
+                                                Divider(),
+                                                _rowBalance(
+                                                    'Potasio',
+                                                    calculos.salidaElemeto(salidaNutriente, 'K'),
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela)
+                                                ),
+                                                Divider(),
+                                                _rowBalance(
+                                                    'Calcio', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'Ca'),
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela)
+                                                ),
+                                                Divider(),
+                                                _rowBalance(
+                                                    'Magnesio', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'Mg'),
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela)
+                                                ),
+                                                Divider(),
+                                                _rowBalance(
+                                                    'Azufre', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'S'), 
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela)
+                                                ),
+                                                Divider(),
+                                                
+                                            ],
                                         ),
                                     ],
                                 ),
@@ -349,24 +231,20 @@ class _BalanceActualState extends State<BalanceActual> {
         return Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-                _titulosForm(tituloRow, size.width * 0.4),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.4,
-                        child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center)
-                    ),
+                Expanded(
+                    child:textList(tituloRow), 
                 ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.4,
-                        child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center)
-                    ),
+                Container(
+                    width: 70,
+                    child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center,),
                 ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.4,
-                        child: Text((entrada - salida).toStringAsFixed(1) == '-0.0' ? '0.0' : (entrada - salida).toStringAsFixed(1) , textAlign: TextAlign.center)
-                    ),
+                Container(
+                    width: 70,
+                    child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center,),
+                ),
+                Container(
+                    width: 70,
+                    child: Text((entrada - salida).toStringAsFixed(1) == '-0.0' ? '0.0' : (entrada - salida).toStringAsFixed(1), textAlign: TextAlign.center,),
                 ),
                 
             ],
@@ -387,11 +265,11 @@ class _BalanceActualState extends State<BalanceActual> {
                     Expanded(
                         child: SingleChildScrollView(
                             child: Container(
-                                color: Colors.white,
+                                padding: EdgeInsets.all(15),
                                 child: Column(
                                     children: [
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 10),
+                                        Container(
+                                            padding: EdgeInsets.symmetric(vertical: 5),
                                             child: InkWell(
                                                 child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -400,17 +278,15 @@ class _BalanceActualState extends State<BalanceActual> {
                                                             child: Text(
                                                                 titulo,
                                                                 textAlign: TextAlign.center,
-                                                                style: Theme.of(context).textTheme
-                                                                    .headline5!
-                                                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                                                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                                                             ),
                                                         ),
-                                                        Padding(
+                                                        Container(
                                                             padding: EdgeInsets.only(left: 10),
                                                             child: Icon(
                                                                 Icons.info_outline_rounded,
                                                                 color: Colors.green,
-                                                                size: 22.0,
+                                                                size: 20,
                                                             ),
                                                         ),
                                                     ],
@@ -418,80 +294,77 @@ class _BalanceActualState extends State<BalanceActual> {
                                                 onTap: () => _dialogText(context),
                                             ),
                                         ),
-                                        
-                                        Container(
-                                            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                            width: double.infinity,
-                                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.circular(10),
-                                                boxShadow: [
-                                                    BoxShadow(
-                                                            color: Color(0xFF3A5160)
-                                                                .withOpacity(0.05),
-                                                            offset: const Offset(1.1, 1.1),
-                                                            blurRadius: 17.0),
+                                        Column(
+                                            children: [
+                                                Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                        Expanded(
+                                                            child: textList('lb/año'),
+                                                        ),
+                                                        Container(
+                                                            width: 65,
+                                                            child: titleList('Salida'),
+                                                        ),
+                                                        Container(
+                                                            width: 65,
+                                                            child: titleList('Entrada'),
+                                                        ),
+                                                        Container(
+                                                            width: 65,
+                                                            child: titleList('Suelo'),
+                                                        ),
+                                                        Container(
+                                                            width: 65,
+                                                            child: titleList('Balance'),
+                                                        ),
                                                     ],
-                                            ),
-                                            child: Column(
-                                                children: [
-                                                    Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        children: [
-                                                            _titulosForm('lb/año', size.width * 0.2),
-                                                            _titulosForm('Salida', size.width * 0.2),
-                                                            _titulosForm('Entrada', size.width * 0.2),
-                                                            _titulosForm('Suelo', size.width * 0.2),
-                                                            _titulosForm('Balance', size.width * 0.2),
-                                                        ],
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'N', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'N'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'P', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'P'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'P'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'K',
-                                                        calculos.salidaElemeto(salidaNutriente, 'K'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'K'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'Ca', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'Ca'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'Ca'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'Mg', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'Mg'),
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'Mg'),
-                                                    ),
-                                                    Divider(),
-                                                    _rowDisponibilidad(
-                                                        'S', 
-                                                        calculos.salidaElemeto(salidaNutriente, 'S'), 
-                                                        calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela),
-                                                        calculos.nutrienteSuelo(sueloNutriente, 'S'),
-                                                    ),
-                                                    Divider(),
-                                                    
-                                                ],
-                                            ),
+                                                ),
+                                                Divider(),
+                                                _rowDisponibilidad(
+                                                    'Nitrógeno', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela),
+                                                    calculos.nutrienteSuelo(sueloNutriente, 'N'),
+                                                ),
+                                                Divider(),
+                                                _rowDisponibilidad(
+                                                    'Fósforo', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'P'),
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela),
+                                                    calculos.nutrienteSuelo(sueloNutriente, 'P'),
+                                                ),
+                                                Divider(),
+                                                _rowDisponibilidad(
+                                                    'Potasio',
+                                                    calculos.salidaElemeto(salidaNutriente, 'K'),
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela),
+                                                    calculos.nutrienteSuelo(sueloNutriente, 'K'),
+                                                ),
+                                                Divider(),
+                                                _rowDisponibilidad(
+                                                    'Calcio', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'Ca'),
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela),
+                                                    calculos.nutrienteSuelo(sueloNutriente, 'Ca'),
+                                                ),
+                                                Divider(),
+                                                _rowDisponibilidad(
+                                                    'Magnesio', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'Mg'),
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela),
+                                                    calculos.nutrienteSuelo(sueloNutriente, 'Mg'),
+                                                ),
+                                                Divider(),
+                                                _rowDisponibilidad(
+                                                    'Azufre', 
+                                                    calculos.salidaElemeto(salidaNutriente, 'S'), 
+                                                    calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela),
+                                                    calculos.nutrienteSuelo(sueloNutriente, 'S'),
+                                                ),
+                                                Divider(),
+                                                
+                                            ],
                                         ),
                                     ],
                                 ),
@@ -512,30 +385,24 @@ class _BalanceActualState extends State<BalanceActual> {
         return Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-                _titulosForm(tituloRow, size.width * 0.2),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.2,
-                        child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center)
-                    ),
+                Expanded(
+                    child:textList(tituloRow), 
                 ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.2,
-                        child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center)
-                    ),
+                Container(
+                    width: 65,
+                    child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center,),
                 ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.2,
-                        child: Text(suelo.toStringAsFixed(1) == '-0.0' ? '0.0' : suelo.toStringAsFixed(1) , textAlign: TextAlign.center)
-                    ),
+                Container(
+                    width: 65,
+                    child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center,),
                 ),
-                Flexible(
-                    child: Container(
-                        width: size.width * 0.2,
-                        child: Text(balance.toStringAsFixed(1) == '-0.0' ? '0.0' : balance.toStringAsFixed(1) , textAlign: TextAlign.center)
-                    ),
+                Container(
+                    width: 65,
+                    child: Text(suelo.toStringAsFixed(1) == '-0.0' ? '0.0' : suelo.toStringAsFixed(1), textAlign: TextAlign.center,),
+                ),
+                Container(
+                    width: 65,
+                    child: Text(balance.toStringAsFixed(1) == '-0.0' ? '0.0' : balance.toStringAsFixed(1), textAlign: TextAlign.center,),
                 ),
                 
             ],

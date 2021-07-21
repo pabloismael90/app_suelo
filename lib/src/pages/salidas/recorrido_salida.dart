@@ -3,9 +3,8 @@ import 'package:app_suelo/src/models/parcela_model.dart';
 import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
-import 'package:app_suelo/src/utils/constants.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
 class RecorridoResultado extends StatefulWidget {
@@ -40,7 +39,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
         size = MediaQuery.of(context).size;
 
         return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(title: Text('Resultado recorrido')),
             body: FutureBuilder(
             future:  _getdataFinca(suelo),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -57,14 +56,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
 
                     return Column(
                         children: [
-                            Container(
-                                child: Column(
-                                    children: [
-                                        TitulosPages(titulo: 'Resultado recorrido'),
-                                        _dataFincas(context,finca, parcela)                                      
-                                    ],
-                                )
-                            ),
+                            _dataFincas(finca, parcela),
                             Expanded(
                                 child: _recorrido(suelo, puntos),
                             ),
@@ -78,124 +70,26 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
     }
 
     //Datos de Finca
-    Widget _dataFincas( BuildContext context, Finca finca, Parcela parcela ){
-        String? labelMedidaFinca;
-        String? labelvariedad;
-
-        final item = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}');
-        labelMedidaFinca  = item['label'];
-
-        final itemvariedad = selectMap.variedadCacao().firstWhere((e) => e['value'] == '${parcela.variedadCacao}');
-        labelvariedad  = itemvariedad['label'];
-
+    Widget _dataFincas( Finca finca, Parcela parcela  ){
         return Container(
-                    
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                    BoxShadow(
-                            color: Color(0xFF3A5160)
-                                .withOpacity(0.05),
-                            offset: const Offset(1.1, 1.1),
-                            blurRadius: 17.0),
-                    ],
-            ),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+            color: Colors.white,
+            padding: EdgeInsets.all(20),
+            margin: EdgeInsets.only(bottom: 10),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    
-                    Flexible(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                            
-                                Padding(
-                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                    child: Text(
-                                        "${finca.nombreFinca}",
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline6,
-                                    ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only( bottom: 10.0),
-                                    child: Text(
-                                        "${parcela.nombreLote}",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                    ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only( bottom: 10.0),
-                                    child: Text(
-                                        "Productor ${finca.nombreProductor}",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                    ),
-                                ),
-
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                        Flexible(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0),
-                                                        child: Text(
-                                                            "Área Finca: ${finca.areaFinca} ($labelMedidaFinca)",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0),
-                                                        child: Text(
-                                                            "N de Plantas: ${parcela.numeroPlanta}",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                        Flexible(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0, left: 20),
-                                                        child: Text(
-                                                            "Área Parcela: ${parcela.areaLote} ($labelMedidaFinca)",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                    Padding(
-                                                        padding: EdgeInsets.only( bottom: 10.0, left: 20),
-                                                        child: Text(
-                                                            "Variedad: $labelvariedad ",
-                                                            style: TextStyle(color: kTextColor, fontSize: 14, fontWeight: FontWeight.bold),
-                                                        ),
-                                                    ),
-                                                ],
-                                            ),
-                                        )
-                                    ],
-                                )
-
-                                
-                            ],  
-                        ),
-                    ),
+                    encabezadoCard('Área finca: ${finca.nombreFinca}','Productor: ${finca.nombreProductor}', 'assets/icons/finca.svg'),
+                    Wrap(
+                        spacing: 20,
+                        children: [
+                            textoCardBody('Área finca: ${finca.areaFinca}'),
+                            textoCardBody('Área parcela: ${parcela.areaLote} ${finca.tipoMedida == 1 ? 'Mz': 'Ha'}'), 
+                        ],
+                    )
                 ],
             ),
-        );
-
-    } 
+        );        
+    }
 
     //Pagina de Conteo de puntos
     Widget _tituloPregunta(String titulo){
@@ -208,9 +102,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
                         child: Text(
                             titulo,
                             textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme
-                                .headline5!
-                                .copyWith(fontWeight: FontWeight.w600, fontSize: 18)
+                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                         ),
                     )
                 ),
@@ -227,22 +119,18 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text('', style: Theme.of(context).textTheme.headline6!
-                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                        Expanded(child: textList('')),
                         Container(
                             width: 60,
-                            child: Text('No', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
+                            child: titleList('No'),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Algo' : 'Mala', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600,) ),
+                            child: titleList(tipo == 1 ? 'Algo' : 'Mala'),
                         ),
                         Container(
                             width: 60,
-                            child: Text(tipo == 1 ? 'Severo' : 'Buena', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6!
-                                            .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
+                            child: titleList(tipo == 1 ? 'Severo' : 'Buena'),
                         ),
                     ],
                 ),
@@ -263,8 +151,7 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
                  Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6!
-                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                        Expanded(child: textList(item['label'])),
                         Container(
                             width: 60,
                             child: FutureBuilder(
@@ -316,45 +203,22 @@ class _RecorridoResultadoState extends State<RecorridoResultado> {
     }
 
     Widget _recorrido(TestSuelo suelo,List<Punto>? puntos){
-    
         return Container(
-            decoration: BoxDecoration(
-                
-            ),
-            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+            padding: EdgeInsets.all(15),
             child: Column(
                 children: [
                     Expanded(
                         child: SingleChildScrollView(
-                            child: Container(
-                                color: Colors.white,
-                                child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                            BoxShadow(
-                                                    color: Color(0xFF3A5160)
-                                                        .withOpacity(0.05),
-                                                    offset: const Offset(1.1, 1.1),
-                                                    blurRadius: 17.0),
-                                            ],
-                                    ),
-                                    child: Column(
-                                        children: [
-                                            
-                                            _rowRecorrido(suelo.id,1, 'Observaciones de erosión', 1, selectMap.erosion()),
-                                            _rowRecorrido(suelo.id, 2, 'Obras de conservación de suelo', 2, selectMap.conservacion()),
-                                            _rowRecorrido(suelo.id, 1, 'Observaciones de drenaje', 3, selectMap.drenaje()),
-                                            _rowRecorrido(suelo.id, 2, 'Obras de drenaje', 4, selectMap.obrasDrenaje()),
-                                            _rowRecorrido(suelo.id, 1, 'Enfermedades de raíz', 5, selectMap.raiz()),
-                                            
-                                        ],
-                                    ),
-                                ),
+                            child: Column(
+                                children: [
+                                    _rowRecorrido(suelo.id,1, 'Observaciones de erosión', 1, selectMap.erosion()),
+                                    _rowRecorrido(suelo.id, 2, 'Obras de conservación de suelo', 2, selectMap.conservacion()),
+                                    _rowRecorrido(suelo.id, 1, 'Observaciones de drenaje', 3, selectMap.drenaje()),
+                                    _rowRecorrido(suelo.id, 2, 'Obras de drenaje', 4, selectMap.obrasDrenaje()),
+                                    _rowRecorrido(suelo.id, 1, 'Enfermedades de raíz', 5, selectMap.raiz()),
+                                    
+                                ],
                             ),
                         ),
                     )
