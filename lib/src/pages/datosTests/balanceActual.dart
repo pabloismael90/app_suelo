@@ -25,7 +25,7 @@ class BalanceRecorrido extends StatelessWidget {
                     _cardRecorrido(suelo),
                     _btnRecorrido( suelo, 'Resultado recorrido', 'recorridoResultado', fincasBloc.puntoStream, 5 ),
                     Divider(),
-                    _tituloDivider(context,'Balance nutrientes actual'),
+                    _tituloDivider('Balance nutrientes actual'),
                     Divider(),
                     _cardItem(suelo, 'Cosecha anual', 'cosechaAnual', fincasBloc.salidaStream),
                     _cardItem(suelo, 'Análisis de suelo', 'analisisSuelo', fincasBloc.sueloStream),
@@ -37,7 +37,7 @@ class BalanceRecorrido extends StatelessWidget {
         );
     }
 
-    Widget _tituloDivider(BuildContext context, String titulo){
+    Widget _tituloDivider(String titulo){
         return Container(
             padding: const EdgeInsets.all(8.0),
             child: Text(

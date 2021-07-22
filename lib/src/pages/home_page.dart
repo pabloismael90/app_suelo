@@ -91,10 +91,18 @@ class HomePage extends StatelessWidget {
                     ),
                     Container(
                         color: Colors.white,
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                        child: FittedBox(
-                            child: Image.asset("assets/images/logos.png"),
-                                
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                            child: Container(
+                                height: size.height * 0.1,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    image: DecorationImage(
+                                        image: AssetImage("assets/images/logos.png"),
+                                        fit: BoxFit.fitWidth
+                                    )
+                                ),
+                            ),
                         ),
                     ),
                 ],

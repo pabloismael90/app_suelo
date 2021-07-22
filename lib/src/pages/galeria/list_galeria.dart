@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:app_suelo/src/utils/widget/titulos.dart';
 import 'package:flutter/material.dart';
 
 class GaleriaImagenes extends StatefulWidget {

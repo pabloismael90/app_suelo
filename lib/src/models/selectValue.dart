@@ -593,7 +593,27 @@ List<Map<String, dynamic>> valoresSalida(){
             "Ca": 0,
             "Mg": 0,
             "S": 0
-        }
+        },
+        {
+            "value": 5,
+            "label": "Frutas (lb/saco)",
+            "N": 0.2,
+            "P": 0.03,
+            "K": 0.16,
+            "Ca": 0.34,
+            "Mg": 0.36,
+            "S": 0
+        },
+        {
+            "value": 6,
+            "label": "Madera (lb/pie tablar)",
+            "N": 0.03,
+            "P": 0.032,
+            "K": 0.019,
+            "Ca": 0,
+            "Mg": 0,
+            "S": 0
+        },
 
     ];
 
@@ -640,6 +660,10 @@ List<Map<String, dynamic>> solucionesXmes(){
         {
             'value': '8',
             'label': 'Aplicar abono mineral'
+        },
+        {
+            'value': '9',
+            'label': 'Aplicar enmienda'
         }
 
     ];

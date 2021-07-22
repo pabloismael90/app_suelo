@@ -23,10 +23,11 @@ class _CosechaAnualState extends State<CosechaAnual> {
     bool _guardando = false;
     var uuid = Uuid();
     late TestSuelo suelo;
+    
 
     late String tituloBtn;
 
-
+    
     @override
     Widget build(BuildContext context) {
 
@@ -35,16 +36,16 @@ class _CosechaAnualState extends State<CosechaAnual> {
 
         suelo = data[0];
         salidaNutriente = data[1];
-
+        
+        
         if (salidaNutriente.id == null) {
             salidaNutriente.idTest = suelo.id;
             tituloBtn = 'Guardar';
-            
         } else {
             tituloBtn = 'Actualizar';
+            
         }
         
-
         return Scaffold(
             key: scaffoldKey,
             appBar: AppBar(title: Text('Cosecha anual')),
@@ -83,8 +84,6 @@ class _CosechaAnualState extends State<CosechaAnual> {
                                         Divider(),
                                         _cacao(size),
                                         Divider(),
-                                        _cascaraCacao(size),
-                                        Divider(),
                                         _lena(size),
                                         Divider(),
                                         _musaceas(size),
@@ -92,6 +91,8 @@ class _CosechaAnualState extends State<CosechaAnual> {
                                         _frutas(size),
                                         Divider(),
                                         _madera(size),
+                                        Divider(),
+                                        _cascaraCacao(),
                                         Divider(),
                                         SizedBox(height: 40,),
                                         _botonsubmit(tituloBtn),
@@ -115,7 +116,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 Flexible(
                     child: Container(
                         width: size.width * 0.25,
-                        child: textList('Cacao'),
+                        child: textList('Cacao baba'),
                     ),
                 ),
         
@@ -134,7 +135,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
                 
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: textList('QQ seco'),
+                        child: textList('QQ'),
                     ),
                 ),
                 
@@ -144,38 +145,48 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
     }
 
-    Widget _cascaraCacao(Size size){
+    Widget _cascaraCacao(){
 
-        return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-                Flexible(child: Container(
-                        width: size.width * 0.25,
-                        child: textList('Cascara de Cacao'),
-                    ),
-                ),
+        // return Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: <Widget>[
+        //         Flexible(child: Container(
+        //                 width: size.width * 0.25,
+        //                 child: textList('Cascara de Cacao'),
+        //             ),
+        //         ),
                 
-                Expanded(
-                    child: TextFormField(
-                        initialValue: salidaNutriente.cascaraCacao == null ? '' : salidaNutriente.cascaraCacao.toString(),
-                        keyboardType: TextInputType.numberWithOptions(decimal: true),
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                        ),
-                        validator: (value) => utils.floatSiCero(value),
-                        onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value!),
-                    ),
-                ),
+        //         Expanded(
+        //             child: TextFormField(
+        //                 initialValue: salidaNutriente.cascaraCacao == null ? '' : salidaNutriente.cascaraCacao.toString(),
+        //                 keyboardType: TextInputType.numberWithOptions(decimal: true),
+        //                 decoration: InputDecoration(
+        //                     border: OutlineInputBorder(),
+        //                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+        //                 ),
+        //                 validator: (value) => utils.floatSiCero(value),
+        //                 onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value!),
+        //             ),
+        //         ),
                 
-                Flexible(child: Container(
-                        width: size.width * 0.25,
-                        child: textList('QQ seco'),
-                    ),
-                ),
+        //         Flexible(child: Container(
+        //                 width: size.width * 0.25,
+        //                 child: textList('QQ seco'),
+        //             ),
+        //         ),
                 
-            ],
+        //     ],
+        // );
+        
+        return CheckboxListTile(
+            title: textList('Regresa la cascara de cacao  a la plantación'),
+            value: salidaNutriente.cascaraCacao != 0 , 
+            onChanged: (value) {
+                setState(() {
+                    salidaNutriente.cascaraCacao = value! ? 1 : 0;
+                });
+            },
         );
         
     }
@@ -322,6 +333,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
         
     }
 
+    
     Widget  _botonsubmit(String tituloBtn){
         return ButtonMainStyle(
             title: tituloBtn,
@@ -339,6 +351,7 @@ class _CosechaAnualState extends State<CosechaAnual> {
         formKey.currentState!.save();
 
         setState(() {_guardando = true;});
+        
 
         if(salidaNutriente.id == null){
             salidaNutriente.id = uuid.v1();

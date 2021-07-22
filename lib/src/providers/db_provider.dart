@@ -103,7 +103,7 @@ class DBProvider {
                     ' fruta REAL,'
                     ' musacea REAL,'
                     ' madera REAL,'
-                    ' cascaraCacao REAL,'
+                    ' cascaraCacao INTEGER,'
                     ' CONSTRAINT fk_punto FOREIGN KEY(idTest) REFERENCES TestSuelo(id) ON DELETE CASCADE'
                     ')'
                 );

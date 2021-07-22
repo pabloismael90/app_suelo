@@ -12,19 +12,24 @@ import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 //Salida
 salidaElemeto(SalidaNutriente salidaNutriente, String elemento){
     double totalElemeto;
+    double factorCacaoBaba = 3.0;
     
     double valorCacao =  salidaNutriente.cacao!;
-    double valorCascara=  salidaNutriente.cascaraCacao!;
+    double valorCascara=  salidaNutriente.cascaraCacao == 1 ? 0.0 : valorCacao;
     double valorLena =  salidaNutriente.lena!;
     double valorMusacea =  salidaNutriente.musacea!;
+    double valorFruta =  salidaNutriente.fruta!;
+    double valorMadera =  salidaNutriente.madera!;
 
     final factorCacao = selectMap.valoresSalida().firstWhere((e) => e['value'] == 1)[elemento];
     final factorCascara = selectMap.valoresSalida().firstWhere((e) => e['value'] == 2)[elemento];
     final factorLena = selectMap.valoresSalida().firstWhere((e) => e['value'] == 3)[elemento];
     final factorMusacea = selectMap.valoresSalida().firstWhere((e) => e['value'] == 4)[elemento];
+    final factorFrutas = selectMap.valoresSalida().firstWhere((e) => e['value'] == 5)[elemento];
+    final factorMadera = selectMap.valoresSalida().firstWhere((e) => e['value'] == 6)[elemento];
 
-    
-    totalElemeto =(valorCacao * factorCacao) + ( valorCascara * factorCascara) + (valorLena * factorLena) + (valorMusacea * factorMusacea);
+    totalElemeto =((valorCacao * factorCacao)/factorCacaoBaba) + (( valorCascara * factorCascara)/factorCacaoBaba) 
+    + (valorLena * factorLena) + (valorMusacea * factorMusacea) + (valorFruta * factorFrutas) + (valorMadera * factorMadera);
     
     return totalElemeto;
     
@@ -50,24 +55,16 @@ entradaElemento(List<EntradaNutriente> entradas, SueloNutriente? sueloNutriente,
 selectFuncionElemento(EntradaNutriente entrada, String label, int? densidad) { 
     switch(entrada.unidad.toString()) { 
         case '0': { return totalOzPlanta(entrada, label, densidad!);  } 
-        break; 
         
         case '1': { return totalLbPlanta(entrada, label, densidad!); } 
-        break; 
         
         case '2': { return totalGPlanta(entrada, label, densidad!); } 
-        break; 
         
-        case '3': { return totalKgMz(entrada, label); } 
-        break;
+        case '3': { return totalKgMz(entrada, label); }
 
         case '4': { return totalLbMz(entrada, label); } 
-        break; 
 
         case '5': { return totalLMz(entrada, label); } 
-        break; 
-        
-        
     }
 } 
 
@@ -160,25 +157,17 @@ nutrienteSuelo(SueloNutriente? sueloNutriente, String elemento){
 
 selectFuncionSuelo(SueloNutriente? sueloNutriente, String label) { 
     switch(label) { 
-        case 'N': { return ((10000*0.3*sueloNutriente!.densidadAparente!*1000)*(sueloNutriente.nitrogeno!/100))*0.01*(2.2*0.7072); } 
-        break; 
+        case 'N': { return ((10000*0.3*sueloNutriente!.densidadAparente!*1000)*(sueloNutriente.nitrogeno!/100))*0.01*(2.2*0.7072); }
         
-        case 'P': { return (((1000*3000*sueloNutriente!.densidadAparente!)*sueloNutriente.fosforo!)/1000000)*2.2*0.7072; } 
-        break; 
+        case 'P': { return (((1000*3000*sueloNutriente!.densidadAparente!)*sueloNutriente.fosforo!)/1000000)*2.2*0.7072; }
         
-        case 'K': { return 780*sueloNutriente!.densidadAparente!*sueloNutriente.potasio!*2.2*0.7; } 
-        break; 
+        case 'K': { return 780*sueloNutriente!.densidadAparente!*sueloNutriente.potasio!*2.2*0.7; }
         
-        case 'Ca': { return 400*sueloNutriente!.densidadAparente!*sueloNutriente.calcio!*2.2*0.7026; } 
-        break;
+        case 'Ca': { return 400*sueloNutriente!.densidadAparente!*sueloNutriente.calcio!*2.2*0.7026; }
 
-        case 'Mg': { return 240*sueloNutriente!.densidadAparente!*sueloNutriente.magnesio!*2.2*0.7026; } 
-        break; 
+        case 'Mg': { return 240*sueloNutriente!.densidadAparente!*sueloNutriente.magnesio!*2.2*0.7026; }
 
-        case 'S': { return (((1000*3000*1.15)*sueloNutriente!.azufre!)/1000000)*2.2*0.7072; } 
-        break; 
-        
-        
+        case 'S': { return (((1000*3000*1.15)*sueloNutriente!.azufre!)/1000000)*2.2*0.7072; }
     }
 } 
 

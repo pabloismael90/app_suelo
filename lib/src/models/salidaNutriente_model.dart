@@ -7,7 +7,7 @@ class SalidaNutriente {
         this.fruta,
         this.musacea,
         this.madera,
-        this.cascaraCacao,
+        this.cascaraCacao = 0,
     });
 
     String? id;
@@ -17,7 +17,7 @@ class SalidaNutriente {
     double? fruta;
     double? musacea;
     double? madera;
-    double? cascaraCacao;
+    int? cascaraCacao;
 
     factory SalidaNutriente.fromJson(Map<String, dynamic> json) => SalidaNutriente(
         id: json["id"],
@@ -27,7 +27,7 @@ class SalidaNutriente {
         fruta: json["fruta"].toDouble(),
         musacea: json["musacea"].toDouble(),
         madera: json["madera"].toDouble(),
-        cascaraCacao: json["cascaraCacao"].toDouble(),
+        cascaraCacao: json["cascaraCacao"],
     );
 
     Map<String, dynamic> toJson() => {
