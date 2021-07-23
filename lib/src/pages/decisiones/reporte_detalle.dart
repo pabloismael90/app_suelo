@@ -57,14 +57,14 @@ class _ReportDetalleState extends State<ReportDetalle> {
     @override
     Widget build(BuildContext context) {
 
-        idTest = ModalRoute.of(context)!.settings.arguments as String?;
+        TestSuelo? suelo = ModalRoute.of(context)!.settings.arguments as TestSuelo;
         size = MediaQuery.of(context).size;
                 
 
         return Scaffold(
             appBar: AppBar(title: Text('Reporte'),),
             body: FutureBuilder(
-            future:  _getdataFinca(idTest),
+            future:  _getdataFinca(suelo.id),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
                         return CircularProgressIndicator();
@@ -206,12 +206,14 @@ class _ReportDetalleState extends State<ReportDetalle> {
                         Wrap(
                             spacing: 20,
                             children: [
+                                textoCardBody('Humedad (%) : ${listAbonos[index].humedad} % '),
                                 textoCardBody('Cantidad: ${listAbonos[index].cantidad} $unidad'),
                                 textoCardBody('Frecuencia: ${listAbonos[index].frecuencia}'),
                                 textoCardBody('Monto total: ${listAbonos[index].cantidad! * listAbonos[index].frecuencia! * parcela.numeroPlanta!} $montoUnidad'),
 
                             ],
                         ),
+                        
                         Divider(color: Colors.black54,)
                     ],
                 );

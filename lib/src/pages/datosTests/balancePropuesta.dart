@@ -162,7 +162,7 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                             ButtonMainStyle(
                                 title: 'Ver Reporte',
                                 icon: Icons.save,
-                                press: () => Navigator.pushNamed(context, 'reportDetalle', arguments: suelo.id),
+                                press: () => Navigator.pushNamed(context, 'reportDetalle', arguments: suelo),
                             ),
                             Spacer(),
                         ],

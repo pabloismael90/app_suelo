@@ -30,7 +30,12 @@ class _AbonosPageState extends State<AbonosPage> {
         
         
         return Scaffold(
-            appBar: AppBar(title: Text('Lista de abonos actual')),
+            
+            appBar: AppBar(
+                title: tipo == 1 ? 
+                Text('Lista de abonos actual')
+                :Text('Lista de abonos propuesta'),
+            ),
             body: StreamBuilder(
                 stream: fincasBloc.entradaStream ,
                 builder: (BuildContext context, AsyncSnapshot snapshot){
@@ -106,13 +111,13 @@ class _AbonosPageState extends State<AbonosPage> {
                 children: [
                     tituloCard(labelAbono),
                     Wrap(
-                    spacing: 20,
-                    children: [
-                        textoCardBody('Humedad (%) : ${entradaNutriente.humedad} % '),
-                        textoCardBody('Cantidad: ${entradaNutriente.cantidad} ($labelUnidad)'),
-                        textoCardBody('Frecuencia: ${entradaNutriente.frecuencia} / año'),
-                    ],
-                ),
+                        spacing: 20,
+                        children: [
+                            textoCardBody('Humedad (%) : ${entradaNutriente.humedad} % '),
+                            textoCardBody('Cantidad: ${entradaNutriente.cantidad} ($labelUnidad)'),
+                            textoCardBody('Frecuencia: ${entradaNutriente.frecuencia} / año'),
+                        ],
+                    ),
                 ],
             )
         );

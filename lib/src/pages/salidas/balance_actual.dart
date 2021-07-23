@@ -7,6 +7,7 @@ import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:app_suelo/src/utils/calculos.dart' as calculos;
 import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 
 class BalanceActual extends StatefulWidget {
@@ -58,9 +59,10 @@ class _BalanceActualState extends State<BalanceActual> {
                     SalidaNutriente salidaNutriente = snapshot.data[2];
                     List<EntradaNutriente> entradas = snapshot.data[3];
                     SueloNutriente? sueloNutriente  = snapshot.data[4];
+                    String? labelMedidaFinca = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}')['label'];
 
-                    pageItem.add(_balanceNeto(finca, parcela, salidaNutriente, entradas, sueloNutriente));
-                    pageItem.add(_disponibilidad('Disponibilidad de nutriente', finca, parcela, salidaNutriente, entradas, sueloNutriente));
+                    pageItem.add(_paginaUno(finca, parcela, salidaNutriente, labelMedidaFinca, entradas, tipo), );
+                    pageItem.add(_paginaDos(finca, parcela, salidaNutriente, entradas, sueloNutriente, tipo));
 
                     return Column(
                         children: [
@@ -85,297 +87,285 @@ class _BalanceActualState extends State<BalanceActual> {
     }
 
 
-    //Balance neto SAF
-
-    Widget _dataFincas( Finca finca, Parcela parcela  ){
+    //Datos cosecha y abono
+    Widget _paginaUno(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, String? labelMedidaFinca, List<EntradaNutriente> listAbonosActual, int tipo){
         return Container(
+            padding: EdgeInsets.all(15),
             color: Colors.white,
-            padding: EdgeInsets.all(20),
-            margin: EdgeInsets.only(bottom: 10),
+            child: SingleChildScrollView(
+                child: Column(
+                    children: [
+                        _dataFincas(finca, parcela, labelMedidaFinca!),
+                        tituloDivider('Cosecha anual'),
+                        _cosechaAnual(salidaNutriente),
+                        tipo == 1 ? 
+                        tituloDivider('Uso de abono actual')
+                        :tituloDivider('Propuesta de fertilización'),
+                        _abonosList(listAbonosActual, parcela)
+                    ],
+                ),
+            ),
+        );
+    }
+    
+    Widget _dataFincas(Finca finca, Parcela parcela, String labelMedidaFinca ){
+        String? labelvariedad;
+        labelvariedad = selectMap.variedadCacao().firstWhere((e) => e['value'] == '${parcela.variedadCacao}')['label'];
+
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+                encabezadoCard('${finca.nombreFinca}','Parcela: ${parcela.nombreLote}', ''),
+                textoCardBody('Productor: ${finca.nombreProductor}'),
+                tecnico('${finca.nombreTecnico}'),
+                textoCardBody('Variedad: $labelvariedad'),
+                Wrap(
+                    spacing: 20,
+                    children: [
+                        textoCardBody('Área Finca: ${finca.areaFinca} ($labelMedidaFinca)'),
+                        textoCardBody('Área Parcela: ${parcela.areaLote} ($labelMedidaFinca)'),
+                        textoCardBody('N de plantas: ${parcela.numeroPlanta}'),
+                    ],
+                ),
+            ],  
+        );
+
+    }
+    
+    Widget _cosechaAnual(SalidaNutriente salidaNutriente){
+        
+
+        return Container(
+            width: double.infinity,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    encabezadoCard('Área finca: ${finca.nombreFinca}','Productor: ${finca.nombreProductor}', 'assets/icons/finca.svg'),
-                    Wrap(
-                        spacing: 20,
-                        children: [
-                            textoCardBody('Área finca: ${finca.areaFinca}'),
-                            textoCardBody('Área parcela: ${parcela.areaLote} ${finca.tipoMedida == 1 ? 'Mz': 'Ha'}'), 
-                        ],
-                    )
+                    textoCardBody('Cacao baba: ${salidaNutriente.cacao} QQ / año'),
+                    textoCardBody('Cascara de cacao: ${salidaNutriente.cascaraCacao == 0 ? salidaNutriente.cacao : 0} QQ de grano'),
+                    textoCardBody('Leña: ${salidaNutriente.lena} Carga'),
+                    textoCardBody('Frutas: ${salidaNutriente.fruta} Sacos'),
+                    textoCardBody('Madera: ${salidaNutriente.madera} Pie tablar'),
+                    
+                    
+                    
                 ],
             ),
-        );        
+        );
+
     }
 
-    Widget _balanceNeto(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente? sueloNutriente){
+    Widget _abonosList(List<EntradaNutriente> listAbonos, Parcela parcela){
+        
+        return ListView.builder(
+            itemBuilder: (context, index) {
+                String labelAbono = selectMap.listAbonos().firstWhere((e) => e['value'] == '${listAbonos[index].idAbono}', orElse: () => {"value": "1","label": "No data"})['label'];
+                String? unidad = selectMap.unidadAbono().firstWhere((e) => e['value'] == '${listAbonos[index].unidad}', orElse: () => {"value": "1","label": "No data"})['label'];
+                String montoUnidad = unidad!.split("/")[0];
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        
+                        tituloCard(labelAbono),
+                        Wrap(
+                            spacing: 20,
+                            children: [
+                                textoCardBody('Humedad (%) : ${listAbonos[index].humedad} % '),
+                                textoCardBody('Cantidad: ${listAbonos[index].cantidad} $unidad'),
+                                textoCardBody('Frecuencia: ${listAbonos[index].frecuencia}'),
+                                textoCardBody('Monto total: ${listAbonos[index].cantidad! * listAbonos[index].frecuencia! * parcela.numeroPlanta!} $montoUnidad'),
+
+                            ],
+                        ),
+                        
+                        Divider(color: Colors.black54,)
+                    ],
+                );
+                
+            },
+            shrinkWrap: true,
+            itemCount: listAbonos.length,
+            padding: EdgeInsets.only(bottom: 30.0),
+            controller: ScrollController(keepScrollOffset: false),
+        );
+
+    }
+    
+    
+    //Balances actuales
+    Widget _paginaDos(Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente? sueloNutriente, int tipo){
     
         return Container(
-            decoration: BoxDecoration(
-                
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-                children: [
-                    _dataFincas(finca, parcela),
-
-                    Expanded(
-                        child: SingleChildScrollView(
-                            child: Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.all(15),
-                                child: Column(
+            padding: EdgeInsets.all(15),
+            color: Colors.white,
+            child: SingleChildScrollView(
+                child: Column(
+                    children: [
+                        tipo == 1 ? 
+                        tituloDivider('Balance neto del Sistema SAF actual')
+                        :tituloDivider('Propuesta balance neto del Sistema SAF'),
+                        Column(
+                            children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
+                                        Expanded(child: textList('lb/año')),
                                         Container(
-                                            padding: EdgeInsets.symmetric(vertical: 5),
-                                            child: InkWell(
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                        Container(                                                                    
-                                                            child: Text(
-                                                                "Balance neto del Sistema SAF",
-                                                                textAlign: TextAlign.center,
-                                                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                                                            ),
-                                                        ),
-                                                        Container(
-                                                            padding: EdgeInsets.only(left: 10),
-                                                            child: Icon(
-                                                                Icons.info_outline_rounded,
-                                                                color: Colors.green,
-                                                                size: 20,
-                                                            ),
-                                                        ),
-                                                    ],
-                                                ),
-                                                onTap: () => _dialogText(context),
-                                            ),
+                                            width: 65,
+                                            child: titleList('Salida'),
                                         ),
-                                        Divider(),
-                                        Column(
-                                            children: [
-                                                Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                        Expanded(
-                                                            child: textList('lb/año'),
-                                                        ),
-                                                        Container(
-                                                            width: 70,
-                                                            child: titleList('Salida'),
-                                                        ),
-                                                        Container(
-                                                            width: 70,
-                                                            child: titleList('Entrada'),
-                                                        ),
-                                                        Container(
-                                                            width: 70,
-                                                            child: titleList('Balance'),
-                                                        ),
-                                                    ],
-                                                ),
-                                                Divider(),
-                                                _rowBalance(
-                                                    'Nitrógeno', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela)
-                                                ),
-                                                Divider(),
-                                                _rowBalance(
-                                                    'Fósforo', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'P'),
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela)
-                                                ),
-                                                Divider(),
-                                                _rowBalance(
-                                                    'Potasio',
-                                                    calculos.salidaElemeto(salidaNutriente, 'K'),
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela)
-                                                ),
-                                                Divider(),
-                                                _rowBalance(
-                                                    'Calcio', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'Ca'),
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela)
-                                                ),
-                                                Divider(),
-                                                _rowBalance(
-                                                    'Magnesio', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'Mg'),
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela)
-                                                ),
-                                                Divider(),
-                                                _rowBalance(
-                                                    'Azufre', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'S'), 
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela)
-                                                ),
-                                                Divider(),
-                                                
-                                            ],
+                                        Container(
+                                            width: 65,
+                                            child: titleList('Entrada'),
+                                        ),
+                                        Container(
+                                            width: 65,
+                                            child: titleList('Balance'),
                                         ),
                                     ],
                                 ),
-                            ),
+                                Divider(),
+                                _rowData(
+                                    'Nitrogeno', 
+                                    calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela)
+                                ),
+                                Divider(),
+                                _rowData(
+                                    'Fósforo', 
+                                    calculos.salidaElemeto(salidaNutriente, 'P'),
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela)
+                                ),
+                                Divider(),
+                                _rowData(
+                                    'Potasio',
+                                    calculos.salidaElemeto(salidaNutriente, 'K'),
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela)
+                                ),
+                                Divider(),
+                                _rowData(
+                                    'Calcio', 
+                                    calculos.salidaElemeto(salidaNutriente, 'Ca'),
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela)
+                                ),
+                                Divider(),
+                                _rowData(
+                                    'Magnesio', 
+                                    calculos.salidaElemeto(salidaNutriente, 'Mg'),
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela)
+                                ),
+                                Divider(),
+                                _rowData(
+                                    'Azufre', 
+                                    calculos.salidaElemeto(salidaNutriente, 'S'), 
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela)
+                                ),
+                                Divider(),
+                                
+                            ],
                         ),
-                    )
-                    
-                ],
+                        SizedBox(height: 10,),
+                        tipo == 1 ? 
+                        tituloDivider('Disponibilidad de nutriente actual')
+                        :tituloDivider('Propuesta disponibilidad de nutriente'),
+                        Column(
+                            children: [
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                        Expanded(child: textList('lb/año')),
+                                        Container(
+                                            width: 65,
+                                            child: titleList('Salida'),
+                                        ),
+                                        Container(
+                                            width: 65,
+                                            child: titleList('Entrada'),
+                                        ),
+                                        Container(
+                                            width: 65,
+                                            child: titleList('Suelo'),
+                                        ),
+                                        Container(
+                                            width: 65,
+                                            child: titleList('Balance'),
+                                        ),
+                                    ],
+                                ),
+                                Divider(),
+                                _rowDisponibilidad(
+                                    'Nitrogeno', 
+                                    calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela),
+                                    calculos.nutrienteSuelo(sueloNutriente, 'N'),
+                                ),
+                                Divider(),
+                                _rowDisponibilidad(
+                                    'Fósforo', 
+                                    calculos.salidaElemeto(salidaNutriente, 'P'),
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela),
+                                    calculos.nutrienteSuelo(sueloNutriente, 'P'),
+                                ),
+                                Divider(),
+                                _rowDisponibilidad(
+                                    'Potasio',
+                                    calculos.salidaElemeto(salidaNutriente, 'K'),
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela),
+                                    calculos.nutrienteSuelo(sueloNutriente, 'K'),
+                                ),
+                                Divider(),
+                                _rowDisponibilidad(
+                                    'Calcio', 
+                                    calculos.salidaElemeto(salidaNutriente, 'Ca'),
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela),
+                                    calculos.nutrienteSuelo(sueloNutriente, 'Ca'),
+                                ),
+                                Divider(),
+                                _rowDisponibilidad(
+                                    'Magnesio', 
+                                    calculos.salidaElemeto(salidaNutriente, 'Mg'),
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela),
+                                    calculos.nutrienteSuelo(sueloNutriente, 'Mg'),
+                                ),
+                                Divider(),
+                                _rowDisponibilidad(
+                                    'Azufre', 
+                                    calculos.salidaElemeto(salidaNutriente, 'S'), 
+                                    calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela),
+                                    calculos.nutrienteSuelo(sueloNutriente, 'S'),
+                                ),
+                                Divider(),
+                                
+                            ],
+                        ),
+                    ],
+                ),
             ),
         );
             
     }
 
-    Widget _rowBalance( String tituloRow, double salida, double entrada ){
+    Widget _rowData( String tituloRow, double salida, double entrada ){
         return Row(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                Expanded(
-                    child:textList(tituloRow), 
+                Expanded(child: textList(tituloRow)),
+                Container(
+                    width: 65,
+                    child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center)
                 ),
                 Container(
-                    width: 70,
-                    child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center,),
+                    width: 65,
+                    child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center)
                 ),
                 Container(
-                    width: 70,
-                    child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center,),
-                ),
-                Container(
-                    width: 70,
-                    child: Text((entrada - salida).toStringAsFixed(1) == '-0.0' ? '0.0' : (entrada - salida).toStringAsFixed(1), textAlign: TextAlign.center,),
+                    width: 65,
+                    child: Text((entrada - salida).toStringAsFixed(1) == '-0.0' ? '0.0' : (entrada - salida).toStringAsFixed(1) , textAlign: TextAlign.center)
                 ),
                 
             ],
         );
-    }
-
-
-    //Disponibilidada de nutrientes
-    Widget _disponibilidad(String titulo, Finca finca, Parcela parcela, SalidaNutriente salidaNutriente, List<EntradaNutriente> entradas, SueloNutriente? sueloNutriente){
-    
-        return Container(
-            decoration: BoxDecoration(
-                
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-                children: [
-                    Expanded(
-                        child: SingleChildScrollView(
-                            child: Container(
-                                padding: EdgeInsets.all(15),
-                                child: Column(
-                                    children: [
-                                        Container(
-                                            padding: EdgeInsets.symmetric(vertical: 5),
-                                            child: InkWell(
-                                                child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                        Container(                                                                    
-                                                            child: Text(
-                                                                titulo,
-                                                                textAlign: TextAlign.center,
-                                                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-                                                            ),
-                                                        ),
-                                                        Container(
-                                                            padding: EdgeInsets.only(left: 10),
-                                                            child: Icon(
-                                                                Icons.info_outline_rounded,
-                                                                color: Colors.green,
-                                                                size: 20,
-                                                            ),
-                                                        ),
-                                                    ],
-                                                ),
-                                                onTap: () => _dialogText(context),
-                                            ),
-                                        ),
-                                        Column(
-                                            children: [
-                                                Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                        Expanded(
-                                                            child: textList('lb/año'),
-                                                        ),
-                                                        Container(
-                                                            width: 65,
-                                                            child: titleList('Salida'),
-                                                        ),
-                                                        Container(
-                                                            width: 65,
-                                                            child: titleList('Entrada'),
-                                                        ),
-                                                        Container(
-                                                            width: 65,
-                                                            child: titleList('Suelo'),
-                                                        ),
-                                                        Container(
-                                                            width: 65,
-                                                            child: titleList('Balance'),
-                                                        ),
-                                                    ],
-                                                ),
-                                                Divider(),
-                                                _rowDisponibilidad(
-                                                    'Nitrógeno', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'N'),                                                        
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'N', parcela),
-                                                    calculos.nutrienteSuelo(sueloNutriente, 'N'),
-                                                ),
-                                                Divider(),
-                                                _rowDisponibilidad(
-                                                    'Fósforo', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'P'),
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'P', parcela),
-                                                    calculos.nutrienteSuelo(sueloNutriente, 'P'),
-                                                ),
-                                                Divider(),
-                                                _rowDisponibilidad(
-                                                    'Potasio',
-                                                    calculos.salidaElemeto(salidaNutriente, 'K'),
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'K', parcela),
-                                                    calculos.nutrienteSuelo(sueloNutriente, 'K'),
-                                                ),
-                                                Divider(),
-                                                _rowDisponibilidad(
-                                                    'Calcio', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'Ca'),
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'Ca', parcela),
-                                                    calculos.nutrienteSuelo(sueloNutriente, 'Ca'),
-                                                ),
-                                                Divider(),
-                                                _rowDisponibilidad(
-                                                    'Magnesio', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'Mg'),
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'Mg', parcela),
-                                                    calculos.nutrienteSuelo(sueloNutriente, 'Mg'),
-                                                ),
-                                                Divider(),
-                                                _rowDisponibilidad(
-                                                    'Azufre', 
-                                                    calculos.salidaElemeto(salidaNutriente, 'S'), 
-                                                    calculos.entradaElemento(entradas, sueloNutriente, 'S', parcela),
-                                                    calculos.nutrienteSuelo(sueloNutriente, 'S'),
-                                                ),
-                                                Divider(),
-                                                
-                                            ],
-                                        ),
-                                    ],
-                                ),
-                            ),
-                        ),
-                    )
-                    
-                ],
-            ),
-        );
-            
     }
 
     Widget _rowDisponibilidad( String tituloRow, double salida, double entrada, double suelo){
@@ -385,55 +375,27 @@ class _BalanceActualState extends State<BalanceActual> {
         return Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-                Expanded(
-                    child:textList(tituloRow), 
+                Expanded(child: textList(tituloRow)),
+                Container(
+                    width: 65,
+                    child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center)
                 ),
                 Container(
                     width: 65,
-                    child: Text(salida.toStringAsFixed(1), textAlign: TextAlign.center,),
+                    child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center)
                 ),
                 Container(
                     width: 65,
-                    child: Text(entrada.toStringAsFixed(1), textAlign: TextAlign.center,),
+                    child: Text(suelo.toStringAsFixed(1) == '-0.0' ? '0.0' : suelo.toStringAsFixed(1) , textAlign: TextAlign.center)
                 ),
                 Container(
                     width: 65,
-                    child: Text(suelo.toStringAsFixed(1) == '-0.0' ? '0.0' : suelo.toStringAsFixed(1), textAlign: TextAlign.center,),
-                ),
-                Container(
-                    width: 65,
-                    child: Text(balance.toStringAsFixed(1) == '-0.0' ? '0.0' : balance.toStringAsFixed(1), textAlign: TextAlign.center,),
+                    child: Text(balance.toStringAsFixed(1) == '-0.0' ? '0.0' : balance.toStringAsFixed(1) , textAlign: TextAlign.center)
                 ),
                 
             ],
         );
     }
 
-}
-
-Future<void> _dialogText(BuildContext context) async {
-    return showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-            return AlertDialog(
-                title: Text('Titulo'),
-                content: SingleChildScrollView(
-                    child: ListBody(
-                        children: <Widget>[
-                        Text('Texto para breve explicacion'),
-                        ],
-                    ),
-                ),
-                actions: <Widget>[
-                    TextButton(
-                        child: Text('Cerrar'),
-                        onPressed: () {
-                        Navigator.of(context).pop();
-                        },
-                    ),
-                ],
-            );
-        },
-    );
+    
 }
