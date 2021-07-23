@@ -4,6 +4,8 @@ import 'package:app_suelo/src/models/entradaNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/pages/finca/finca_page.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
+import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
 
@@ -42,13 +44,12 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                 int? validacion = snapshot.data[0];
                 List<Acciones>? acciones = snapshot.data[1];
                 
-                if (validacion == 1) {
+                 return validacion == 1 ?
                     
-                    return Container(
+                    Container(
                         child: ListView(
                             children: [
-                                _tituloDivider(context, 'Propuesta fertilización'),
-                                Divider(),
+                                tituloDivider('Propuesta fertilización'),
                                 _cardEntrada(suelo,fincasBloc.entradaStream, 'Propuesta de abonos', 'abonosPage', 2),
                                 _botonBalance(context, suelo, 'Propuesta balance nutrientes', 2),
                                 Divider(),
@@ -61,28 +62,16 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                             ],
                         ),
                         
-                    );
-                } else {
-                    return Center(child: _tituloDivider(context,'Finalizar los formularios de recorrido de puntos y balance de nutriente actual '),);
-                }
+                    )
+                    :
+                    Center(child: tituloDivider('Finalizar los formularios de recorrido de puntos y balance de nutriente actual '),);
+                
                 
             },
         );
         
     }
 
-    Widget _tituloDivider(BuildContext context, String titulo){
-        return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-                titulo,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme
-                    .headline5!
-                    .copyWith(fontWeight: FontWeight.w900, fontSize: 20 )
-            ),
-        );
-    }
 
     Widget _cardEntrada(TestSuelo suelo, Stream streamData, String titulo, String url, int tipo){
 
@@ -97,40 +86,15 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                 
                 
                 return GestureDetector(
-                    child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                            
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(13),
-                            boxShadow: [
-                                BoxShadow(
-                                        color: Color(0xFF3A5160)
-                                            .withOpacity(0.05),
-                                        offset: const Offset(1.1, 1.1),
-                                        blurRadius: 17.0),
-                                ],
-                        ),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    child: cardDefault(
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                                
-                                Padding(
-                                    padding: EdgeInsets.only(top: 10, bottom: 10.0),
-                                    child: Text(
-                                        titulo,
-                                        softWrap: true,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: Theme.of(context).textTheme.headline6,
-                                    ),
-                                ),
+                                tituloCard(titulo),
                                 Container(
                                     child: Icon(Icons.check_circle, 
                                         color: entradas.length == 0 ? Colors.black38 : Colors.green[900],
-                                        size: 30,
+                                        size: 25,
                                     ),
                                     
                                 )
@@ -155,24 +119,19 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                 
                 List<EntradaNutriente> entradas = snapshot.data;
                 
-                
-                return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
-                    child: RaisedButton(
-                        child: Text(titulo,
-                            style: Theme.of(context).textTheme
-                                .headline6!
-                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                return Row(
+                    children: [
+                        Spacer(),
+                        ButtonMainStyle(
+                            title: titulo,
+                            icon: Icons.save,
+                            press: entradas.length > 0 ? () => Navigator.pushNamed(context, 'ResultadoNutrientes', arguments: [suelo, titulo, tipo]) : null,
                         ),
-                        padding:EdgeInsets.all(13),
-                        onPressed: entradas.length > 0 ? () => Navigator.pushNamed(context, 'ResultadoNutrientes', arguments: [suelo, titulo, tipo]) : null,
-                    ),
+                        Spacer(),
+                    ],
                 );
             },
         );
-
-        
-
     }
 
     Widget  _botonDecisiones(BuildContext context, TestSuelo suelo, List<Acciones>? acciones ){
@@ -183,39 +142,35 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                 if (!snapshot.hasData) {
                     return CircularProgressIndicator();
                 }
-                if (acciones!.length == 0) {
-                    return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
-                        child: RaisedButton(
-                            child: Text('Tomar desiciones',
-                                style: Theme.of(context).textTheme
-                                    .headline6!
-                                    .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
+                return acciones!.length == 0 ?
+                    Row(
+                        children: [
+                            Spacer(),
+                            ButtonMainStyle(
+                                title: 'Tomar desiciones',
+                                icon: Icons.save,
+                                press: snapshot.data.length > 0 ? () => Navigator.pushNamed(context, 'decisiones', arguments: suelo) : null,
                             ),
-                            padding:EdgeInsets.all(13),
-                            onPressed: snapshot.data.length > 0 ? () => Navigator.pushNamed(context, 'decisiones', arguments: suelo) : null,
-                        ),
-                    );
-                }
-
-                return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
-                    child: RaisedButton(
-                        child: Text('Ver Reporte',
-                            style: Theme.of(context).textTheme
-                                .headline6!
-                                .copyWith(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)
-                        ),
-                        padding:EdgeInsets.all(13),
-                        onPressed:  () => Navigator.pushNamed(context, 'reportDetalle', arguments: suelo.id),
-                    ),
-                );
+                            Spacer(),
+                        ],
+                    )
+                    
+                :
+                    Row(
+                        children: [
+                            Spacer(),
+                            ButtonMainStyle(
+                                title: 'Ver Reporte',
+                                icon: Icons.save,
+                                press: () => Navigator.pushNamed(context, 'reportDetalle', arguments: suelo.id),
+                            ),
+                            Spacer(),
+                        ],
+                    )
+                ;
                 
             },
         );
-
-        
-
     }
 
 }

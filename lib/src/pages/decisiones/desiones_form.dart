@@ -2,7 +2,7 @@ import 'package:app_suelo/src/bloc/fincas_bloc.dart';
 import 'package:app_suelo/src/models/acciones_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
-import 'package:app_suelo/src/utils/widget/titulos.dart';
+import 'package:app_suelo/src/utils/widget/button.dart';
 import 'package:app_suelo/src/models/selectValue.dart' as selectMap;
 import 'package:flutter/material.dart';
 import 'package:multiselect_formfield/multiselect_formfield.dart';
@@ -54,14 +54,11 @@ class _DecisionesPageState extends State<DecisionesPage> {
                 
 
         return Scaffold(
-            appBar: AppBar(),
-            body: Column(
-                children: [
-                    TitulosPages(titulo: 'Toma de Decisión'),
-                    Expanded(
-                        child: _accionesMeses(),
-                    ),
-                ],
+            appBar: AppBar(title: Text('Toma de Decisión'),),
+            body: Container(
+                padding: EdgeInsets.all(15),
+                color: Colors.white,
+                child: _accionesMeses(),
             )
             
         );
@@ -81,9 +78,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
                             child: Text(
                                 "Nueva propuesta de manejo de suelo",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme
-                                    .headline5!
-                                    .copyWith(fontWeight: FontWeight.w600, fontSize: 16)
+                                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
                             ),
                         )
                     ),
@@ -97,7 +92,7 @@ class _DecisionesPageState extends State<DecisionesPage> {
             
             listaAcciones.add(
                 Container(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.symmetric(vertical: 5),
                     child: MultiSelectFormField(
                         chipBackGroundColor: Colors.deepPurple,
                         chipLabelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -135,44 +130,26 @@ class _DecisionesPageState extends State<DecisionesPage> {
             );
         }
 
+        listaAcciones.add(SizedBox(height: 10,));
         listaAcciones.add(_botonsubmit());
 
         return SingleChildScrollView(
-            child: Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                        BoxShadow(
-                                color: Color(0xFF3A5160)
-                                    .withOpacity(0.05),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 17.0),
-                        ],
-                ),
-                child: Column(children:listaAcciones,)
-            ),
+            child: Column(children:listaAcciones,),
         );
     }
 
     Widget  _botonsubmit(){
 
-        return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 30),
-            child: RaisedButton.icon(
-                icon:Icon(Icons.save),
-                label: Text('Guardar',
-                    style: Theme.of(context).textTheme
-                        .headline6!
-                        .copyWith(fontWeight: FontWeight.w600, color: Colors.white)
+        return Row(
+            children: [
+                Spacer(),
+                ButtonMainStyle(
+                    title: 'Guardar',
+                    icon: Icons.save,
+                    press: (_guardando) ? null : _submit,
                 ),
-                padding:EdgeInsets.all(13),
-                onPressed:(_guardando) ? null : _submit,
-                
-            ),
+                Spacer(),
+            ],
         );
     }
 

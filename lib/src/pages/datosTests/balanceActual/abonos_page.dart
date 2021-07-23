@@ -79,7 +79,8 @@ class _AbonosPageState extends State<AbonosPage> {
                 return Dismissible(
                     key: UniqueKey(),
                     child: GestureDetector(
-                        child:cardDefault(tituloCard(labelAbono))
+                        child: _cardDesing(labelAbono, entradas[index])
+                        
                     ),
                     confirmDismiss: (direction) => confirmacionUser(direction, context),
                     direction: DismissDirection.endToStart,
@@ -97,6 +98,25 @@ class _AbonosPageState extends State<AbonosPage> {
 
     }
 
+    Widget _cardDesing(String labelAbono, EntradaNutriente entradaNutriente){
+        String labelUnidad = selectMap.unidadAbono().firstWhere((e) => e['value'] == '${entradaNutriente.unidad}', orElse: () => {"value": "1","label": "No data"})['label'];
+        return cardDefault(
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    tituloCard(labelAbono),
+                    Wrap(
+                    spacing: 20,
+                    children: [
+                        textoCardBody('Humedad (%) : ${entradaNutriente.humedad} % '),
+                        textoCardBody('Cantidad: ${entradaNutriente.cantidad} ($labelUnidad)'),
+                        textoCardBody('Frecuencia: ${entradaNutriente.frecuencia} / año'),
+                    ],
+                ),
+                ],
+            )
+        );
+    }
 
     Widget _addAbono(TestSuelo suelo, int tipo){
         return ButtonMainStyle(

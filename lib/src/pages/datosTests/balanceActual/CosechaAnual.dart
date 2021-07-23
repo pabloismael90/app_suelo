@@ -146,39 +146,6 @@ class _CosechaAnualState extends State<CosechaAnual> {
     }
 
     Widget _cascaraCacao(){
-
-        // return Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //     crossAxisAlignment: CrossAxisAlignment.center,
-        //     children: <Widget>[
-        //         Flexible(child: Container(
-        //                 width: size.width * 0.25,
-        //                 child: textList('Cascara de Cacao'),
-        //             ),
-        //         ),
-                
-        //         Expanded(
-        //             child: TextFormField(
-        //                 initialValue: salidaNutriente.cascaraCacao == null ? '' : salidaNutriente.cascaraCacao.toString(),
-        //                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-        //                 decoration: InputDecoration(
-        //                     border: OutlineInputBorder(),
-        //                     contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-        //                 ),
-        //                 validator: (value) => utils.floatSiCero(value),
-        //                 onSaved: (value) => salidaNutriente.cascaraCacao = double.parse(value!),
-        //             ),
-        //         ),
-                
-        //         Flexible(child: Container(
-        //                 width: size.width * 0.25,
-        //                 child: textList('QQ seco'),
-        //             ),
-        //         ),
-                
-        //     ],
-        // );
-        
         return CheckboxListTile(
             title: textList('Regresa la cascara de cacao  a la plantación'),
             value: salidaNutriente.cascaraCacao != 0 , 

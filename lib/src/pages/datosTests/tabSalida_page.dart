@@ -3,6 +3,7 @@ import 'package:app_suelo/src/models/testSuelo_model.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
 import 'package:app_suelo/src/pages/datosTests/balanceActual.dart' as balancePage;
 import 'package:app_suelo/src/pages/datosTests/balancePropuesta.dart' as nuevoBalance;
+import 'package:app_suelo/src/utils/constants.dart';
 import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -46,18 +47,27 @@ class SalidaPageState extends State<SalidaPage> with SingleTickerProviderStateMi
         return Scaffold(
             appBar: AppBar(title: Text('Completar datos'),),
             bottomNavigationBar: Material(
-                child: TabBar(
-                    isScrollable: false,
-                    controller: controller,
+                color: kbase,
+                child: SafeArea(
                     
-                    tabs: <Tab>[
-                        Tab(
-                            text: 'Balance de\nNutrientes',
+                    child: TabBar(
+                        isScrollable: false,
+                        controller: controller,
+                        indicator: UnderlineTabIndicator(
+                            borderSide: BorderSide(width: 3.0,color: Color.fromARGB(27, 38, 69, 30)),
+                            insets: EdgeInsets.symmetric(horizontal:16.0),
                         ),
-                        Tab(
-                            text: 'Propuesta\nfertilización',
-                        ),
-                    ]
+                        indicatorColor: Color.fromARGB(42, 134, 145, 4),
+                        labelColor: Colors.white,
+                        tabs: <Tab>[
+                            Tab(
+                                text: 'Balance de\nNutrientes',
+                            ),
+                            Tab(
+                                text: 'Propuesta\nfertilización',
+                            ),
+                        ]
+                    ),
                 )
             ),
             body: Column(

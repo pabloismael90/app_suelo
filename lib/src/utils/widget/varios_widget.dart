@@ -217,7 +217,21 @@ Widget mensajeSwipe(String text){
 }
 
 
-
+Widget tituloDivider(String titulo){
+    return Column(
+        children: [
+            Divider(),
+            Container(
+                padding: EdgeInsets.symmetric(vertical: 5),
+                child: Text(
+                    titulo,
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
+                ),
+            ),
+            Divider()
+        ],
+    );
+}
 
 
 

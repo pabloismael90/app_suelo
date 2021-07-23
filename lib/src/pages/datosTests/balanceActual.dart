@@ -24,9 +24,7 @@ class BalanceRecorrido extends StatelessWidget {
                 children: [
                     _cardRecorrido(suelo),
                     _btnRecorrido( suelo, 'Resultado recorrido', 'recorridoResultado', fincasBloc.puntoStream, 5 ),
-                    Divider(),
-                    _tituloDivider('Balance nutrientes actual'),
-                    Divider(),
+                    tituloDivider('Balance nutrientes actual'),
                     _cardItem(suelo, 'Cosecha anual', 'cosechaAnual', fincasBloc.salidaStream),
                     _cardItem(suelo, 'Análisis de suelo', 'analisisSuelo', fincasBloc.sueloStream),
                     _cardEntrada(suelo, fincasBloc.entradaStream, 'Uso de abono anual', 'abonosPage', 1 ),
@@ -34,17 +32,6 @@ class BalanceRecorrido extends StatelessWidget {
                 ],
             ),
             
-        );
-    }
-
-    Widget _tituloDivider(String titulo){
-        return Container(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-                titulo,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)
-            ),
         );
     }
 
@@ -68,7 +55,7 @@ class BalanceRecorrido extends StatelessWidget {
                                 Container(
                                     child: Icon(Icons.check_circle, 
                                         color: puntos.length < 5 ? Colors.black38 : Colors.green[900],
-                                        size: 30,
+                                        size: 25,
                                     ),
                                 ) 
                             ],
@@ -101,7 +88,7 @@ class BalanceRecorrido extends StatelessWidget {
                                 Container(
                                     child: Icon(Icons.check_circle, 
                                         color: nutrientes.id == null ? Colors.black38 : Colors.green[900],
-                                        size: 30,
+                                        size: 25,
                                     ),
                                     
                                 )
@@ -135,7 +122,7 @@ class BalanceRecorrido extends StatelessWidget {
                                 Container(
                                     child: Icon(Icons.check_circle, 
                                         color: entradas.length == 0 ? Colors.black38 : Colors.green[900],
-                                        size: 30,
+                                        size: 25,
                                     ),
                                     
                                 )
