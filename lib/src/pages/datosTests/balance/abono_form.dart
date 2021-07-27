@@ -38,7 +38,6 @@ class _AddAbonoState extends State<AddAbono> {
 
         entradaNutriente.idTest = suelo.id;
         entradaNutriente.tipo = dataRoute[1];
-        print(entradaNutriente.tipo);
 
         
         return Scaffold(

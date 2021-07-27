@@ -157,7 +157,6 @@ class _DecisionesPageState extends State<DecisionesPage> {
 
     _listaAcciones(){
 
-        //print(itemActividad);
         itemActividad.forEach((key, value) {
             final Acciones itemAcciones = Acciones();
             itemAcciones.id = uuid.v1();
@@ -176,9 +175,6 @@ class _DecisionesPageState extends State<DecisionesPage> {
         _listaAcciones();
         
         listaAcciones.forEach((accion) {
-            // print("Id item: ${accion.idItem}");
-            // print("Id Respues: ${accion.repuesta}");
-            // print("Id prueba: ${accion.idTest}");
             DBProvider.db.nuevaAccion(accion);
         });
 

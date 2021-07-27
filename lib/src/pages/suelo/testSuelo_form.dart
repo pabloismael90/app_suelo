@@ -64,7 +64,6 @@ class _AgregarTestState extends State<AgregarTest> {
             stream: fincasBloc.fincaSelect,
             //future: DBProvider.db.getSelectFinca(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-                //print(snapshot.data);
                 if (!snapshot.hasData) {
                     return Scaffold(body: CircularProgressIndicator(),);
                 } else {
@@ -181,8 +180,6 @@ class _AgregarTestState extends State<AgregarTest> {
                             return null;
                         }
                     },
-
-                    //onChanged: (val) => print(val),
                     onSaved: (value) => plaga.idLote = value,
                 );
             },
@@ -204,8 +201,6 @@ class _AgregarTestState extends State<AgregarTest> {
                 FocusScope.of(context).requestFocus(new FocusNode());
                 _selectDate(context);
             },
-            //onChanged: (value) => print('hola: $value'),
-            //validator: (value){},
             onSaved: (value){
                 plaga.fechaTest = value;
             }

@@ -363,9 +363,6 @@ class DBProvider {
             "SELECT id AS value, nombreFinca AS label FROM Finca"
         );
         List<Map<String, dynamic>> list = res.isNotEmpty ? res : [];
-
-        //print(list);
-
         return list; 
     }
     
@@ -484,8 +481,6 @@ class DBProvider {
         if (salidaNutriente.length > 0 && sueloNutriente.length > 0 && entradaNutriente.length > 0) {
             validacion = 1;
         }
-
-        //print(validacion);
         return validacion;
     }
 

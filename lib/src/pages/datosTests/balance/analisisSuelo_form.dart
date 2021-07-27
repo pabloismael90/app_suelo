@@ -247,7 +247,7 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
             children: <Widget>[
                 Flexible(child: Container(
                         width: size.width * 0.25,
-                        child: textList('Nitrógeno total'),
+                        child: textList('Nitrógeno'),
                     ),
                 ),
                 
@@ -693,8 +693,6 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                                 return null;
                             } 
                         },
-
-                        //onChanged: (val) => print(val),
                         onSaved: (value) => sueloNutriente.textura = int.parse(value!),
                     ),
                 ),
@@ -727,8 +725,6 @@ class _AnalisiSueloState extends State<AnalisiSuelo> {
                                 return null;
                             } 
                         },
-
-                        //onChanged: (val) => print(val),
                         onSaved: (value) => sueloNutriente.tipoSuelo = int.parse(value!),
                     ),
                 ),

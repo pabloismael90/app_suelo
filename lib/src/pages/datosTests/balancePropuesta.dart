@@ -64,7 +64,11 @@ class _NuevoBalanceState extends State<NuevoBalance> {
                         
                     )
                     :
-                    Center(child: tituloDivider('Finalizar los formularios de recorrido de puntos y balance de nutriente actual '),);
+                    Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Center(child: tituloDivider('Finalizar los formularios de recorrido de puntos y balance de nutriente actual '),)
+                    );
                 
                 
             },

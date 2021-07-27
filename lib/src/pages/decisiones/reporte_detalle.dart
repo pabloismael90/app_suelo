@@ -9,7 +9,9 @@ import 'package:app_suelo/src/models/punto_model.dart';
 import 'package:app_suelo/src/models/salidaNutriente_model.dart';
 import 'package:app_suelo/src/models/sueloNutriente_model.dart';
 import 'package:app_suelo/src/models/testSuelo_model.dart';
+import 'package:app_suelo/src/pages/pdf/pdf_api.dart';
 import 'package:app_suelo/src/providers/db_provider.dart';
+import 'package:app_suelo/src/utils/constants.dart';
 import 'package:app_suelo/src/utils/widget/varios_widget.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:app_suelo/src/utils/calculos.dart' as calculos;
@@ -34,14 +36,16 @@ class _ReportDetalleState extends State<ReportDetalle> {
     late Size size;
     final fincasBloc = new FincasBloc();
     String? idTest;
+    Map<String,List> recorridoData = {};
+
 
     final List<Map<String, dynamic>>  _meses = selectMap.listMeses();
     final List<Map<String, dynamic>>  listSoluciones = selectMap.solucionesXmes();
 
-    Future _getdataFinca( String? idTest) async{
+    Future _getdataFinca( TestSuelo suelo) async{
 
-            TestSuelo? suelo = await (DBProvider.db.getTestId(idTest));
-            Finca? finca = await DBProvider.db.getFincaId(suelo!.idFinca);
+
+            Finca? finca = await DBProvider.db.getFincaId(suelo.idFinca);
             Parcela? parcela = await DBProvider.db.getParcelaId(suelo.idLote);
             List<Punto> puntos = await DBProvider.db.getPuntosIdTest(suelo.id);
             SalidaNutriente salidaNutriente = await DBProvider.db.getSalidaNutrientes(suelo.id);
@@ -51,7 +55,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
             List<Acciones> listAcciones = await DBProvider.db.getAccionesIdTest(suelo.id);
             
             return [finca, parcela, salidaNutriente, entradas, sueloNutriente,
-                    puntos, fertilizacion, suelo, listAcciones];
+                    puntos, fertilizacion, listAcciones];
     }
 
     @override
@@ -59,19 +63,32 @@ class _ReportDetalleState extends State<ReportDetalle> {
 
         TestSuelo? suelo = ModalRoute.of(context)!.settings.arguments as TestSuelo;
         size = MediaQuery.of(context).size;
+        
                 
 
         return Scaffold(
-            appBar: AppBar(title: Text('Reporte'),),
+            appBar: AppBar(
+                title: Text('Reporte de Decisiones'),
+                actions: [
+                    TextButton(
+                        onPressed: () => _crearPdf(suelo), 
+                        child: Row(
+                            children: [
+                                Icon(Icons.download, color: kwhite, size: 16,),
+                                SizedBox(width: 5,),
+                                Text('PDF', style: TextStyle(color: Colors.white),)
+                            ],
+                        )
+                        
+                    )
+                ],
+            ),
             body: FutureBuilder(
-            future:  _getdataFinca(suelo.id),
+            future:  _getdataFinca(suelo),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
                         return CircularProgressIndicator();
                     }
-
-                    
-
                     List<Widget> pageItem =  [];
                     Finca finca = snapshot.data[0];
                     Parcela parcela = snapshot.data[1];
@@ -80,8 +97,7 @@ class _ReportDetalleState extends State<ReportDetalle> {
                     SueloNutriente? sueloNutriente  = snapshot.data[4];
                     List<Punto>? puntos = snapshot.data[5];
                     List<EntradaNutriente> fertilizacion = snapshot.data[6];
-                    TestSuelo suelo = snapshot.data[7];
-                    List<Acciones> listAcciones = snapshot.data[8];
+                    List<Acciones> listAcciones = snapshot.data[7];
 
                     String? labelMedidaFinca = selectMap.dimenciones().firstWhere((e) => e['value'] == '${finca.tipoMedida}')['label'];
 
@@ -136,7 +152,10 @@ class _ReportDetalleState extends State<ReportDetalle> {
                         ),
                         tituloDivider('Cosecha anual'),
                         _cosechaAnual(salidaNutriente),
-                        tituloDivider('Uso de abono actual'),
+                        pagina == 1 ?
+                        tituloDivider('Uso de abono actual')
+                        :
+                        tituloDivider('Propuesta de fertilización'),
                         _abonosList(listAbonosActual, parcela)
                     ],
                 ),
@@ -464,14 +483,14 @@ class _ReportDetalleState extends State<ReportDetalle> {
         prueba.add(tituloDivider(titulo));
         prueba.add(_labelTipo(tipo));
 
+
         for (var item in preguntaItem) {
             
             prueba.add(
                  Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Expanded(child: Text(item['label'], style: Theme.of(context).textTheme.headline6!
-                                        .copyWith(fontSize: 14, fontWeight: FontWeight.w600))),
+                        Expanded(child: textList(item['label'])),
                         Container(
                             width: 60,
                             child: FutureBuilder(
@@ -480,7 +499,6 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                     if (!snapshot.hasData) {
                                         return Text('0.0', textAlign: TextAlign.center);
                                     }
-                                    
                                     return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                 },
                             ),
@@ -493,7 +511,6 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                     if (!snapshot.hasData) {
                                         return Text('0.0', textAlign: TextAlign.center);
                                     }
-                                    
                                     return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                 },
                             ),
@@ -506,7 +523,6 @@ class _ReportDetalleState extends State<ReportDetalle> {
                                     if (!snapshot.hasData) {
                                         return Text('0.0', textAlign: TextAlign.center);
                                     }
-                                    
                                     return Text('${snapshot.data.toStringAsFixed(0)}%', textAlign: TextAlign.center);
                                 },
                             ),
@@ -516,10 +532,10 @@ class _ReportDetalleState extends State<ReportDetalle> {
             );
             prueba.add(Divider());
         }
+
         return  Column(
             children:prueba,
         );
- 
     }
 
     Widget _recorrido(TestSuelo suelo,List<Punto>? puntos){
@@ -589,7 +605,38 @@ class _ReportDetalleState extends State<ReportDetalle> {
         );
     }
 
+    _generarDataRecorrido(TestSuelo suelo, List<Map<String, dynamic>> lisData) async{
+        List<List> dato = [];
 
+        for (var i = 0; i < lisData.length; i++) {
+            List valueDato =[
+                lisData[i]['label'],
+                await _count(suelo.id, 1,i,1),
+                await _count(suelo.id, 2, i,2),
+                await _count(suelo.id, 3, i,3),
+            ];
+            
+            dato.add(valueDato);
+        }
+
+       return dato;
+    }
+
+    Future _crearPdf( TestSuelo? suelo) async{
+        Map recorrido = {};
+        recorrido['Observaciones de erosión'] = await _generarDataRecorrido(suelo!, selectMap.erosion());
+        recorrido['Obras de conservación de suelo'] = await _generarDataRecorrido(suelo, selectMap.conservacion());
+        recorrido['Observaciones de drenaje'] = await _generarDataRecorrido(suelo, selectMap.drenaje());
+        recorrido['Obras de drenaje'] = await _generarDataRecorrido(suelo, selectMap.obrasDrenaje());
+        recorrido['Enfermedades de raíz'] = await _generarDataRecorrido(suelo, selectMap.raiz());
+        
+        
+        
+        
+        final pdfFile = await PdfApi.generateCenteredText(suelo, recorrido);
+        
+        PdfApi.openFile(pdfFile);
+    }
 
 }
 
