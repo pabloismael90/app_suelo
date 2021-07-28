@@ -193,15 +193,15 @@ class PdfApi {
                         pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
-                                _textoBody('pH: ${sueloNutriente.ph} QQ / año',font ),
+                                _textoBody('pH: ${sueloNutriente.ph}',font ),
                                 _textoBody('Densidad Aparente: ${sueloNutriente.densidadAparente} g/cm3',font ),
                                 _textoBody('Materia orgánica: ${sueloNutriente.materiaOrganica} %',font ),
                                 _textoBody('Nitrógeno: ${sueloNutriente.nitrogeno} %',font ),
                                 _textoBody('Fósforo: ${sueloNutriente.fosforo} ppm',font ),
                                 _textoBody('Potasio: ${sueloNutriente.potasio} meq/100g',font ),
-                                _textoBody('Azufre: ${sueloNutriente.calcio} Carga',font ),
+                                _textoBody('Azufre: ${sueloNutriente.calcio} meq/100g',font ),
                                 _textoBody('Calcio: ${sueloNutriente.magnesio} meq/100g',font ),
-                                _textoBody('Magnesio: ${sueloNutriente.azufre} meq/100g',font ), 
+                                _textoBody('Magnesio: ${sueloNutriente.azufre} ppm',font ), 
                                 
 
 
@@ -212,14 +212,14 @@ class PdfApi {
                             child: pw.Column(
                                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                                 children: [
-                                    _textoBody('Hierro: ${sueloNutriente.hierro} ppm',font ),              
-                                    _textoBody('Manganeso: ${sueloNutriente.manganeso} ppm',font ),              
-                                    _textoBody('Cadmio: ${sueloNutriente.cadmio} ppm',font ),              
-                                    _textoBody('Zinc: ${sueloNutriente.zinc} ppm',font ),              
-                                    _textoBody('Boro: ${sueloNutriente.boro} ppm',font ),              
-                                    _textoBody('Acidez intercambiable: ${sueloNutriente.acidez} Cmol+/kg',font ),              
-                                    _textoBody('Leña: $textura',font ),             
-                                    _textoBody('Leña: $tipoSuelo',font ),             
+                                    _textoBody(sueloNutriente.hierro == 0 ?'Hierro: No hay datos':'Hierro: ${sueloNutriente.hierro} ppm',font ),              
+                                    _textoBody(sueloNutriente.manganeso == 0 ? 'Manganeso: No hay datos' : 'Manganeso: ${sueloNutriente.manganeso} ppm',font ),              
+                                    _textoBody(sueloNutriente.cadmio == 0 ? 'Cadmio: No hay datos' : 'Cadmio: ${sueloNutriente.cadmio} ppm',font ),              
+                                    _textoBody(sueloNutriente.zinc == 0 ? 'Zinc: No hay datos' : 'Zinc: ${sueloNutriente.zinc} ppm',font ),              
+                                    _textoBody(sueloNutriente.boro == 0 ? 'Boro: No hay datos' : 'Boro: ${sueloNutriente.boro} ppm',font ),              
+                                    _textoBody(sueloNutriente.acidez == 0 ? 'Acidez intercambiable: No hay datos' : 'Acidez intercambiable: ${sueloNutriente.acidez} Cmol+/kg',font ),              
+                                    _textoBody('Textura: $textura',font ),             
+                                    _textoBody('Tipo de suelo: $tipoSuelo',font ),             
                                 ]
                             ),
                         )
@@ -451,7 +451,9 @@ class PdfApi {
 
 
     //Conteo de puntos
-    static pw.TableRow _labelTipo(String titulo, int tipo, Font font){
+    static pw.TableRow _labelTipo(String titulo, Font font){
+
+        int tipo = titulo == 'Obras de conservación de suelo' ||  titulo == 'Obras de drenaje'  ? 2 : 1 ;
         
         return  _crearFila([titulo, 'No', tipo == 1 ? 'Algo' : 'Mala', tipo == 1 ? 'Severo' : 'Buena'], font, true);
     }
@@ -462,7 +464,7 @@ class PdfApi {
         
         recorrido!.forEach((key, value) {
             List<pw.TableRow> filas = [];
-            filas.add(_labelTipo(key,1,font));
+            filas.add(_labelTipo(key,font));
             
             for (var item in value) {
                 filas.add(_crearFila(item,font,false));
