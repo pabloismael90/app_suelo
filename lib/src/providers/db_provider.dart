@@ -39,8 +39,6 @@ class DBProvider {
 
         final path = join( documentsDirectory.path, 'sueloHerramienta.db' );
 
-        print(path);
-
         return await openDatabase(
             path,
             version: 2,

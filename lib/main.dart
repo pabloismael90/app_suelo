@@ -1,4 +1,4 @@
-import 'package:app_suelo/src/pages/PDFView.dart';
+import 'package:app_suelo/src/pages/pdf/PDFView.dart';
 import 'package:app_suelo/src/pages/datosTests/balance/cosecha_form.dart';
 import 'package:app_suelo/src/pages/datosTests/balance/salida_Balance.dart';
 import 'package:app_suelo/src/pages/datosTests/recorrido/recorrido_salida.dart';
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
                 const Locale('es', 'ES'),
                 // const Locale('en', 'US'),
             ],
-            title: 'Material App',
+            title: 'Cacao Suelo',
             initialRoute: 'home',
             routes: {
                 'home': (BuildContext context) => HomePage(),
