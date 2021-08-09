@@ -108,10 +108,11 @@ class SalidaPageState extends State<SalidaPage> with SingleTickerProviderStateMi
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            encabezadoCard('Área finca: ${finca.nombreFinca}','Productor: ${finca.nombreProductor}', 'assets/icons/finca.svg'),
+                            encabezadoCard('${finca.nombreFinca}','Parcela: ${parcela.nombreLote}', 'assets/icons/finca.svg'),
                             Wrap(
                                 spacing: 20,
                                 children: [
+                                    textoCardBody('Productor: ${finca.nombreProductor}'),
                                     textoCardBody('Área finca: ${finca.areaFinca}'),
                                     textoCardBody('Área parcela: ${parcela.areaLote} ${finca.tipoMedida == 1 ? 'Mz': 'Ha'}'), 
                                 ],
