@@ -1,3 +1,4 @@
+import 'package:app_suelo/src/pages/pdf/Manuales.dart';
 import 'package:app_suelo/src/pages/pdf/PDFView.dart';
 import 'package:app_suelo/src/pages/datosTests/balance/cosecha_form.dart';
 import 'package:app_suelo/src/pages/datosTests/balance/salida_Balance.dart';
@@ -92,12 +93,13 @@ class MyApp extends StatelessWidget {
                 'registros': (BuildContext context) => ReportPage(),
                 'reportDetalle': (BuildContext context) => ReportDetalle(),
 
+                //PDFs
+                'Manuales' : ( BuildContext context ) => Manuales(),
+                'PDFview' : ( BuildContext context ) => PDFView(),
                 
-
                 //Galeria de imagenes
-                'galeria': (BuildContext context) => GaleriaImagenes(),
-                'viewImg': (BuildContext context) => ViewImage(),
-                'PDFview': (BuildContext context) => PDFView(),
+                'galeria' : ( BuildContext context ) => GaleriaImagenes(),
+                'viewImg' : ( BuildContext context ) => ViewImage(),
             },
             theme: ThemeData(
                 fontFamily: "Museo",
